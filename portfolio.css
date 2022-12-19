@@ -9,7 +9,6 @@ body {
 img {
     width: 100%;
     height: 80%;
-    border-radius: 10px 10px 0 0;
     
 }
 .container > h2 {
@@ -18,27 +17,30 @@ img {
 
 .project {
     position: relative;
-    height: 250px;
+    min-height: auto;
     width: 80%;
+    min-width: 300px;
     box-shadow: 0 3px 15px 0 hsl(215, 55%, 6%);
     border-radius: 10px;
+    display: flex;
+    flex-direction: column;
     
 }
-.background {
+/*.background {
     position: absolute;
     inset: 0;
-    height: 80%;
+    top: 21.5%;
+    height: 60%;
     background: hsl(178, 100%, 50%, .5);
-    border-radius: 10px 10px 0 0;
     opacity: 0;   
     transition: 0.5s;
-    
-}
+}*/
 .discription {
     border-radius: 0 0 10px 10px;
     padding: 10px 20px;
     color: hsl(215, 51%, 70%);
     font-weight: 500;
+    text-align: center;
 }
 .discription a:nth-child(1)  {
     color: white;
@@ -51,9 +53,7 @@ img {
 .project:hover .background {
     opacity: 1;
 }
-.project:hover img {
-    transform: scale(1000px);
-}
+
 .fmp {
     display: flex;
     flex-direction: column;
@@ -63,10 +63,12 @@ img {
 }
 .text {
     display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    align-items: center;
-    height: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    height: 30%;
+    width: 100%;
+    padding: 10px;
 }
 .text a {
     color: rgba(255, 255, 255);
@@ -82,22 +84,25 @@ a:hover {
     box-shadow: 0 5px 15px 0 hsl(215, 55%, 6%), 0 3px 10px 0 hsl(215, 52%, 21%) inset;
     color: wheat;
 }
-@media screen and (min-width: 600px) {
+@media screen and (min-width: 700px) {
     .fmp {
         display: grid;
-        grid-template-columns: 50% 50%;
-        gap: 20px;
+        grid-template-columns: auto auto;
         padding: 20px;
-    }
+    }    
     .project {
+        display: flex;
+        flex-direction: column;
+        height: 400px;
         width: 100%;
+        
     }
     .text {
         display: flex;
         flex-direction: column;
-        
+        width: 100%;
+        padding: 10px 10px;
     }
-    
 }
 @media screen and (min-width: 900px) {
     .fmp {
