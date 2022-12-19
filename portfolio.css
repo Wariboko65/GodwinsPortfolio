@@ -78,6 +78,7 @@ img {
     padding: 10px 20px;
     border-radius: 30px;
     transition: 0.5s;
+    
 }
 a:hover {
     background: hsl(217, 54%, 11%);
