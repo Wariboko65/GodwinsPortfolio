@@ -26,7 +26,20 @@ img {
     flex-direction: column;
     
 }
+<<<<<<< HEAD
 
+=======
+.background {
+    position: absolute;
+    inset: 0;
+    height: 80%;
+    background: hsl(178, 100%, 50%, .3);
+    border-radius: 10px 10px 0 0;
+    opacity: 0;   
+    transition: 0.5s;
+    
+}
+>>>>>>> master
 .discription {
     border-radius: 0 0 10px 10px;
     padding: 10px 20px;
