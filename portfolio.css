@@ -30,17 +30,33 @@ body {
     font-weight: 700;
     font-family: "Ravie", arial, sans-serif;
 }
-.ico {
+.ico, .icoo {
     font-size: 25px;
     margin: 10px;
     color: var(--white);
-    transition: 0.5s;
+    transition: 0.3s;
+}
+.ico:hover {
+    color: var(--cyan);
+}
+.icoo:active {
+    color: var(--white);
+}
+.icoo:hover {
+    color: var(--mainbg);
 }
 .contact-bttn {
     margin-block-start: 30px;
 }
 .first {
     color: var(--cyan);
+}
+.first:hover {
+    color: var(--lblue);
+}
+.bo {
+    color: var(--mainbg);
+    font-weight: 700;
 }
 img {
     width: 100%;
@@ -90,6 +106,17 @@ img {
     display: flex;
     flex-direction: column;
     
+}
+.maill {
+    color: var(--white);
+    text-decoration: none;
+    font-weight: 500;
+    padding: 10px 15px;
+}
+.maill:hover {
+    box-shadow: 0 5px 15px 0 var(--cardshadow), 0 3px 10px 0 var(--btninset) inset;
+    color: var(--mainbg);
+    border-radius: 20px;
 }
 .discription {
     padding: 15px;
@@ -162,6 +189,11 @@ footer {
     background: var(--cyan);
     text-align: center;
     padding: 20px;
+    box-shadow: 0 20px 35px 0 var(--mainbg) inset,
+                0 5px 10px 0 hsl(194, 100%, 65%) inset,
+                0 10px 15px 0 hsl(194, 59%, 15%) inset,
+                0px -150px 50px 0 hsl(194, 55%, 20%) inset,
+                0px 100px 20px 0 rgb(38, 146, 165) inset;
 }
 
 @media screen and (min-width: 700px) {
@@ -227,11 +259,12 @@ footer {
         display: grid;
         grid-template-columns: auto auto auto;
     }
-    .background {
+    .text::after {
+        content: "";
         position: absolute;
         inset: 0;
         top: 0;
-        height: 75%;
+        height: 100%;
         background: var(--cyan);
         border-radius: 10px 10px 0 0;
         opacity: 0;   
@@ -252,7 +285,7 @@ footer {
     .discription {
         height: 25%;
     }
-    .project:hover .background {
+    .project:hover .text::after {
         opacity: 0.4;
     }
     .project:hover .linkbttn {
@@ -263,6 +296,7 @@ footer {
     }
     
     .text {
+        position: relative;
         border-radius: 10px 10px 0 0;
         position: absolute;
         top: 0;
@@ -297,6 +331,7 @@ footer {
         background: var(--btncolor);
         color: var(--whiteopa);
         box-shadow: 0 0 0 0;
+        z-index: 1;
     }
     .tn {
         opacity: 1;
