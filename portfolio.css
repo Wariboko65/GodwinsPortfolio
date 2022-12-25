@@ -9,17 +9,23 @@
     --btncolor: hsl(216, 50%, 16%);
     --whiteopa: rgba(255, 255, 255, 0.7);
     --whiteopacity: rgba(255, 255, 255, 0.5);
+    --inputbg: hsla(218, 49%, 8%, 0.452);
 }
-
+nav {
+    background: var(--mainbg);
+    box-shadow: 0 5px 15px 0 var(--cardshadow), 0 3px 10px 0 var(--btninset) inset;
+}
 body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: "segoe ui", arial, sans-serif;
     background: var(--mainbg);
+    box-shadow: 0 50px 100px 0 var(--cardshadow) inset;
     color: var(--white);
     scroll-behavior: smooth;
 }
+
 .image {
     width: 100%;
     height: 75%;
@@ -30,17 +36,31 @@ body {
     font-weight: 700;
     font-family: "Ravie", arial, sans-serif;
 }
-.ico, .icoo {
+.folio {
+    font-weight: 700;
+    font-family: "Jokerman", Arial, Helvetica, sans-serif;
+}
+
+.roww {
+    position: relative;
+}   
+
+.ico, .icoo, .icop {
     font-size: 25px;
     margin: 10px;
     color: var(--white);
     transition: 0.3s;
 }
-.ico:hover {
+.contact a:hover .ico {
     color: var(--cyan);
 }
-.icoo:active {
-    color: var(--white);
+
+.contact a {
+    display: inline-block;
+    transition: 0.5s;
+}
+.contact a:hover {
+    transform: translateY(-5px);
 }
 .icoo:hover {
     color: var(--mainbg);
@@ -50,6 +70,8 @@ body {
 }
 .first {
     color: var(--cyan);
+    transition: 0.5s;
+    cursor: pointer;
 }
 .first:hover {
     color: var(--lblue);
@@ -185,6 +207,107 @@ img {
 .linkbttn:hover {
     color: var(--white);
 }
+.contact-left {
+    margin-inline-start: 35px;
+}
+.cvbtn {
+    color: var(--white);
+    padding: 10px 20px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: 0.5s;
+    box-shadow: 0 5px 15px 0 var(--cardshadow), 0 3px 10px 0 var(--btninset) inset;
+}
+.cvbtn:hover {
+    color: var(--mainbg);
+    background-color: var(--cyan);
+    box-shadow: 0 3px 10px 0 var(--cyan), 0 -3px 5px 0 var(--mainbg) inset;
+}
+.submitbtn {
+    border: none;
+    padding: 10px 30px;
+    margin-inline-start: 15px;
+    background: transparent;
+    margin-block-end: 30px;
+}
+.icop {
+    color: var(--cyan);
+}
+.social-icons a {
+    display: inline-block;
+    color: var(--cyan);
+    transition: 0.5s;
+}
+.social-icons a:hover .icop {
+    color: var(--white);
+    transition: 0.5s;
+}
+.social-icons a:hover {
+    transform: translatey(-5px);
+}
+
+.contact-right form {
+    width: 90%;
+    margin-inline-start: 8px;
+    margin-block-start: 30px;
+}
+
+.top {
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 110vh;
+    margin-block-start: -50px;
+    position: relative;
+}
+
+.design {
+    color: var(--lblue);
+    transition: 0.5s;
+    cursor: pointer;
+}
+.design:hover  {
+    color: var(--cyan);
+}
+.big {
+    font-size: 1.57em;
+    font-weight: 700;
+    font-family: "jokerman", Arial, Helvetica, sans-serif;
+}
+form input, form textarea {
+    width: 100%;
+    border: none;
+    outline: none;
+    padding: 15px;
+    margin: 15px;
+    font-size: 18px;
+    border-radius: 10px;
+    background: transparent;
+    color: var(--lblue);
+    font-weight: 500;
+    resize: none;
+    transition: 0.5s;
+    box-shadow: 0 5px 15px 0 var(--cardshadow), 0 3px 10px 0 var(--btninset) inset;;
+}
+
+form input:focus {
+    background: var(--inputbg);
+    transform: translatey(-10px);
+    box-shadow: 0 30px 80px 0 var(--cardshadow), 0 20px 50px 0 var(--btninset) inset;
+}
+form textarea:focus {
+    background: var(--inputbg);
+    transform: translateY(-10px);
+    box-shadow: 0 30px 80px 0 var(--cardshadow), 0 20px 50px 0 var(--btninset) inset;
+}
+#msg {
+    color: #61b752;
+    margin-inline-start: 35px;
+    margin-block-start: -20px;
+    display: block;
+}
 footer {
     background: var(--cyan);
     text-align: center;
@@ -241,11 +364,30 @@ footer {
     .content-text {
         flex: 70%;
     }
+    .navbar-nav a {
+        position: relative;
+        margin: 20px;
+    }
+    .navbar-nav a::after {
+        content: "";
+        width: 0;
+        height: 3px;
+        background: var(--cyan);
+        position: absolute;
+        left: 0;
+        bottom: -1px;
+        transition: 0.5s;
+    }
+    .navbar-nav a:hover::after {
+        width: 100%;
+    }
+
     .profile-image {
-        flex: 30%;
+        flex: 30%
     }
     .image {
         overflow: hidden;
+        border-radius: 0;
     }
     .text {
         display: flex;
@@ -265,16 +407,20 @@ footer {
         inset: 0;
         top: 0;
         height: 100%;
-        background: var(--cyan);
+        background-image: linear-gradient(to top, var(--cyan), purple);
         border-radius: 10px 10px 0 0;
         opacity: 0;   
-        transition: 0.5s;
+        transition: 0.5s ease-in-out;
     }
     .project {
         display: flex;
         flex-direction: column-reverse;
         position: relative;
         height: 280px;
+        transition: 0.5s ease-in-out;
+    }
+    .image {
+        border-radius: 10px 10px 0 0;
     }
     img {
         height: 100%;
@@ -286,7 +432,11 @@ footer {
         height: 25%;
     }
     .project:hover .text::after {
-        opacity: 0.4;
+        opacity: 1;
+    }
+    .project:hover {
+        transform: translatey(-20px);
+        cursor: pointer;
     }
     .project:hover .linkbttn {
         opacity: 1;
@@ -339,6 +489,24 @@ footer {
     .linkbttn:hover {
         background: var(--mainbg);
         box-shadow: 0 5px 15px 0 var(--cardshadow), 0 3px 10px 0 var(--btninset) inset;
+    }
+    .contact-left {
+        margin-inline-start: 50px;
+        padding: 40px 0;
+        flex: 35%;
+    }
+    .roww {
+        display: flex;
+        flex-direction: row;
+        height: 550px;
+        align-items: center;
+        margin-block-start: -50px;
+    }
+    .contact-right {
+        flex: 60%;
+    }
+    .contact-right form {
+        width: 90%;
     }
 }
 @media screen and (min-width: 2000px) {
