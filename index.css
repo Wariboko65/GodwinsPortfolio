@@ -68,7 +68,7 @@ body {
     box-sizing: border-box;
     font-family: "segoe ui", arial, sans-serif;
     background: var(--mainbg);
-    background-image: url("Images/dice-3319359_1920.jpg");
+    background-image: url("Images/PSX_20230101_005827.jpg");
     background-repeat: no-repeat;
     background-size: 100vw 100vh;
     box-shadow: 0 50px 100px 0 var(--cardshadow) inset;
@@ -176,8 +176,7 @@ body {
     color: var(--lblue);
 }
 .bo {
-    color: var(--mainbg);
-    font-weight: 700;
+    color: var(--lblue);
 }
 img {
     width: 100%;
@@ -407,6 +406,9 @@ footer {
 }
 
 @media screen and (min-width: 700px) {
+    body {
+        background-image: url("Images/dice-3319359_1920.jpg");
+    }
     .fmp {
         display: grid;
         grid-template-columns: auto auto;
