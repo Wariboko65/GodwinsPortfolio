@@ -39,11 +39,13 @@
                 <h1>HI, I'm <span class="big">John</span> <span class="first big">Godwin</span> From <span class="design">Nigeria</span></h1><br>
                 <a href="Images/Godwins-cv.pdf"  class="cvbtn" download>Download CV</a>
             </div>
-            <svg class="arrows">
-               <path class="a1" d="M0 0 L30 32 L60 0"></path>
-                <path class="a2" d="M0 20 L30 52 L60 20"></path>
-                <path class="a3" d="M0 40 L30 72 L60 40"></path>
-            </svg>
+            <a href="#contactme" target="_self">
+                <svg class="arrows">
+                    <path class="a1" d="M0 0 L30 32 L60 0"></path>
+                     <path class="a2" d="M0 20 L30 52 L60 20"></path>
+                     <path class="a3" d="M0 40 L30 72 L60 40"></path>
+                 </svg>
+            </a>
         </section>
         <section class="main-projects" id="projects">
             <h2>Front-End Mentor Projects</h2>
@@ -188,6 +190,13 @@
                             <button type="submit" class="cvbtn submitbtn">Submit</button>
                         </form>
                         <span id="msg"></span>
+                        <a href="#home" target="_self" class="up">
+                            <svg class="arrows aw">
+                                <path class="a1" d="M0 0 L30 32 L60 0"></path>
+                                 <path class="a2" d="M0 20 L30 52 L60 20"></path>
+                                 <path class="a3" d="M0 40 L30 72 L60 40"></path>
+                             </svg>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -207,6 +216,33 @@
             </div>
         </footer>
     </main>
+    <script>
+        // Change Nav on Scroll
+        const nav = document.querySelector("nav");
+        const sectionOne = document.querySelector(".top");
+
+        const sectionOneOptions = {
+            rootMargin: "-200px 0px 0px 0px"
+        };
+
+        const sectionOneObserver = new IntersectionObserver(function(
+            entries,
+            sectionOneObserver
+        ) {
+            entries.forEach(entry => {
+                if(!entry.isIntersecting) {
+                    nav.classList.add("navv")
+                } else {
+                    nav.classList.remove("navv");
+                }
+            })
+        },
+        sectionOneOptions);
+
+        sectionOneObserver.observe(sectionOne);
+
+    </script>
+
     <script>
         //  Fade in
     const faders =  document.querySelectorAll(".fade-in");

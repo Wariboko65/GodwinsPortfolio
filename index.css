@@ -11,8 +11,25 @@
     --whiteopacity: rgba(255, 255, 255, 0.5);
     --inputbg: hsla(218, 49%, 8%, 0.452);
 }
-nav {
-    /* box-shadow: 0 5px 15px 0 var(--cardshadow), 0 3px 10px 0 var(--btninset) inset; */
+.up {
+    height: 200px;
+    width: 200px;
+    display: block;
+    position: absolute;
+    right: -30px;
+    bottom: -35px;
+    transform: scale(0.5);
+}
+.aw {
+    transform: rotate(180deg);
+}
+.contact-right {
+    position: relative;
+}
+.navv {
+    background: var(--mainbg);
+    transition: 0.5s ease-in;
+    box-shadow: 0 5px 15px 0 var(--cardshadow), 0 3px 10px 0 var(--btninset) inset;
 }
 .fade-in {
     opacity: 0;
@@ -64,7 +81,7 @@ body {
     justify-content: center;
     height: 100vh;
     position: relative;
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: rgba(0, 0, 0, 0.5);
     margin-block-end: 50px;
 }
 .arrows {
@@ -168,9 +185,6 @@ img {
 }
 .main-projects > h2 {
     text-align: center;
-}
-.content-text {
-    text-align: left;
 }
 .pp {
     transition: 0.5s ease-in-out;
@@ -404,6 +418,10 @@ footer {
         height: 400px;
         width: 100%;
     }
+    .up {
+        right: -20px;
+        bottom: -35px;
+    }
     .content {
         display: flex;
         justify-content: space-around;
@@ -447,12 +465,13 @@ footer {
         height: 3px;
         background: var(--cyan);
         position: absolute;
-        left: 0;
+        left: 50%;
         bottom: -1px;
         transition: 0.5s;
     }
     .navbar-nav a:hover::after {
         width: 100%;
+        left: 0;
     }
 
     .profile-image {
@@ -474,6 +493,10 @@ footer {
         display: grid;
         grid-template-columns: auto auto auto;
     }
+    .up {
+        bottom: -50px;
+    }
+
     .text::after {
         content: "";
         position: absolute;
