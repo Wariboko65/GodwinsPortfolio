@@ -175,9 +175,6 @@ body {
 .first:hover {
     color: var(--lblue);
 }
-.bo {
-    color: var(--lblue);
-}
 img {
     width: 100%;
     height: 100%;
@@ -406,9 +403,9 @@ footer {
 }
 
 @media screen and (min-width: 700px) {
-    /* body {
+     body {
         background-image: url("Images/dice-3319359_1920.jpg");
-    } */
+    }
     .fmp {
         display: grid;
         grid-template-columns: auto auto;
