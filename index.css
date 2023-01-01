@@ -68,10 +68,10 @@ body {
     box-sizing: border-box;
     font-family: "segoe ui", arial, sans-serif;
     background: var(--mainbg);
-    background-image: url("images/dice-3319359_1920.jpg");
+    background-image: url("Images/dice-3319359_1920.jpg");
     background-repeat: no-repeat;
     background-size: 100vw 100vh;
-    /* box-shadow: 0 50px 100px 0 var(--cardshadow) inset; */
+    box-shadow: 0 50px 100px 0 var(--cardshadow) inset;
     color: var(--white);
 }
 .top {
