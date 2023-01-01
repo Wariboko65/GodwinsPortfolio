@@ -476,6 +476,9 @@ footer {
     .profile-image {
         flex: 30%
     }
+    .contain {
+        object-fit: cover;
+    }
     .image {
         overflow: hidden;
         border-radius: 0;
