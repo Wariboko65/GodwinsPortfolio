@@ -26,6 +26,7 @@
 .contact-right {
     position: relative;
 }
+
 .navv {
     background: var(--mainbg);
     transition: 0.5s ease-in;
