@@ -12,7 +12,7 @@
     <base target="_blank">
     <title>Godwin's Portfolio</title>
 </head>
-<body>
+<body class="light-theme" id="change-theme">
     <main>
         <nav class="navbar navbar-expand-md navbar-dark fixed-top">
             <div class="container-fluid">
@@ -29,6 +29,7 @@
                         <a href="#projects" class="nav-item nav-link" target="_self">Projects</a>
                         <a href="#skil" class="nav-item nav-link" target="_self">Skills</a>
                         <a href="#contactme" class="nav-item nav-link active person" target="_self">Contact Me</a>
+                        <a href="#theme-button" target="_self" class="nav-link nav-item" id="theme-button"><span id="change-icon" class="bi-moon-fill"> Switch Theme</a>
                     </div>
                 </div>
             </div>
@@ -240,6 +241,26 @@
             </div>
         </footer>
     </main>
+    <script>
+        // Change Theme
+        let themeButton = document.getElementById("theme-button");
+        themeButton.addEventListener("click", function() {
+            let bodyTheme = document.getElementById("change-theme");
+            let themeIcon = document.getElementById("change-icon");
+            if (bodyTheme.classList.contains("light-theme")) {
+                bodyTheme.classList.remove("light-theme");
+                bodyTheme.classList.add("dark-theme");
+                themeIcon.classList.remove("bi-moon-fill");
+                themeIcon.classList.add("bi-sun-fill");
+            } else {
+                bodyTheme.classList.remove("dark-theme");
+                bodyTheme.classList.add("light-theme");
+                themeIcon.classList.remove("bi-sun-fill");
+                themeIcon.classList.add("bi-moon-fill");
+            }
+        });
+
+    </script>
     <script>
         // Change Nav on Scroll
         const nav = document.querySelector("nav");

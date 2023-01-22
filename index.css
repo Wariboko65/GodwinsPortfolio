@@ -1,4 +1,4 @@
-:root {
+.dark-theme {
     --mainbg: hsl(217, 54%, 11%);
     --white: rgb(255, 255, 255);
     --cardshadow: hsl(215, 55%, 6%);
@@ -11,6 +11,20 @@
     --whiteopacity: rgba(255, 255, 255, 0.5);
     --inputbg: hsla(218, 49%, 8%, 0.452);
 }
+.light-theme {
+    --mainbg: hsl(217, 54%, 11%);
+    --white: rgb(255, 255, 255);
+    --cardshadow: hsl(215, 55%, 6%);
+    --lblue: hsl(215, 51%, 70%);
+    --cyan: hsl(178, 100%, 50%, .5);
+    --boxshadow: hsl(178, 100%, 50%, .3);
+    --btninset: hsl(215, 52%, 21%);
+    --btncolor: hsl(216, 50%, 16%);
+    --whiteopa: rgba(255, 255, 255, 0.7);
+    --whiteopacity: rgba(255, 255, 255, 0.5);
+    --inputbg: hsla(218, 49%, 8%, 0.452);
+}
+
 .up {
     height: 200px;
     width: 200px;
@@ -72,7 +86,6 @@ body {
     background-image: url("Images/PSX_20230101_005827.jpg");
     background-repeat: no-repeat;
     background-size: 100vw 100vh;
-    box-shadow: 0 50px 100px 0 var(--cardshadow) inset;
     color: var(--white);
 }
 .top {
@@ -392,15 +405,15 @@ form textarea:focus {
     margin-block-start: -20px;
     display: block;
 }
+/* footer > div {
+    display: flex;
+} */
 footer {
-    background: var(--cyan);
+    background: var(--cardshadow);
     text-align: center;
-    padding: 20px;
-    box-shadow: 0 20px 35px 0 var(--mainbg) inset,
-                -1px 5px 10px 0 hsl(194, 100%, 65%) inset,
-                0 10px 15px 0 hsl(194, 59%, 15%) inset,
-                0px -150px 50px 0 hsl(194, 55%, 20%) inset;
-                
+    box-shadow: 0 5px 15px 0 var(--cardshadow), 0 3px 10px 0 var(--btninset) inset;
+
+    padding: 20px;            
 }
 
 @media screen and (min-width: 700px) {
