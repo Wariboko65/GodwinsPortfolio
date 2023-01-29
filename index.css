@@ -1,23 +1,4 @@
-.dark-theme {
-    --mainbg: hsl(217, 54%, 11%);
-    --white2: rgb(255, 255, 255);
-    --white: rgb(255, 255, 255);
-    --cardshadow: hsl(215, 55%, 6%);
-    --lblue: hsl(215, 51%, 70%);
-    --cyan: rgb(42, 143, 139);
-    --cyan2: rgb(42, 143, 139);
-    --boxshadow: hsl(178, 100%, 50%, .3);
-    --btninset: hsl(215, 52%, 21%);
-    --btncolor: hsl(216, 50%, 16%);
-    --whiteopa: rgba(255, 255, 255, 0.7);
-    --whiteopacity: rgba(255, 255, 255, 0.5);
-    --inputbg: hsla(218, 49%, 8%, 0.452);
-    --footernav: hsl(217, 54%, 11%);
-    --navshadow: hsl(215, 55%, 6%);
-    --navfootershadow2: hsl(215, 52%, 21%);
-    transition: color 0.5s, background-color 0.5s, box-shadow 0.5s;
-}
-.light-theme {
+.light {
     --mainbg: rgb(255, 255, 255);
     --white2: hsl(217, 54%, 11%);
     --white: rgb(255, 255, 255);
@@ -34,6 +15,27 @@
     --footernav: rgb(255, 255, 255);
     --navshadow: hsla(215, 55%, 6%, 0.466);
     --navfootershadow2: rgba(128, 128, 128, 0.568);
+    background-image: url('Images/pexels-kanhaiya-sharma-13062570 (2).jpg');
+    transition: color 0.5s, background-color 0.5s, box-shadow 0.5s;
+}
+.dark {
+    --mainbg: hsl(217, 54%, 11%);
+    --white2: rgb(255, 255, 255);
+    --white: rgb(255, 255, 255);
+    --cardshadow: hsl(215, 55%, 6%);
+    --lblue: hsl(215, 51%, 70%);
+    --cyan: rgb(42, 143, 139);
+    --cyan2: rgb(42, 143, 139);
+    --boxshadow: hsl(178, 100%, 50%, .3);
+    --btninset: hsl(215, 52%, 21%);
+    --btncolor: hsl(216, 50%, 16%);
+    --whiteopa: rgba(255, 255, 255, 0.7);
+    --whiteopacity: rgba(255, 255, 255, 0.5);
+    --inputbg: hsla(218, 49%, 8%, 0.452);
+    --footernav: hsl(217, 54%, 11%);
+    --navshadow: hsl(215, 55%, 6%);
+    --navfootershadow2: hsl(215, 52%, 21%);
+    background-image: url('Images/dice-3319359_1920.jpg');
     transition: color 0.5s, background-color 0.5s, box-shadow 0.5s;
 }
 .up {
