@@ -38,6 +38,8 @@
         })
     },
     sectionOneOptions);
+
+    sectionOneObserver.observe(sectionOne);
 // Changed Navigation on Scroll Successfully
 
 // Fade content into Viewport on Scroll
