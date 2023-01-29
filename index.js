@@ -38,7 +38,7 @@
         })
     },
     sectionOneOptions);
-    
+
     sectionOneObserver.observe(sectionOne);
 // Changed Navigation on Scroll Successfully
 
