@@ -7,17 +7,19 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
     <link href="../../Bootstrap/bootstrap-5.0.2-dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="bootstrap-5.0.2-dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="../../Bootstrap/bootstrap-icons-1.9.1/bootstrap-icons.css" rel="stylesheet">
+    <link href="bootstrap-icons-1.9.1/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="index.css">
     <base target="_blank">
     <title>Godwin's Portfolio</title>
 </head>
 <body class="light-theme" id="change-theme">
     <main>
-        <nav class="navbar navbar-expand-md navbar-dark fixed-top">
+        <nav id="nav-change" class="navbar navbar-expand-lg navbar-light fixed-top">
             <div class="container-fluid">
                 <a href="#home" class="navbar-brand">
-                    <span class="first folio name">PORTFOLIO</span>
+                    <span class="folio name">PORTFOLIO</span>
                 </a>
                 <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
                     <span class="navbar-toggler-icon"></span>
@@ -29,7 +31,7 @@
                         <a href="#projects" class="nav-item nav-link" target="_self">Projects</a>
                         <a href="#skil" class="nav-item nav-link" target="_self">Skills</a>
                         <a href="#contactme" class="nav-item nav-link active person" target="_self">Contact Me</a>
-                        <a href="#theme-button" target="_self" class="nav-link nav-item" id="theme-button"><span id="change-icon" class="bi-moon-fill"> Switch Theme</a>
+                        <a href="#theme-button" target="_self" class="nav-link nav-item" id="theme-button"><span id="change-icon" class="bi-moon-fill"></span> Switch Theme</a>
                     </div>
                 </div>
             </div>
@@ -154,8 +156,9 @@
                 <div class="content-text fade-in">
                     <p>Hello, My <span class="first">name</span> is</p>
                     <p class="name">John <span class="first">Godwin</span></p>
-                    <p>I'm a Front End Web Developer and Project Manager with a passion to create clean, interactive and memorable responsive websites.</p>
-                    <p>I'm a very curiouse person when it comes to Tech, I've always wonder how such mind blowing Design, Creativity and Interactive Websites, apps and games are made which led me to <a href="https://www.w3schools.com" class="first">w3school.com</a> were I learned HTML, CSS, Bootstrap and other languages which I use today to build and maintain websites....</p>
+                    <p>I'm a Front-End Web Developer and Project Manager with a passion to create clean, interactive and memorable responsive websites.</p>
+                    <p>I'm a very curiouse person by nature and I've always wonder how such mind blowing designs, interactive and memorable responsive websites, 
+                        Bootstrap and other languages which I use today to build and maintain websites...</p>
                     <p>Can't wait to <span class="first">work</span> with you!</p>
                     <div class="contact">
                         <a href="https://www.instagram.com/_.octagram._"><span class="bi-instagram ico"></span></a>
@@ -197,7 +200,7 @@
                 <div class="roww">
                     <div class="contact-left slide-in from-left">
                         <h1 class="sub-title">Contact Me</h1>
-                        <p><span class="bi-send icop"></span> oamienjoh20034@gmail.com</p>
+                        <p><span class="bi-send icop"></span> <a href="mailto:oamienjoh20034@gmail.com" class="maill">oamienjoh20034@gmail.com</a></p>
                         <p><span class="bi-phone-vibrate icop"></span>+2348141657601</p>
                         <div class="social-icons">
                             <a href="https://www.instagram.com/_.octagram._"><span class="bi-instagram icop"></span></a>
@@ -230,33 +233,54 @@
         <footer>
             <div class="footer-content">
                 <h2>Let's Connect</h2>
-                <p>Hire me</p>
+                <div>
+                    <p>Hire me</p>
                 <p><a class="maill" href="mailto:oamienjoh20034@gmail.com">oamienjoh20034@gmail.com</a></p>
                 <p>+2348141657601</p>
-                <p>Follow Me</p>
+                </div>
+                <div>
+                    <p>Follow Me</p>
                 <a href="https://wa.me/+2348141657601"><span class="bi-whatsapp icoo"></span></a>
                 <a href="https://www.linkedin.com/in/godwin-john-920915206"><span class="bi-linkedin icoo"></span></a>
                 <a href="https://github.com/wariboko65"><span class="bi-github icoo"></span></a>
                 <a href="https://t.me/Gdwin656"><span class="bi-telegram icoo"></span></a>
+                </div>
             </div>
         </footer>
     </main>
     <script>
         // Change Theme
+        let body = document.body;
         let themeButton = document.getElementById("theme-button");
+        let topp = document.querySelector(".top");
+        let navText = document.getElementById("nav-change");
+
+        body.style.backgroundImage = "url('Images/pexels-kanhaiya-sharma-13062570 (2).jpg')";
+        topp.style.backgroundColor = "rgba(0, 0, 0, 0)";
+
         themeButton.addEventListener("click", function() {
             let bodyTheme = document.getElementById("change-theme");
             let themeIcon = document.getElementById("change-icon");
+           
             if (bodyTheme.classList.contains("light-theme")) {
                 bodyTheme.classList.remove("light-theme");
                 bodyTheme.classList.add("dark-theme");
                 themeIcon.classList.remove("bi-moon-fill");
                 themeIcon.classList.add("bi-sun-fill");
+                navText.classList.remove("navbar-light");
+                navText.classList.add("navbar-dark");
+                body.style.backgroundImage = "url('Images/dice-3319359_1920.jpg')";
+                topp.style.backgroundColor = "rgba(0, 0, 0, 0.6)";
+
             } else {
                 bodyTheme.classList.remove("dark-theme");
                 bodyTheme.classList.add("light-theme");
                 themeIcon.classList.remove("bi-sun-fill");
                 themeIcon.classList.add("bi-moon-fill");
+                navText.classList.remove("navbar-dark");
+                navText.classList.add("navbar-light");
+                body.style.backgroundImage = "url('Images/pexels-kanhaiya-sharma-13062570 (2).jpg')";
+                topp.style.backgroundColor = "rgba(0, 0, 0, 0)";
             }
         });
 
@@ -267,7 +291,7 @@
         const sectionOne = document.querySelector(".top");
 
         const sectionOneOptions = {
-            rootMargin: "-200px 0px 0px 0px"
+            rootMargin: "-90% 0px 0px 0px"
         };
 
         const sectionOneObserver = new IntersectionObserver(function(
@@ -285,7 +309,6 @@
         sectionOneOptions);
 
         sectionOneObserver.observe(sectionOne);
-
     </script>
 
     <script>
@@ -345,6 +368,7 @@
         })
       </script>
     <script src="../../Bootstrap/bootstrap-5.0.2-dist/js/bootstrap.min.js"></script>      
+    <script src="bootstrap-5.0.2-dist/js/bootstrap.min.js"></script>      
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
 </body>
 </html>

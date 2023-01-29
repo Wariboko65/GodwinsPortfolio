@@ -1,30 +1,41 @@
 .dark-theme {
     --mainbg: hsl(217, 54%, 11%);
+    --white2: rgb(255, 255, 255);
     --white: rgb(255, 255, 255);
     --cardshadow: hsl(215, 55%, 6%);
     --lblue: hsl(215, 51%, 70%);
-    --cyan: hsl(178, 100%, 50%, .5);
+    --cyan: rgb(42, 143, 139);
+    --cyan2: rgb(42, 143, 139);
     --boxshadow: hsl(178, 100%, 50%, .3);
     --btninset: hsl(215, 52%, 21%);
     --btncolor: hsl(216, 50%, 16%);
     --whiteopa: rgba(255, 255, 255, 0.7);
     --whiteopacity: rgba(255, 255, 255, 0.5);
     --inputbg: hsla(218, 49%, 8%, 0.452);
+    --footernav: hsl(217, 54%, 11%);
+    --navshadow: hsl(215, 55%, 6%);
+    --navfootershadow2: hsl(215, 52%, 21%);
+    transition: color 0.5s, background-color 0.5s, box-shadow 0.5s;
 }
 .light-theme {
-    --mainbg: hsl(217, 54%, 11%);
+    --mainbg: rgb(255, 255, 255);
+    --white2: hsl(217, 54%, 11%);
     --white: rgb(255, 255, 255);
-    --cardshadow: hsl(215, 55%, 6%);
-    --lblue: hsl(215, 51%, 70%);
-    --cyan: hsl(178, 100%, 50%, .5);
-    --boxshadow: hsl(178, 100%, 50%, .3);
-    --btninset: hsl(215, 52%, 21%);
+    --cardshadow: rgba(128, 128, 128, 0.384);
+    --lblue: hsl(217, 54%, 11%);
+    --cyan: hsl(217, 54%, 11%);
+    --cyan2: hsl(263, 55%, 52%); 
+    --boxshadow: hsla(216, 54%, 11%, 0.459);
+    --btninset: rgba(128, 128, 128, 0.432);
     --btncolor: hsl(216, 50%, 16%);
     --whiteopa: rgba(255, 255, 255, 0.7);
-    --whiteopacity: rgba(255, 255, 255, 0.5);
+    --whiteopacity: hsla(216, 54%, 11%, 0.801);
     --inputbg: hsla(218, 49%, 8%, 0.452);
+    --footernav: rgb(255, 255, 255);
+    --navshadow: hsla(215, 55%, 6%, 0.466);
+    --navfootershadow2: rgba(128, 128, 128, 0.568);
+    transition: color 0.5s, background-color 0.5s, box-shadow 0.5s;
 }
-
 .up {
     height: 200px;
     width: 200px;
@@ -34,17 +45,15 @@
     bottom: -35px;
     transform: scale(0.5);
 }
-.aw {
-    transform: rotate(180deg);
-}
 .contact-right {
     position: relative;
 }
-
+nav, .navv {
+    transition: background-color 0.5s ease-in-out, box-shadow 0.5s ease-in-out, color 0.5s ease-in-out backdrop-filter 0.5s ease-in-out;
+}
 .navv {
-    background: var(--mainbg);
-    transition: 0.5s ease-in;
-    box-shadow: 0 5px 15px 0 var(--cardshadow), 0 3px 10px 0 var(--btninset) inset;
+    background: var(--footernav);
+    box-shadow: 0 5px 15px 0 var(--navshadow), 0 3px 10px 0 var(--navfootershadow2) inset;
 }
 .fade-in {
     opacity: 0;
@@ -69,8 +78,9 @@
     transform: translatex(0);
     opacity: 1;
 }
-.contact-content {
-    overflow:hidden;
+
+.nav-link {
+    font-weight: 500;
 }
 html {
     scroll-behavior: smooth;
@@ -83,10 +93,9 @@ body {
     box-sizing: border-box;
     font-family: "segoe ui", arial, sans-serif;
     background: var(--mainbg);
-    background-image: url("Images/PSX_20230101_005827.jpg");
     background-repeat: no-repeat;
     background-size: 100vw 100vh;
-    color: var(--white);
+    color: var(--white2);
 }
 .top {
     padding: 0 30px;
@@ -95,8 +104,8 @@ body {
     justify-content: center;
     height: 100vh;
     position: relative;
-    background-color: rgba(0, 0, 0, 0.5);
     margin-block-end: 50px;
+    transition: background-color 0.5s;
 }
 .arrows {
     width: 60px;
@@ -105,13 +114,17 @@ body {
     bottom: 30px;
     left: 50%;
     margin-inline-start: -30px;
+    transform: scale(0.6);
 }
 .arrows path {
-    stroke: var(--cyan);
+    stroke: var(--cyan2);
     fill: transparent;
     stroke-width: 1px;
     animation: arrow 2s infinite;
     -webkit-animation: arrow 2s infinite;
+}
+.aw {
+    transform: rotate(180deg);
 }
 
 @keyframes arrow {
@@ -142,7 +155,6 @@ body {
 .image {
     width: 100%;
     height: 75%;
-    border-radius: 10px 10px 0 0;
 }
 .name {
     font-size: 40px;
@@ -152,22 +164,32 @@ body {
 .folio {
     font-weight: 700;
     font-family: "Jokerman", Arial, Helvetica, sans-serif;
+    color: var(--cyan2);
+    transition: color 0.5s;
+    cursor: pointer;
 }
 
 .roww {
     position: relative;
+    width:  90%;
+    margin-inline: auto;
 }   
+.contact-content {
+    overflow: hidden;
+}
 
 .ico, .icoo, .icop {
     font-size: 25px;
     margin: 10px;
-    color: var(--white);
+    color: var(--white2);
     transition: 0.3s;
 }
 .contact a:hover .ico {
-    color: var(--cyan);
+    color: var(--cyan2);
 }
-
+.icoo {
+    color: var(--white2);
+}
 .contact a {
     display: inline-block;
     transition: 0.5s;
@@ -176,14 +198,14 @@ body {
     transform: translateY(-5px);
 }
 .icoo:hover {
-    color: var(--mainbg);
+    color: var(--cyan2);
 }
 .contact-bttn {
     margin-block-start: 30px;
 }
 .first {
-    color: var(--cyan);
-    transition: 0.5s;
+    color: var(--cyan2);
+    transition: color 0.5s;
     cursor: pointer;
 }
 .first:hover {
@@ -197,6 +219,7 @@ img {
     text-align: center;
 }
 .pp {
+    height: auto;
     transition: 0.5s ease-in-out;
     cursor: pointer;
 }
@@ -207,8 +230,7 @@ img {
     margin-block-start: 30px;
     border-radius: 20px;
     margin-inline: auto;
-    box-shadow: 0 10px 20px 0 var(--cardshadow),
-                0 20px 30px 0 var(--cardshadow);
+    box-shadow: 0 10px 20px 0 var(--cardshadow);
 }
 .content {
     margin-block-start: 30px;
@@ -236,15 +258,13 @@ img {
     
 }
 .maill {
-    color: var(--white);
     text-decoration: none;
     font-weight: 500;
-    padding: 10px 15px;
+    color: var(--white2);
 }
 .maill:hover {
     box-shadow: 0 5px 15px 0 var(--cardshadow), 0 3px 10px 0 var(--btninset) inset;
-    color: var(--mainbg);
-    border-radius: 20px;
+    color: var(--cyan2)
 }
 .discription {
     padding: 15px;
@@ -253,18 +273,17 @@ img {
     text-align: center;
 }
 .discription a:nth-child(1)  {
-    color: var(--white);
+    color: var(--white2);
     text-decoration: none;
 }
 .discription a:nth-child(2) {
-    color: var(--cyan);
+    color: var(--cyan2);
     text-decoration: none;
 }
 /* Skills Section */
 .skills {
     margin: 0;
     padding: 30px;
-    background: var;
     text-align: center;
     cursor: pointer;
 }
@@ -274,7 +293,7 @@ img {
     transition: 0.5s ease-in-out;
 }
 .edit:hover {
-    scale: 0.9;
+    transform: scale(0.9);
 }
 .fmp {
     display: flex;
@@ -304,20 +323,18 @@ img {
 }
 .edit1 {color: var(--cyan); font-weight: 700;}
 .edit2 {color: var(--whiteopacity);}
-.edit3 {background-color: var(--cyan); box-shadow: 0 5px 15px var(--boxshadow);}
-.edit5 {background-color: var(--cyan); box-shadow: 0 5px 15px var(--boxshadow);}
-.edit7 {background-color: var(--cyan); box-shadow: 0 5px 15px var(--boxshadow);}
+.edit3 {background-color: var(--cyan); box-shadow: 0 5px 15px var(--boxshadow); color: var(--white);}
+.edit5 {background-color: var(--cyan); box-shadow: 0 5px 15px var(--boxshadow); color: var(--white);}
+.edit7 {background-color: var(--cyan); box-shadow: 0 5px 15px var(--boxshadow); color: var(--white);}
 .edit9 {color: var(--whiteopacity);}
-.edit11 {background-color: var(--cyan); box-shadow: 0 5px 15px var(--boxshadow);}
-.edit13 {background-color: var(--cyan); box-shadow: 0 5px 15px var(--boxshadow);}
+.edit11 {background-color: var(--cyan); box-shadow: 0 5px 15px var(--boxshadow); color: var(--white);}
+.edit13 {background-color: var(--cyan); box-shadow: 0 5px 15px var(--boxshadow); color: var(--white);}
 .linkbttn:hover {
-    color: var(--white);
+    color: var(--white2);
 }
-.contact-left {
-    margin-inline-start: 35px;
-}
+
 .cvbtn {
-    color: var(--white);
+    color: var(--white2);
     padding: 10px 20px;
     border-radius: 20px;
     text-decoration: none;
@@ -328,25 +345,23 @@ img {
 .cvbtn:hover {
     color: var(--mainbg);
     background-color: var(--cyan);
-    box-shadow: 0 3px 10px 0 var(--cyan);
+    box-shadow: 0 3px 10px 0 var(--cyan), 0 3px 10px 0 var(--btninset) inset;
 }
 .submitbtn {
     border: none;
     padding: 10px 30px;
-    margin-inline-start: 15px;
     background: transparent;
     margin-block-end: 30px;
 }
 .icop {
-    color: var(--cyan);
+    color: var(--cyan2);
 }
 .social-icons a {
     display: inline-block;
-    color: var(--cyan);
     transition: 0.5s;
 }
 .social-icons a:hover .icop {
-    color: var(--white);
+    color: var(--white2);
     transition: 0.5s;
 }
 .social-icons a:hover {
@@ -354,15 +369,14 @@ img {
 }
 
 .contact-right form {
-    width: 90%;
-    margin-inline-start: 8px;
+    width: 100%;
     margin-block-start: 30px;
 }
 
 
 .design {
     color: var(--lblue);
-    transition: 0.5s;
+    transition: color 0.5s;
     cursor: pointer;
 }
 .design:hover  {
@@ -373,29 +387,31 @@ img {
     font-weight: 700;
     font-family: "jokerman", Arial, Helvetica, sans-serif;
 }
+
 form input, form textarea {
     width: 100%;
     border: none;
     outline: none;
     padding: 15px;
-    margin: 15px;
+    margin: 15px 0;
     font-size: 18px;
     border-radius: 10px;
-    background: transparent;
+    background: var(--mainbg);
     color: var(--lblue);
     font-weight: 500;
     resize: none;
     transition: 0.5s;
-    box-shadow: 0 5px 15px 0 var(--cardshadow), 0 3px 10px 0 var(--btninset) inset;;
+    box-shadow: 0 5px 15px 0 var(--cardshadow), 0 3px 10px 0 var(--btninset) inset;
 }
 
 form input:focus {
-    background: var(--inputbg);
+    background: var(--mainbg);
     transform: translatey(-10px);
-    box-shadow: 0 30px 80px 0 var(--cardshadow), 0 20px 50px 0 var(--btninset) inset;
+    box-shadow: 0 30px 80px 0 var(--cardshadow), 0 10px 20px 0 var(--btninset) inset;
+    z-index: 4;
 }
 form textarea:focus {
-    background: var(--inputbg);
+    background: var(--mainbg);
     transform: translateY(-10px);
     box-shadow: 0 30px 80px 0 var(--cardshadow), 0 20px 50px 0 var(--btninset) inset;
 }
@@ -405,21 +421,16 @@ form textarea:focus {
     margin-block-start: -20px;
     display: block;
 }
-/* footer > div {
-    display: flex;
-} */
-footer {
-    background: var(--cardshadow);
-    text-align: center;
-    box-shadow: 0 5px 15px 0 var(--cardshadow), 0 3px 10px 0 var(--btninset) inset;
 
-    padding: 20px;            
+footer {
+    background: var(--footernav);
+    text-align: center;
+    box-shadow: 0 5px 15px 0 var(--cardshadow), 0 3px 10px 0 var(--navfootershadow2) inset;
+    padding: 20px;    
+    color: var(--white2);
 }
 
 @media screen and (min-width: 700px) {
-     body {
-        background-image: url("Images/dice-3319359_1920.jpg");
-    }
     .fmp {
         display: grid;
         grid-template-columns: auto auto;
@@ -468,24 +479,6 @@ footer {
     .content-text {
         flex: 70%;
     }
-    .navbar-nav a {
-        position: relative;
-        margin: 20px;
-    }
-    .navbar-nav a::after {
-        content: "";
-        width: 0;
-        height: 3px;
-        background: var(--cyan);
-        position: absolute;
-        left: 50%;
-        bottom: -1px;
-        transition: 0.5s;
-    }
-    .navbar-nav a:hover::after {
-        width: 100%;
-        left: 0;
-    }
 
     .profile-image {
         flex: 30%
@@ -495,7 +488,6 @@ footer {
     }
     .image {
         overflow: hidden;
-        border-radius: 0;
     }
     .text {
         display: flex;
@@ -508,11 +500,11 @@ footer {
     .fmp {
         display: grid;
         grid-template-columns: auto auto auto;
+        overflow: hidden;
     }
     .up {
         bottom: -50px;
     }
-
     .text::after {
         content: "";
         position: absolute;
@@ -529,7 +521,7 @@ footer {
         flex-direction: column-reverse;
         position: relative;
         height: 280px;
-        transition: 0.5s ease-in-out;
+        transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
     }
     .image {
         border-radius: 10px 10px 0 0;
@@ -548,6 +540,7 @@ footer {
     }
     .project:hover {
         transform: translatey(-20px);
+        box-shadow: 0 25px 80px 0 var(--cardshadow), 0 -25px 80px 0 var(--cardshadow), 0 10px 20px 0 var(--btninset) inset;
         cursor: pointer;
     }
     .project:hover .linkbttn {
@@ -579,7 +572,7 @@ footer {
         width: 230px;
         border-radius: 0 0 0 0;
         box-shadow: 0 10px 20px 0 var(--cardshadow),
-        0 20px 30px 0 var(--cardshadow);;
+        0 20px 30px 0 var(--cardshadow);
     }
     .content {
         height: 440px;
@@ -589,36 +582,58 @@ footer {
     }
     .linkbttn {
         opacity: 0;
-        transition: 0.5s;
+        transition: color 0.5s, box-shadow 0.5s, background-color 0.5s;
         background: var(--btncolor);
         color: var(--whiteopa);
-        box-shadow: 0 0 0 0;
+        box-shadow: 0 3px 10px 0 var(--cyan) inset;
         z-index: 1;
     }
     .tn {
         opacity: 1;
     }
     .linkbttn:hover {
-        background: var(--mainbg);
-        box-shadow: 0 5px 15px 0 var(--cardshadow), 0 3px 10px 0 var(--btninset) inset;
+        box-shadow: 0 3px 10px 0 var(--cardshadow), 0 3px 10px 0 var(--btninset) inset;
+        color: var(--white);
     }
     .contact-left {
-        margin-inline-start: 50px;
-        padding: 40px 0;
-        flex: 35%;
+        flex: 30%;
+    }
+    .navbar-nav a {
+        position: relative;
+        margin: 20px;
+    }
+    .navbar-nav a::after {
+        content: "";
+        width: 0;
+        height: 3px;
+        background: var(--cyan2);
+        position: absolute;
+        left: 50%;
+        bottom: -1px;
+        transition: 0.5s;
+    }
+    .navbar-nav a:hover::after {
+        width: 100%;
+        left: 0;
     }
     .roww {
         display: flex;
         flex-direction: row;
-        height: 550px;
-        align-items: center;
-        margin-block-start: -50px;
+        align-items: flex-start;
+        justify-content: space-around;
     }
     .contact-right {
-        flex: 60%;
+        flex: 70%;
     }
     .contact-right form {
-        width: 90%;
+        width: 100%;
+        margin: 0;
+    }
+    .footer-content {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
     }
 }
 @media screen and (min-width: 2000px) {
