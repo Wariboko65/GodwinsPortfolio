@@ -127,6 +127,7 @@
                 navTextChanger.classList.add("navbar-light");
             } else {
                 navTextChanger.classList.add("navbar-dark");
+                darkBackground.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
             }
         });
 // Change, Store and Retrieve Theme
