@@ -127,8 +127,10 @@
         window.addEventListener("load", () => {
             if (storedValues === "light") {
                 navTextChanger.classList.add("navbar-light");
+                themeIcon.classList.add("bi-moon-fill");
             } else {
                 navTextChanger.classList.add("navbar-dark");
+                themeIcon.classList.add("bi-sun-fill");
                 darkBackground.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
             }
         });
