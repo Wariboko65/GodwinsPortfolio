@@ -51,7 +51,8 @@
     position: relative;
 }
 nav, .navv {
-    transition: background-color 0.5s ease-in-out, box-shadow 0.5s ease-in-out, color 0.5s ease-in-out backdrop-filter 0.5s ease-in-out;
+    padding: 0;
+    transition: background-color 0.5s ease-in-out, box-shadow 0.5s ease-in-out, color 0.5s ease-in-out;
 }
 .navv {
     background: var(--footernav);
@@ -161,11 +162,9 @@ body {
 .name {
     font-size: 40px;
     font-weight: 700;
-    font-family: "Ravie", arial, sans-serif;
 }
 .folio {
     font-weight: 700;
-    font-family: "Jokerman", Arial, Helvetica, sans-serif;
     color: var(--cyan2);
     transition: color 0.5s;
     cursor: pointer;
@@ -174,6 +173,7 @@ body {
 .roww {
     position: relative;
     width:  90%;
+    margin-block-end: 50px;
     margin-inline: auto;
 }   
 .contact-content {
@@ -184,7 +184,7 @@ body {
     font-size: 25px;
     margin: 10px;
     color: var(--white2);
-    transition: 0.3s;
+    transition: 0.2s;
 }
 .contact a:hover .ico {
     color: var(--cyan2);
@@ -220,18 +220,19 @@ img {
 .main-projects > h2 {
     text-align: center;
 }
-.pp {
-    height: auto;
-    transition: 0.5s ease-in-out;
-    cursor: pointer;
+.main-projects {
+    margin-block-end: 100px;
 }
 .profile-image {
     width: 60%;
-    overflow: hidden;
+    height: auto;
     margin-block-end: 10px;
     margin-block-start: 30px;
     border-radius: 20px;
+    overflow: hidden;
+    cursor: pointer;
     margin-inline: auto;
+    transition: 0.5s;
     box-shadow: 0 10px 20px 0 var(--cardshadow);
 }
 .content {
@@ -245,24 +246,25 @@ img {
 .content-text p:nth-child(4) {
     color: var(--whiteopacity);
 }
+.pp {
+    transition: 0.5s;
+}
 .profile-image:hover .pp {
-    transform: scale(1.2);
+    transform: scale(1.15);
 }
 .project {
     position: relative;
-    min-height: auto;
     width: 90%;
     min-width: 300px;
     box-shadow: 0 3px 15px 0 var(--cardshadow);
     border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    
+    margin-inline: auto;
+    margin-block-end: 20px;
 }
 .maill {
     text-decoration: none;
-    font-weight: 500;
     color: var(--white2);
+    font-weight: 500;
 }
 .maill:hover {
     box-shadow: 0 5px 15px 0 var(--cardshadow), 0 3px 10px 0 var(--btninset) inset;
@@ -278,16 +280,21 @@ img {
     color: var(--white2);
     text-decoration: none;
 }
+.discription a:nth-child(2):hover, .discription a:nth-child(1):hover {
+    box-shadow: 0 5px 15px 0 var(--cardshadow), 0 3px 10px 0 var(--btninset) inset;
+}
 .discription a:nth-child(2) {
     color: var(--cyan2);
     text-decoration: none;
 }
-/* Skills Section */
 .skills {
     margin: 0;
     padding: 30px;
     text-align: center;
+    overflow: hidden;
     cursor: pointer;
+    margin-block-start: 100px;
+    margin-block-end: 50px;
 }
 .edit {
     box-shadow: 0 5px 15px 0 var(--cardshadow), 0 3px 10px 0 var(--btninset) inset;
@@ -297,13 +304,7 @@ img {
 .edit:hover {
     transform: scale(0.9);
 }
-.fmp {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
-}
+
 .text {
     display: flex;
     flex-direction: column;
@@ -324,13 +325,7 @@ img {
     transition: 0.5s;
 }
 .edit1 {color: var(--cyan); font-weight: 700;}
-.edit2 {color: var(--whiteopacity);}
-.edit3 {background-color: var(--cyan); box-shadow: 0 5px 15px var(--boxshadow); color: var(--white);}
-.edit5 {background-color: var(--cyan); box-shadow: 0 5px 15px var(--boxshadow); color: var(--white);}
-.edit7 {background-color: var(--cyan); box-shadow: 0 5px 15px var(--boxshadow); color: var(--white);}
-.edit9 {color: var(--whiteopacity);}
-.edit11 {background-color: var(--cyan); box-shadow: 0 5px 15px var(--boxshadow); color: var(--white);}
-.edit13 {background-color: var(--cyan); box-shadow: 0 5px 15px var(--boxshadow); color: var(--white);}
+.edit3, .edit5, .edit7, .edit11, .edit13, .theme-changer {background-color: var(--cyan); box-shadow: 0 5px 15px var(--boxshadow); color: var(--white);}
 .linkbttn:hover {
     color: var(--white2);
 }
@@ -342,6 +337,7 @@ img {
     text-decoration: none;
     font-weight: 500;
     transition: 0.5s;
+    user-select: none;
     box-shadow: 0 5px 15px 0 var(--cardshadow), 0 3px 10px 0 var(--btninset) inset;
 }
 .cvbtn:hover {
@@ -354,9 +350,15 @@ img {
     padding: 10px 30px;
     background: transparent;
     margin-block-end: 30px;
+    user-select: none;
 }
 .icop {
     color: var(--cyan2);
+}
+.contain {
+    object-fit: cover;
+    height: 300px;
+    object-position: top;
 }
 .social-icons a {
     display: inline-block;
@@ -432,17 +434,35 @@ footer {
     color: var(--white2);
 }
 
+.theme-changer {
+    content: "";
+    position: fixed;
+    overflow: hidden;
+    bottom: 20px;
+    right: 20px;
+    height: 40px;
+    width: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--cyan);
+    border-radius: 50%;
+    cursor: pointer;
+    
+}
+
 @media screen and (min-width: 700px) {
     .fmp {
         display: grid;
         grid-template-columns: auto auto;
         padding: 20px;
+        column-gap: 20px;
+        row-gap: 10px;
     }    
     .project {
+        width: 100%;
         display: flex;
         flex-direction: column;
-        height: 400px;
-        width: 100%;
     }
     .up {
         right: -20px;
@@ -460,49 +480,28 @@ footer {
     }
     .skills-list {
         display: grid;
-        grid-template-columns: auto auto;
-        column-gap: 20px;
+        grid-template-columns: 49% 49%;
+        gap: max(20px, 2%);
     }
     .edit1 {grid-column: 1 / 3;}
-    .edit2 {grid-column: 1 / 2;}
-    .edit3 {grid-column: 1 / 2;}
-    .edit4 {grid-column: 1 / 2;}
-    .edit5 {grid-column: 1 / 2;}
-    .edit6 {grid-column: 1 / 2;}
-    .edit7 {grid-column: 1 / 2;}
-    .edit8 {grid-column: 1 / 2;}
-    .edit9 {grid-area: 2 / 2 / 3 / 2;}
-    .edit10 {grid-area: 3 / 2 / 3 /3;}
-    .edit11 {grid-area: 4 / 2 / 5 /3;}
-    .edit12 {grid-area: 5 / 2 / 6 /3;}
-    .edit13 {grid-area: 6 / 2 / 7 /3;}
-    .edit14 {grid-area: 7 / 2 / 8 /3;}
 
     .content-text {
         flex: 70%;
     }
-
     .profile-image {
         flex: 30%
-    }
-    .contain {
-        object-fit: cover;
     }
     .image {
         overflow: hidden;
     }
     .text {
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        padding: 10px 10px;
+        justify-content: center;
     }
 }
 @media screen and (min-width: 1000px) {
     .fmp {
         display: grid;
         grid-template-columns: auto auto auto;
-        overflow: hidden;
     }
     .up {
         bottom: -50px;
@@ -515,7 +514,7 @@ footer {
         height: 100%;
         background-image: linear-gradient(to top, var(--cyan), purple);
         border-radius: 10px 10px 0 0;
-        opacity: 0;   
+        opacity: 0;                          
         transition: 0.5s ease-in-out;
     }
     .project {
@@ -597,9 +596,6 @@ footer {
         box-shadow: 0 3px 10px 0 var(--cardshadow), 0 3px 10px 0 var(--btninset) inset;
         color: var(--white);
     }
-    .contact-left {
-        flex: 30%;
-    }
     .navbar-nav a {
         position: relative;
         margin: 20px;
@@ -621,15 +617,11 @@ footer {
     .roww {
         display: flex;
         flex-direction: row;
-        align-items: flex-start;
-        justify-content: space-around;
-    }
-    .contact-right {
-        flex: 70%;
+        gap: 100px;        
     }
     .contact-right form {
-        width: 100%;
         margin: 0;
+        width: 70%;
     }
     .footer-content {
         display: flex;
