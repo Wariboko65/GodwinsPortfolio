@@ -52,7 +52,7 @@
 }
 nav, .navv {
     padding: 0;
-    transition: background-color 0.5s ease-in-out, box-shadow 0.5s ease-in-out, color 0.5s ease-in-out backdrop-filter 0.5s ease-in-out;
+    transition: background-color 0.5s ease-in-out, box-shadow 0.5s ease-in-out, color 0.5s ease-in-out;
 }
 .navv {
     background: var(--footernav);
@@ -173,6 +173,7 @@ body {
 .roww {
     position: relative;
     width:  90%;
+    margin-block-end: 50px;
     margin-inline: auto;
 }   
 .contact-content {
@@ -183,7 +184,7 @@ body {
     font-size: 25px;
     margin: 10px;
     color: var(--white2);
-    transition: 0.3s;
+    transition: 0.2s;
 }
 .contact a:hover .ico {
     color: var(--cyan2);
@@ -219,7 +220,9 @@ img {
 .main-projects > h2 {
     text-align: center;
 }
-
+.main-projects {
+    margin-block-end: 100px;
+}
 .profile-image {
     width: 60%;
     height: auto;
@@ -227,6 +230,7 @@ img {
     margin-block-start: 30px;
     border-radius: 20px;
     overflow: hidden;
+    cursor: pointer;
     margin-inline: auto;
     transition: 0.5s;
     box-shadow: 0 10px 20px 0 var(--cardshadow);
@@ -242,19 +246,20 @@ img {
 .content-text p:nth-child(4) {
     color: var(--whiteopacity);
 }
+.pp {
+    transition: 0.5s;
+}
 .profile-image:hover .pp {
     transform: scale(1.15);
 }
 .project {
     position: relative;
-    min-height: auto;
     width: 90%;
     min-width: 300px;
     box-shadow: 0 3px 15px 0 var(--cardshadow);
     border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    
+    margin-inline: auto;
+    margin-block-end: 20px;
 }
 .maill {
     text-decoration: none;
@@ -275,6 +280,9 @@ img {
     color: var(--white2);
     text-decoration: none;
 }
+.discription a:nth-child(2):hover, .discription a:nth-child(1):hover {
+    box-shadow: 0 5px 15px 0 var(--cardshadow), 0 3px 10px 0 var(--btninset) inset;
+}
 .discription a:nth-child(2) {
     color: var(--cyan2);
     text-decoration: none;
@@ -285,6 +293,8 @@ img {
     text-align: center;
     overflow: hidden;
     cursor: pointer;
+    margin-block-start: 100px;
+    margin-block-end: 50px;
 }
 .edit {
     box-shadow: 0 5px 15px 0 var(--cardshadow), 0 3px 10px 0 var(--btninset) inset;
@@ -294,13 +304,7 @@ img {
 .edit:hover {
     transform: scale(0.9);
 }
-.fmp {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
-}
+
 .text {
     display: flex;
     flex-direction: column;
@@ -350,6 +354,11 @@ img {
 }
 .icop {
     color: var(--cyan2);
+}
+.contain {
+    object-fit: cover;
+    height: 300px;
+    object-position: top;
 }
 .social-icons a {
     display: inline-block;
@@ -447,12 +456,13 @@ footer {
         display: grid;
         grid-template-columns: auto auto;
         padding: 20px;
+        column-gap: 20px;
+        row-gap: 10px;
     }    
     .project {
+        width: 100%;
         display: flex;
         flex-direction: column;
-        height: 400px;
-        width: 100%;
     }
     .up {
         right: -20px;
@@ -470,39 +480,28 @@ footer {
     }
     .skills-list {
         display: grid;
-        grid-template-columns: 48% 48%;
-        margin-block-start: 100px;
-        margin-block-end: 50px;
-        box-sizing: border-box;
-        gap: 20px;
+        grid-template-columns: 49% 49%;
+        gap: max(20px, 2%);
     }
     .edit1 {grid-column: 1 / 3;}
 
     .content-text {
         flex: 70%;
     }
-
     .profile-image {
         flex: 30%
-    }
-    .contain {
-        object-fit: cover;
     }
     .image {
         overflow: hidden;
     }
     .text {
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        padding: 10px 10px;
+        justify-content: center;
     }
 }
 @media screen and (min-width: 1000px) {
     .fmp {
         display: grid;
         grid-template-columns: auto auto auto;
-        overflow: hidden;
     }
     .up {
         bottom: -50px;
@@ -515,7 +514,7 @@ footer {
         height: 100%;
         background-image: linear-gradient(to top, var(--cyan), purple);
         border-radius: 10px 10px 0 0;
-        opacity: 0;   
+        opacity: 0;                          
         transition: 0.5s ease-in-out;
     }
     .project {
@@ -618,9 +617,7 @@ footer {
     .roww {
         display: flex;
         flex-direction: row;
-        gap: 100px;
-        margin-block-end: 50px;
-        
+        gap: 100px;        
     }
     .contact-right form {
         margin: 0;
