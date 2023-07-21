@@ -325,7 +325,7 @@ img {
     transition: 0.5s;
 }
 .edit1 {color: var(--cyan); font-weight: 700;}
-.edit2, .theme-changer {background-color: var(--cyan); box-shadow: 0 5px 15px var(--boxshadow); color: var(--white);}
+.edit2 {background-color: var(--cyan); box-shadow: 0 5px 15px var(--boxshadow); color: var(--white);}
 .linkbttn:hover {
     color: var(--white2);
 }
@@ -448,7 +448,9 @@ footer {
     background: var(--cyan);
     border-radius: 50%;
     cursor: pointer;
-    
+    background-color: var(--cyan); 
+    box-shadow: 0 0 15px var(--boxshadow); 
+    color: var(--white);
 }
 
 @media screen and (min-width: 700px) {
