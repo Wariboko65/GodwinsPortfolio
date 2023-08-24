@@ -15,7 +15,7 @@
     --footernav: rgb(255, 255, 255);
     --navshadow: hsla(215, 55%, 6%, 0.466);
     --navfootershadow2: rgba(128, 128, 128, 0.568);
-    background-image: url('Images/69W3UT.jpg');
+    background-image: url('Images/1668944.jpg');
     transition: color 0.5s, background-color 0.5s, box-shadow 0.5s;
 }
 .dark {
