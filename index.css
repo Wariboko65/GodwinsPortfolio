@@ -15,7 +15,7 @@
     --footernav: rgb(255, 255, 255);
     --navshadow: hsla(215, 55%, 6%, 0.466);
     --navfootershadow2: rgba(128, 128, 128, 0.568);
-    background-image: url('Images/milad-fakurian-WKk3IypKo50-unsplash.jpg');
+    background-image: url('Images/2084297.jpg');
     transition: color 0.5s, background-color 0.5s, box-shadow 0.5s;
 }
 .dark {
@@ -81,7 +81,10 @@ nav, .navv {
     transform: translatex(0);
     opacity: 1;
 }
-
+[alt="logo"] {
+    height: 100px;
+    width: 100px
+}
 .nav-link {
     font-weight: 500;
 }
@@ -94,7 +97,7 @@ body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: "segoe ui", arial, sans-serif;
+    font-family: "Roboto", arial, sans-serif;
     background: var(--mainbg);
     background-repeat: no-repeat;
     background-size: 100vw 100vh;
@@ -225,7 +228,7 @@ img {
     text-align: center;
 }
 .profile-image {
-    width: 60%;
+    width: 80%;
     height: auto;
     margin-block-end: 10px;
     margin-block-start: 30px;
@@ -246,6 +249,7 @@ img {
 }
 .content-text p:nth-child(4) {
     color: var(--whiteopacity);
+    
 }
 .pp {
     transition: 0.5s;
@@ -387,9 +391,9 @@ img {
     color: var(--cyan);
 }
 .big {
-    font-size: 1.57em;
+    font-size: 2em;
     font-weight: 700;
-    font-family: "jokerman", Arial, Helvetica, sans-serif;
+    font-family: "Dancing Script", cursive;
 }
 
 form input, form textarea {
@@ -509,6 +513,19 @@ footer {
         display: grid;
         grid-template-columns: auto auto auto;
     }
+    .skills {
+        width: 80%;
+        margin-inline: auto;
+    }
+    .top-content {
+        width: 50%;
+        text-align: center;
+        margin-inline: auto;
+    }
+    .top-content > p:nth-child(3) {
+        margin-block-start: 25px;
+        margin-block-end: 40px;
+    }
     .up {
         bottom: -50px;
     }
@@ -572,20 +589,16 @@ footer {
         align-items: center;
     }
     .profile-image {
-        margin-block-start: 15px;
-        box-shadow: 0 15px 30px 0 var(--cardshadow) ;
+        height: 450px;
     }
     .pp {
-        width: 230px;
-        border-radius: 0 0 0 0;
-        box-shadow: 0 10px 20px 0 var(--cardshadow),
-        0 20px 30px 0 var(--cardshadow);
+        height: 450px;
+        object-fit: cover;
     }
-    .content {
-        height: 440px;
-    }
+   
     .content-text {
-        margin-inline: 30px;
+        margin-inline-start: 80px;
+        padding: 20px;
     }
     .linkbttn {
         opacity: 0;
@@ -602,6 +615,7 @@ footer {
         box-shadow: 0 3px 10px 0 var(--cardshadow), 0 3px 10px 0 var(--btninset) inset;
         color: var(--white);
     }
+
     .navbar-nav a {
         position: relative;
         margin: 20px;
