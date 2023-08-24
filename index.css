@@ -117,6 +117,9 @@ body {
     margin-block-end: 50px;
     transition: background-color 0.5s;
 }
+.top-content {
+    text-align: center;
+}
 .arrows {
     width: 60px;
     height: 70px;
@@ -519,7 +522,6 @@ footer {
     }
     .top-content {
         width: 50%;
-        text-align: center;
         margin-inline: auto;
     }
     .top-content > p:nth-child(3) {
