@@ -141,8 +141,8 @@ body {
     stroke: var(--cyan2);
     fill: transparent;
     stroke-width: 1px;
-    animation: arrow 2s infinite;
     -webkit-animation: arrow 2s infinite;
+    animation: arrow 2s infinite;
 }
 .aw {
     transform: rotate(180deg);
@@ -162,16 +162,16 @@ body {
     100% {opacity: 0;}
 }
 .arrows path.a1 {
-    animation-delay: -1s;
     -webkit-animation-delay: -1s;
+    animation-delay: -1s;
 }
 .arrows path.a2 {
-    animation-delay: -0.5s;
     -webkit-animation-delay: -0.5s;
+    animation-delay: -0.5s;
 }
 .arrows path.a3 {
-    animation-delay: 0s;
     -webkit-animation-delay: 0s;
+    animation-delay: 0s;
 }
 .image {
     width: 100%;
@@ -351,6 +351,7 @@ img {
     text-decoration: none;
     font-weight: 500;
     transition: 0.5s;
+    -webkit-user-select: none;
     user-select: none;
     box-shadow: 0 5px 15px 0 var(--cardshadow), 0 3px 10px 0 var(--btninset) inset;
 }
@@ -364,6 +365,7 @@ img {
     padding: 10px 30px;
     background: transparent;
     margin-block-end: 30px;
+    -webkit-user-select: none;
     user-select: none;
 }
 .icop {
