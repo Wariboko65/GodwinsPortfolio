@@ -16,6 +16,8 @@
     --navshadow: hsla(215, 55%, 6%, 0.466);
     --navfootershadow2: rgba(128, 128, 128, 0.568);
     --background-image: url('Images/2084267.jpg');
+    --size: cover;
+    --topB: transparent;
     transition: color 0.5s, background-color 0.5s, box-shadow 0.5s;
 }
 .dark {
@@ -35,6 +37,8 @@
     --footernav: hsl(217, 54%, 11%);
     --navshadow: hsl(215, 55%, 6%);
     --navfootershadow2: hsl(215, 52%, 21%);
+    --size: contain;
+    --topB: rgba(0, 0, 0, 0.4);
     --background-image: url('Images/dice-3319359_1920.jpg');
     transition: color 0.5s, background-color 0.5s, box-shadow 0.5s;
 }
@@ -116,7 +120,6 @@ body {
     flex-direction: column;
     background-image: var(--background-image);
     background-repeat: no-repeat;
-    background-size: cover;
     justify-content: center;
     height: 100vh;
     height: 100dvh;
@@ -124,8 +127,16 @@ body {
     margin-block-end: 50px;
     transition: background-color 0.5s;
 }
+.top::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--topB);
+    z-index: 0;
+}
 .top-content {
     text-align: center;
+    z-index: 2;
 }
 .top-content > p:nth-child(3) {
     margin-block-start: 25px;

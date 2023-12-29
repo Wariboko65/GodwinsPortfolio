@@ -79,7 +79,6 @@
 // Change, Store and Retrieve Theme
     const toggleButton = document.querySelector("#light-dark-toggle");
     let imagex = document.body;
-    let darkBackground = document.querySelector(".top");
     let themeIcon = document.getElementById("change-icon");
     let navText = document.getElementById("nav-change");
 
@@ -95,7 +94,6 @@
                 themeIcon.classList.remove("bi-moon-fill");
                 navText.classList.add("navbar-dark");
                 navText.classList.remove("navbar-light");
-                darkBackground.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
             } else {
                 localStorage.setItem("theme", "light");
                 document.body.classList.add("light");
@@ -104,7 +102,6 @@
                 themeIcon.classList.remove("bi-sun-fill");
                 navText.classList.add("navbar-light");
                 navText.classList.remove("navbar-dark");
-                darkBackground.style.backgroundColor = "rgba(0, 0, 0, 0)";
             }
         }
 
@@ -131,7 +128,6 @@
             } else {
                 navTextChanger.classList.add("navbar-dark");
                 themeIcon.classList.add("bi-sun-fill");
-                darkBackground.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
             }
         });
 // Change, Store and Retrieve Theme
