@@ -363,20 +363,16 @@ img {
 }
 
 .tools {
-    margin: 20px;
-}
-.tools img {
-    width: 40px;
-    object-fit: contain;
+    margin-block: 15px;
 }
 .tools span {
-    padding: 20px;
-    /* background: var(--cyan2); */
+    padding: 8px 26px;
+    background: var(--cyan2);
     color: var(--white);
-    /* box-shadow: 0 5px 20px 0 var(--boxshadow); */
+    box-shadow: 0 5px 20px 0 var(--boxshadow);
     font-size: 12px;
-    /* border-radius: 50px; */
-    /* margin: 10px; */
+    border-radius: 20px;
+    margin-inline-end: 8px;
 }
 .cvbtn {
     color: var(--white2);
