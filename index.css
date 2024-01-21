@@ -38,7 +38,7 @@
     --navshadow: hsl(215, 55%, 6%);
     --navfootershadow2: hsl(215, 52%, 21%);
     --size: contain;
-    --topB: rgba(0, 0, 0, 0.4);
+    --topB: rgba(0, 0, 0, 0.7);
     --background-image: url('Images/dice-3319359_1920.jpg');
     transition: color 0.5s, background-color 0.5s, box-shadow 0.5s;
 }
