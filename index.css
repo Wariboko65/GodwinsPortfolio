@@ -116,7 +116,6 @@ body {
 .top {
     padding: 0 30px;
     display: flex;
-    top: 0;
     flex-direction: column;
     background-image: var(--background-image);
     background-size: cover;
@@ -131,7 +130,10 @@ body {
 .top::after {
     content: '';
     position: absolute;
-    inset: 0;
+    height: 100%;
+    width: 100%;
+    left: 0;
+    top: 0;
     background: var(--topB);
     z-index: 0;
 }
