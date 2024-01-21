@@ -138,7 +138,7 @@ body {
     z-index: 0;
 }
 .top-content {
-    text-align: center;
+    text-align: left;
     z-index: 2;
 }
 .top-content > p:nth-child(3) {
@@ -572,8 +572,8 @@ footer {
         margin-inline: auto;
     }
     .top-content {
-        width: 50%;
-        margin-inline: auto;
+        width: 70%;
+        margin-inline: 10%;
     }
     .up {
         bottom: -50px;
