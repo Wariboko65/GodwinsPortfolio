@@ -103,11 +103,13 @@ html {
     scroll-behavior: smooth;
     scroll-padding-top: 90px;
 }
-
+* {
+    box-sizing: border-box;
+}
 body {
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
+    line-height: 1.5;
     font-family: "Roboto", arial, sans-serif;
     background: var(--mainbg);
     color: var(--white2);
