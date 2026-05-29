@@ -143,6 +143,18 @@ body {
 .top-content {
     text-align: left;
     z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.hero-img-con {
+    overflow: hidden;
+    width: 100%;
+}
+.hero-img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
 }
 .top-content > p:nth-child(3) {
     margin-block-start: 25px;
@@ -486,7 +498,12 @@ footer {
         margin-inline: auto;
         width: 90%;
     }    
-
+   .top-content {
+     flex-direction: row;
+   }
+   .hero-img-con {
+    width: 300px;
+   }
     .main-projects {
         margin-block-end: 100px;
     }
