@@ -143,8 +143,8 @@ body {
 .top-content {
     text-align: left;
     z-index: 2;
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1fr;
     gap: 15px;
 }
 .hero-img-con {
@@ -499,7 +499,7 @@ footer {
         width: 90%;
     }    
    .top-content {
-     flex-direction: row;
+    grid-template-columns: 1fr 1fr;
    }
    .hero-img-con {
     width: 300px;
