@@ -119,7 +119,7 @@ body {
     color: var(--cyan2)
 }
 .top {
-    padding: 120px 30px 80px 30px;
+    padding: 140px 30px 80px 30px;
     display: flex;
     flex-direction: column;
     background-image: var(--background-image);
@@ -146,11 +146,15 @@ body {
     flex-direction: column;
     justify-content: space-between;
     align-items: space-around;
-    /* gap: 50px; */
+    gap: 50px;
     z-index: 2;
 } 
 #p {
     width: 100%;
+    margin-inline: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .top-content > p:nth-child(3) {
     margin-block-start: 25px;
