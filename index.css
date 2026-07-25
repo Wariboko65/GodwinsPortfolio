@@ -1,47 +1,53 @@
-.light {
-    --mainbg: rgb(255, 255, 255);
-    --white2: hsl(217, 54%, 11%);
-    --white: rgb(255, 255, 255);
-    --cardshadow: rgba(128, 128, 128, 0.384);
-    --lblue: hsl(217, 54%, 11%);
-    --cyan: hsl(217, 54%, 11%);
-    --cyan2: hsl(263, 55%, 52%); 
-    --boxshadow: hsla(216, 54%, 11%, 0.459);
-    --btninset: rgba(128, 128, 128, 0.432);
-    --btncolor: hsl(216, 50%, 16%);
-    --whiteopa: rgba(255, 255, 255, 0.7);
-    --whiteopacity: hsla(216, 54%, 11%, 0.801);
-    --inputbg: hsla(218, 49%, 8%, 0.452);
-    --footernav: rgb(255, 255, 255);
-    --navshadow: hsla(215, 55%, 6%, 0.466);
-    --navfootershadow2: rgba(128, 128, 128, 0.568);
-    --background-image: url('Images/2084267.jpg');
-    --size: cover;
-    --topB: transparent;
-    transition: color 0.5s, background-color 0.5s, box-shadow 0.5s;
+@media (prefers-color-scheme: light) {
+    :root {
+        --mainbg: rgb(255, 255, 255);
+        --white2: hsl(217, 54%, 11%);
+        --white: rgb(255, 255, 255);
+        --cardshadow: rgba(128, 128, 128, 0.384);
+        --lblue: hsl(217, 54%, 11%);
+        --cyan: hsl(217, 54%, 11%);
+        --cyan2: hsl(263, 55%, 52%); 
+        --boxshadow: hsla(216, 54%, 11%, 0.459);
+        --btninset: rgba(128, 128, 128, 0.432);
+        --btncolor: hsl(216, 50%, 16%);
+        --whiteopa: rgba(255, 255, 255, 0.7);
+        --whiteopacity: hsla(216, 54%, 11%, 0.801);
+        --inputbg: hsla(218, 49%, 8%, 0.452);
+        --footernav: rgb(255, 255, 255);
+        --navshadow: hsla(215, 55%, 6%, 0.466);
+        --navfootershadow2: rgba(128, 128, 128, 0.568);
+        --background-image: url('Images/2084267.jpg');
+        --size: cover;
+        --topB: transparent;
+        transition: color 0.5s, background-color 0.5s, box-shadow 0.5s;
+    }
 }
-.dark {
-    --mainbg: hsl(217, 54%, 11%);
-    --white2: rgb(255, 255, 255);
-    --white: rgb(255, 255, 255);
-    --cardshadow: hsl(215, 55%, 6%);
-    --lblue: hsl(215, 51%, 70%);
-    --cyan: rgb(42, 143, 139);
-    --cyan2: rgb(42, 143, 139);
-    --boxshadow: hsl(178, 100%, 50%, .3);
-    --btninset: hsl(215, 52%, 21%);
-    --btncolor: hsl(216, 50%, 16%);
-    --whiteopa: rgba(255, 255, 255, 0.7);
-    --whiteopacity: rgba(255, 255, 255, 0.5);
-    --inputbg: hsla(218, 49%, 8%, 0.452);
-    --footernav: hsl(217, 54%, 11%);
-    --navshadow: hsl(215, 55%, 6%);
-    --navfootershadow2: hsl(215, 52%, 21%);
-    --size: contain;
-    --topB: rgba(0, 0, 0, 0.7);
-    --background-image: url('Images/dice-3319359_1920.jpg');
-    transition: color 0.5s, background-color 0.5s, box-shadow 0.5s;
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --mainbg: hsl(217, 54%, 11%);
+        --white2: rgb(255, 255, 255);
+        --white: rgb(255, 255, 255);
+        --cardshadow: hsl(215, 55%, 6%);
+        --lblue: hsl(215, 51%, 70%);
+        --cyan: rgb(42, 143, 139);
+        --cyan2: rgb(42, 143, 139);
+        --boxshadow: hsl(178, 100%, 50%, .3);
+        --btninset: hsl(215, 52%, 21%);
+        --btncolor: hsl(216, 50%, 16%);
+        --whiteopa: rgba(255, 255, 255, 0.7);
+        --whiteopacity: rgba(255, 255, 255, 0.5);
+        --inputbg: hsla(218, 49%, 8%, 0.452);
+        --footernav: hsl(217, 54%, 11%);
+        --navshadow: hsl(215, 55%, 6%);
+        --navfootershadow2: hsl(215, 52%, 21%);
+        --size: contain;
+        --topB: rgba(0, 0, 0, 0.7);
+        --background-image: url('Images/dice-3319359_1920.jpg');
+        transition: color 0.5s, background-color 0.5s, box-shadow 0.5s;
+    }
 }
+
 .up {
     height: 200px;
     width: 200px;
