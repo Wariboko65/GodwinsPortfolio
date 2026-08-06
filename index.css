@@ -73,6 +73,9 @@ nav, .navv {
     transition: opacity 1s ease-in, transform 2s ease-out;
     transform: translatey(100px);
 }
+.nav-item  {
+    color: var(--white2);
+}
 .fade-in.appear {
     transition: opacity 1s ease-in, transform 2s ease-out;
     transform: translatey(0);
