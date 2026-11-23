@@ -3,6 +3,7 @@ import { Picture } from 'astro:assets';
 import Profile from '../../layouts/Profile.astro';
 import Contours from '../../components/Contours.astro';
 import TitleBlock from '../../components/TitleBlock.astro';
+import FieldGallery from '../../components/FieldGallery.astro';
 import { person, site } from '../../data/site';
 import { degree, siwes, study, knowledge } from '../../data/engineering';
 import portrait from '../../assets/photos/portrait-civil-dept.jpg';
@@ -106,6 +107,9 @@ import portrait from '../../assets/photos/portrait-civil-dept.jpg';
         {siwes.role}, {siwes.department}, {siwes.org} ({siwes.orgNote}).
       </p>
       <a class="arrow-link" href="/engineering/projects#field-work">Field work in detail <span aria-hidden="true">→</span></a>
+      <div class="field-photos">
+        <FieldGallery limit={2} cols={2} />
+      </div>
     </div>
     <ul class="field-list">
       {
@@ -348,6 +352,11 @@ import portrait from '../../assets/photos/portrait-civil-dept.jpg';
 
   .field-head h2 {
     font-size: var(--step-3);
+  }
+
+  .field-photos {
+    width: 100%;
+    margin-top: var(--space-s);
   }
 
   .field-list {

@@ -44,6 +44,7 @@ src/
   pages/             One file per route (see below)
   assets/
     photos/          Portraits (EXIF/location data stripped)
+    field/           SIWES inspection photos and study photos (overlays cropped)
     projects/        Project screenshots, cropped to 16:10
 public/
   cv/                Software and engineering CVs (PDF)
@@ -75,6 +76,7 @@ public/
 - **Contact details, CV files, nav:** `src/data/site.ts`.
 - **Add a Frontend Mentor project:** add a screenshot to `src/assets/projects/`, import it at the top of `src/data/software.ts`, and add an entry to the right group in `archive`. Only list tech that is actually in the repo.
 - **Engineering coursework:** `coursework` in `src/data/engineering.ts` is empty on purpose. The Education page shows a "Relevant coursework" section as soon as confirmed course titles are added.
+- **Engineering figures and photos:** study figures come from the final-year project report (Chapter 4) and field photos from the SIWES report, both cropped to remove GPS-camera overlays. Photos showing identifiable people (handover meetings, hostel residents) are deliberately not used, and the water-scheme photos are left out because those projects were not inspected in person. Physicochemical values are literature-based estimates and are labelled as such.
 - **Case study screenshots:** JOPAD and Jason have no screenshots yet. To add one, put the image in `src/assets/projects/` and render it with `<Picture>` as the Vortex Horizon page does.
 
 Accuracy rules for the copy: JOPAD's frontend is vanilla HTML/CSS/JavaScript (not React); the backend is Node.js/Express/MongoDB. Jason is React + TypeScript. Engineering figures come only from the engineering CV. Do not add metrics or outcomes that are not documented.

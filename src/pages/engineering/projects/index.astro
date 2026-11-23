@@ -2,6 +2,7 @@
 import Profile from '../../../layouts/Profile.astro';
 import { person } from '../../../data/site';
 import { study, siwes } from '../../../data/engineering';
+import FieldGallery from '../../../components/FieldGallery.astro';
 ---
 
 <Profile
@@ -43,6 +44,11 @@ import { study, siwes } from '../../../data/engineering';
         {siwes.role}, {siwes.department}, {siwes.org}, {siwes.orgNote}. The projects belonged to the Commission and its
         contractors. My part was supporting the monitoring team on site and in the office.
       </p>
+      <p class="muted">{siwes.focus}</p>
+    </div>
+    <div class="gallery-wrap">
+      <FieldGallery />
+      <p class="gallery-note">Photographs I took for project files during inspections, from my SIWES report.</p>
     </div>
     <ol class="duties">
       {
@@ -136,6 +142,17 @@ import { study, siwes } from '../../../data/engineering';
 
   .fw-head h2 {
     font-size: var(--step-3);
+  }
+
+  .gallery-wrap {
+    display: grid;
+    gap: var(--space-s);
+    margin-bottom: var(--space-2xl);
+  }
+
+  .gallery-note {
+    font-size: var(--step--1);
+    color: var(--muted);
   }
 
   .duties {

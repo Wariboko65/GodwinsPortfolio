@@ -1,17 +1,23 @@
 ---
+import { Picture } from 'astro:assets';
 import Profile from '../../../layouts/Profile.astro';
 import TitleBlock from '../../../components/TitleBlock.astro';
 import PairChart from '../../../components/PairChart.astro';
 import { person, site } from '../../../data/site';
 import { study } from '../../../data/engineering';
+import hostelE from '../../../assets/field/hostel-e.jpg';
+import hostelD from '../../../assets/field/hostel-d.jpg';
+import bags from '../../../assets/field/waste-bags.jpg';
+import scale from '../../../assets/field/weighing-scale.jpg';
 
 const d = study.design;
+const fmt = (n: number) => n.toLocaleString('en-GB', { maximumFractionDigits: 3 });
 ---
 
 <Profile
   path="engineering"
   title={`Hostel solid waste study · Final-year research · ${person.fullName}`}
-  description="B.Eng. final-year research: solid waste generation and characterization in a male and a female hostel at Rivers State University, with recovery potential, heating values and IPCC Tier 1 methane emission estimates."
+  description="B.Eng. final-year research: solid waste generation and composition in a male and a female hostel at Rivers State University, with recovery fractions, estimated heating values and methane potential, and IPCC Tier 1 emission estimates."
 >
   <header class="wrap head">
     <nav class="crumbs" aria-label="Breadcrumb">
@@ -38,10 +44,12 @@ const d = study.design;
       <ol>
         <li><a href="#problem">Problem and aims</a></li>
         <li><a href="#method">Method</a></li>
-        <li><a href="#generation">Generation and composition</a></li>
-        <li><a href="#recovery">Recovery potential</a></li>
+        <li><a href="#generation">How much waste</a></li>
+        <li><a href="#composition">What it is made of</a></li>
+        <li><a href="#recovery">Recovery and energy</a></li>
         <li><a href="#climate">Climate impact</a></li>
         <li><a href="#recommendations">Recommendations</a></li>
+        <li><a href="#limitations">Limitations</a></li>
         <li><a href="#role">My role</a></li>
       </ol>
     </aside>
@@ -51,16 +59,19 @@ const d = study.design;
         <h2 id="h-problem"><span class="n">1</span>Problem and aims</h2>
         <div class="prose">
           <p>
-            University hostels concentrate hundreds of people in a small area, and the waste they produce has to go
-            somewhere. Planning collection, recycling or composting needs real numbers: how much waste each person
-            generates, what it is made of, and what happens if it ends up on an open dump.
+            Hostels are continuous sources of waste on a university campus, but Rivers State University had no
+            site-specific data on how much its hostels generate, how that differs between a male and a female hostel,
+            or what the waste could be recovered as. Without that data, decisions about bin sizes, collection schedules
+            and recycling are guesses, and the result is overflowing receptacles, dumping around hostels and blocked
+            drains.
           </p>
           <p>The study set out to:</p>
           <ul>
-            <li>measure solid waste generation rates in a male and a female hostel and compare them;</li>
-            <li>characterise the waste by category and weight;</li>
-            <li>assess its potential for composting, recycling and energy recovery;</li>
-            <li>estimate methane emissions and global warming potential if it is disposed of by open dumping.</li>
+            <li>determine the mean daily waste and the generation rate per person in each hostel;</li>
+            <li>determine the physical composition and classify it into biodegradable, recyclable and combustible fractions;</li>
+            <li>estimate proximate and ultimate analyses and derive an empirical formula for each waste stream;</li>
+            <li>estimate heating value and biological methane potential;</li>
+            <li>estimate methane emissions and global warming potential if the waste were openly dumped, and compare the hostels.</li>
           </ul>
         </div>
       </section>
@@ -70,30 +81,56 @@ const d = study.design;
         <dl class="spec">
           <div><dt>Rooms sampled</dt><dd>{d.roomsPerHostel} per hostel</dd></div>
           <div><dt>Occupants</dt><dd>{d.occupantsPerHostel} per hostel</dd></div>
-          <div><dt>Sampling days</dt><dd>{d.samplingDays}</dd></div>
-          <div><dt>Waste sorted</dt><dd>{d.totalKg} kg</dd></div>
+          <div><dt>Sampling days</dt><dd>{d.samplingDays}, over two weeks</dd></div>
+          <div><dt>Waste sorted</dt><dd>{fmt(study.sixDayTotal.combined)} kg</dd></div>
           <div><dt>Categories</dt><dd>{d.categories}</dd></div>
         </dl>
+        <div class="photos photos--4">
+          <figure>
+            <Picture src={hostelE} alt="Entrance building of Hostel E, with a ‘Welcome to Hostel E’ sign" widths={[300, 500]} sizes="(min-width: 56rem) 18vw, 48vw" formats={['avif', 'webp']} />
+            <figcaption>Hostel E (male)</figcaption>
+          </figure>
+          <figure>
+            <Picture src={hostelD} alt="Entrance of Hostel D with its sign above the door" widths={[300, 500]} sizes="(min-width: 56rem) 18vw, 48vw" formats={['avif', 'webp']} />
+            <figcaption>Hostel D (female)</figcaption>
+          </figure>
+          <figure>
+            <Picture src={bags} alt="Black waste bags and a wheelbarrow against a wall, ready for sorting" widths={[300, 500]} sizes="(min-width: 56rem) 18vw, 48vw" formats={['avif', 'webp']} />
+            <figcaption>Collected bags before sorting</figcaption>
+          </figure>
+          <figure>
+            <Picture src={scale} alt="The blue digital weighing scale used for every measurement" widths={[300, 500]} sizes="(min-width: 56rem) 18vw, 48vw" formats={['avif', 'webp']} />
+            <figcaption>The digital scale, zero-checked daily</figcaption>
+          </figure>
+        </div>
         <div class="prose">
           <p>
-            Waste was collected from the sampled rooms, hand-sorted into nine categories and weighed on a digital scale
-            that was zero-checked every day. Gloves and masks were worn throughout.
+            Instead of entering rooms, I placed waste bags at the existing receptacles that serve a defined set of twenty
+            rooms in each hostel (ten receptacles in Hostel D, five in Hostel E), at about five occupants per room.
+            That captured waste at the point of disposal, the way students actually throw it away.
           </p>
           <p>
-            Generation rates were calculated per person per day. For the energy assessment I applied proximate and
-            ultimate analysis and derived empirical formulae using the Tchobanoglous weighted-average method. Methane
-            emissions from open dumping and the resulting global warming potential were estimated with the IPCC 2006
-            Tier 1 method, alongside biological methane potential.
+            On each sampling day the bags from the two hostels were kept apart, taken to a sorting area and processed the
+            same day. The waste was hand-sorted into food, paper, cardboard, glass, metals, plastics, yard waste,
+            residual waste and dirt or soil, and each category was weighed in a pre-weighed container on the same
+            digital scale, zero-checked against known tare weights every day. Gloves and nose masks were worn throughout.
+          </p>
+          <p>
+            The physical results are measured. The physicochemical results are estimates: proximate and ultimate
+            analysis, empirical formulae and heating values use standard values for each category (Tchobanoglous et
+            al., 1993) weighted by the measured composition, and methane emissions use IPCC default parameters.
           </p>
         </div>
       </section>
 
       <section id="generation" aria-labelledby="h-gen">
-        <h2 id="h-gen"><span class="n">3</span>Generation and composition</h2>
+        <h2 id="h-gen"><span class="n">3</span>How much waste</h2>
         <div class="prose">
           <p>
-            The female hostel generated about five times more waste per person each day than the male hostel. In both,
-            plastics dominated by weight, followed by food waste.
+            The female hostel produced a mean of <strong>{study.meanDaily.female} kg a day</strong> against{' '}
+            <strong>{study.meanDaily.male} kg</strong> in the male hostel. Over the six days that was{' '}
+            {fmt(study.sixDayTotal.female)} kg against {fmt(study.sixDayTotal.male)} kg, so the female hostel accounted
+            for {study.share.female}% of everything collected. Per person, that is about five times higher.
           </p>
         </div>
         <div class="charts">
@@ -106,23 +143,42 @@ const d = study.design;
             rows={[{ label: 'Generation rate', ...study.generation }]}
           />
           <PairChart
-            id="plastics"
-            title="Plastics as a share of total waste"
-            caption="Percentage by weight"
-            unit="%"
-            max={100}
-            rows={[{ label: 'Plastics', ...study.plastics }]}
+            id="daily"
+            title="Total waste on each sampling day"
+            caption="Kilograms per day, 20 rooms per hostel"
+            unit="kg"
+            decimals={2}
+            rows={study.daily}
           />
         </div>
       </section>
 
-      <section id="recovery" aria-labelledby="h-rec">
-        <h2 id="h-rec"><span class="n">4</span>Recovery potential</h2>
+      <section id="composition" aria-labelledby="h-comp">
+        <h2 id="h-comp"><span class="n">4</span>What it is made of</h2>
         <div class="prose">
           <p>
-            Each category was classed as biodegradable, recyclable and combustible to judge which recovery routes
-            make sense. The classes overlap (a plastic bottle is both recyclable and combustible), so the percentages
-            do not add up to 100.
+            Plastics dominated both streams, at about four-fifths of the weight. Food waste came next in the female
+            hostel ({study.composition[1].female}%), more than double its share in the male hostel. Cardboard, paper and
+            the remaining categories each made up a few per cent or less.
+          </p>
+        </div>
+        <PairChart
+          id="composition"
+          title="Composition by category"
+          caption="Percentage of total weight, six-day mean"
+          unit="%"
+          decimals={2}
+          rows={study.composition}
+        />
+      </section>
+
+      <section id="recovery" aria-labelledby="h-rec">
+        <h2 id="h-rec"><span class="n">5</span>Recovery and energy</h2>
+        <div class="prose">
+          <p>
+            Each category was classed as biodegradable, recyclable and combustible. The classes overlap (a plastic
+            bottle is both recyclable and combustible), so the percentages do not add up to 100. The high recyclable and
+            combustible shares follow directly from the plastic content.
           </p>
         </div>
         <PairChart
@@ -130,68 +186,88 @@ const d = study.design;
           title="Recoverable fractions by hostel"
           caption="Percentage by weight. Classes overlap and are not additive."
           unit="%"
+          decimals={2}
           max={100}
           rows={study.fractions.map((f) => ({ label: f.label, male: f.male, female: f.female }))}
         />
+        <div class="table-wrap" tabindex="0" role="region" aria-label="Estimated physicochemical properties table">
+          <table class="pc">
+            <caption>Estimated physicochemical properties (weighted-average method, standard literature values)</caption>
+            <thead>
+              <tr><th scope="col">Property</th><th scope="col">Male hostel (E)</th><th scope="col">Female hostel (D)</th></tr>
+            </thead>
+            <tbody>
+              {study.physchem.map((r) => (
+                <tr><th scope="row">{r.label}</th><td>{r.male} <span class="u">{r.unit}</span></td><td>{r.female} <span class="u">{r.unit}</span></td></tr>
+              ))}
+              <tr><th scope="row">Empirical formula</th><td class="f">{study.formula.male}</td><td class="f">{study.formula.female}</td></tr>
+            </tbody>
+          </table>
+        </div>
         <div class="prose">
           <p>
-            With almost all of the waste combustible, the estimated heating values came out at about{' '}
-            <strong>{study.heatingValues[0].toLocaleString('en-GB')}</strong> and{' '}
-            <strong>{study.heatingValues[1].toLocaleString('en-GB')} kJ/kg</strong> for the two hostels. These are the
-            values that matter when weighing energy recovery against recycling and composting.
+            Both streams have a substantial theoretical energy content, close to 27,500 kJ/kg, again because of the
+            plastics. The female hostel’s higher food-waste share gives it the higher biological methane potential.
           </p>
         </div>
       </section>
 
       <section id="climate" aria-labelledby="h-cli">
-        <h2 id="h-cli"><span class="n">5</span>Climate impact</h2>
+        <h2 id="h-cli"><span class="n">6</span>Climate impact</h2>
         <div class="prose">
           <p>
-            If the waste collected during the study were openly dumped, the estimated methane emissions would be
-            equivalent to <strong>{study.gwp.combined} kg CO₂</strong> across both hostels. This covers the study
-            period only. It is not an annual figure.
+            If the {fmt(study.sixDayTotal.combined)} kg collected were openly dumped, the estimated methane would be
+            equivalent to <strong>{study.gwp.combined} kg CO₂</strong>. This covers the six sampling days only. It is
+            not an annual figure. The female hostel accounts for most of it simply because it produced more waste.
           </p>
         </div>
         <PairChart
           id="gwp"
           title="Global warming potential of open-dump methane"
-          caption="kg CO₂-equivalent over the study period, IPCC 2006 Tier 1"
+          caption="kg CO₂-equivalent over the study period"
           unit="kg CO₂-eq"
+          decimals={1}
           rows={[{ label: 'Global warming potential', male: study.gwp.male, female: study.gwp.female }]}
         />
+        <p class="note">Method: {study.ipcc}.</p>
       </section>
 
       <section id="recommendations" aria-labelledby="h-recs">
-        <h2 id="h-recs"><span class="n">6</span>Recommendations</h2>
+        <h2 id="h-recs"><span class="n">7</span>Recommendations</h2>
         <div class="prose">
-          <p>I framed the results within Integrated Solid Waste Management (ISWM) and the waste hierarchy:</p>
+          <p>
+            The main conclusion is that hostel waste should be managed by fraction, not as one uniform stream, and
+            sized to each hostel’s actual output. Framed within Integrated Solid Waste Management and the waste
+            hierarchy, the recommendations were:
+          </p>
         </div>
         <div class="recs">
-          <div>
-            <h3>University management</h3>
-            <p>Segregation bins, scheduled collection, composting and periodic waste audits.</p>
-          </div>
-          <div>
-            <h3>Regulators</h3>
-            <p>Managed disposal with gas control, and plastics recycling.</p>
-          </div>
-          <div>
-            <h3>Students</h3>
-            <p>Recommendations addressed to students, who generate the waste in the first place.</p>
-          </div>
+          {Object.entries(study.recommendations).map(([who, items]) => (
+            <div>
+              <h3>{who}</h3>
+              <ul>{items.map((i) => <li>{i}</li>)}</ul>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section id="limitations" aria-labelledby="h-lim">
+        <h2 id="h-lim"><span class="n">8</span>Limitations</h2>
+        <div class="prose">
+          <ul>{study.limitations.map((l) => <li>{l}</li>)}</ul>
         </div>
       </section>
 
       <section id="role" aria-labelledby="h-role">
-        <h2 id="h-role"><span class="n">7</span>My role</h2>
+        <h2 id="h-role"><span class="n">9</span>My role</h2>
         <div class="prose">
           <p>
-            This was my own final-year project, carried out under the supervision of {study.supervisor}. I designed and
-            ran the fieldwork, did the sorting and weighing, carried out the calculations and analysis, and wrote up
-            the findings and recommendations.
+            This was my own final-year project, supervised by {study.supervisor}. I designed the sampling plan, placed
+            and collected the bags, did the sorting and weighing, carried out every calculation and wrote the report,
+            which I have defended.
           </p>
           <p>
-            Full details are summarised in my <a href={site.cv.engineering} download>engineering CV (PDF)</a>.
+            A summary is also in my <a href={site.cv.engineering} download>engineering CV (PDF)</a>.
           </p>
         </div>
       </section>
@@ -253,6 +329,7 @@ const d = study.design;
   .body > section {
     display: grid;
     gap: var(--space-l);
+    min-width: 0;
   }
 
   .body h2 {
@@ -297,20 +374,100 @@ const d = study.design;
     line-height: 1.1;
   }
 
+  .photos {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-s);
+  }
+
+  @media (min-width: 56rem) {
+    .photos--4 {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  .photos figure {
+    display: grid;
+    gap: var(--space-2xs);
+  }
+
+  .photos :global(img) {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border: 1px solid var(--line);
+  }
+
+  .photos figcaption {
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+
   .charts {
     display: grid;
     gap: var(--space-l);
   }
 
-  @media (min-width: 48rem) {
+  @media (min-width: 64rem) {
     .charts {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+      align-items: start;
     }
+  }
+
+  .table-wrap {
+    overflow-x: auto;
+  }
+
+  .pc {
+    width: 100%;
+    min-width: 32rem;
+    border-collapse: collapse;
+    font-size: var(--step--1);
+    font-variant-numeric: tabular-nums;
+    background: var(--surface);
+    border: 1px solid var(--line);
+  }
+
+  .pc caption {
+    text-align: left;
+    padding: 0 0 var(--space-s);
+    font-weight: 700;
+    font-size: var(--step-0);
+  }
+
+  .pc th,
+  .pc td {
+    text-align: left;
+    padding: 0.6rem 0.8rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .pc thead th {
+    color: var(--muted);
+    font-weight: 600;
+  }
+
+  .pc tbody th {
+    font-weight: 600;
+  }
+
+  .u {
+    color: var(--muted);
+  }
+
+  .f {
+    font-family: var(--font-serif);
+  }
+
+  .note {
+    font-size: 0.8rem;
+    color: var(--muted);
   }
 
   .recs {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
     gap: var(--space-l);
   }
 
@@ -322,7 +479,14 @@ const d = study.design;
 
   .recs h3 {
     font-size: var(--step-1);
-    margin-bottom: var(--space-xs);
+    margin-bottom: var(--space-s);
+  }
+
+  .recs ul {
+    padding-left: 1.1em;
+    display: grid;
+    gap: 0.4rem;
+    font-size: var(--step--1);
   }
 
   @media (min-width: 64rem) {

@@ -15,12 +15,22 @@ export const degree = {
 // section while this list is empty.
 export const coursework: string[] = [];
 
+export const fieldPhotos = [
+  { file: 'streetlights-night', alt: 'A road at night lit by a line of working solar street lights', caption: 'Night-time functional check of an installed array' },
+  { file: 'plinth-measurement', alt: 'A tape measure held against the concrete plinth at the base of a blue street-light pole', caption: 'Measuring a concrete plinth' },
+  { file: 'pole-measurement', alt: 'A measuring tape wrapped around a blue galvanised street-light pole', caption: 'Checking pole dimensions' },
+  { file: 'plinth-reinforcement', alt: 'Stacked steel reinforcement cages for street-light plinths', caption: 'Reinforcement cages for the plinths' },
+  { file: 'earthing-installation', alt: 'An excavated plinth pit with reinforcement bars and a green earthing wire', caption: 'Earthing system during installation' },
+  { file: 'unmounted-poles', alt: 'Rows of blue and white street-light poles laid on grass before installation', caption: 'Poles delivered before installation' },
+];
+
 export const siwes = {
   role: 'Industrial Trainee (SIWES)',
   department: 'Project Monitoring & Supervision (PMS) Department',
   org: 'Niger Delta Development Commission (NDDC)',
   orgNote: 'Rivers State Office · Federal Government development agency',
   period: 'July – December 2025',
+  focus: 'Most of my field work was on solar street-light projects, which made up the largest share of active projects during my placement.',
   duties: [
     {
       title: 'Site handovers',
@@ -32,7 +42,7 @@ export const siwes = {
     },
     {
       title: 'Road works monitoring',
-      text: 'Took length and width measurements with a measuring wheel and tape, checked alignment, drainage and surface finish against the approved BEME, and documented deviations for corrective action.',
+      text: 'Observed and assisted on road inspections: length and width measurements with a measuring wheel and tape, checks of alignment, drainage and surface finish against the approved BEME, and records of deviations for corrective action.',
     },
     {
       title: 'Valuation',
@@ -44,7 +54,7 @@ export const siwes = {
     },
     {
       title: 'Technical exposure',
-      text: 'Built working knowledge of solar-powered water schemes (geophysical and geotechnical surveys, borehole drilling, filtration, chlorination and UV treatment, elevated GRP storage, gravity reticulation) through BEME study and engineer briefings.',
+      text: 'I did not inspect the solar-powered water projects on site, but built working knowledge of them (geophysical and geotechnical surveys, borehole drilling, filtration, chlorination and UV treatment, elevated storage, gravity reticulation) through engineer briefings and BEME valuation work.',
     },
   ],
 };
@@ -68,15 +78,74 @@ export const study = {
     totalKg: 150.4,
     categories: 9,
   },
-  generation: { male: 0.041, female: 0.209 }, // kg/person/day
-  plastics: { male: 78.5, female: 80.5 }, // % by weight
-  fractions: [
-    { label: 'Biodegradable', male: 15.1, female: 17.4 },
-    { label: 'Recyclable', male: 91.2, female: 86.6 },
-    { label: 'Combustible', male: 96.3, female: 99.2 },
+  // From the final-year project report (Chapter 4). kg/day unless stated.
+  meanDaily: { male: 4.133, female: 20.941 },
+  sixDayTotal: { male: 24.8, female: 125.645, combined: 150.445 },
+  share: { male: 16.48, female: 83.52 }, // % of the combined six-day total
+  daily: [
+    { label: 'Day 1', male: 8.95, female: 23.895 },
+    { label: 'Day 2', male: 4.054, female: 27.75 },
+    { label: 'Day 3', male: 2.03, female: 18.14 },
+    { label: 'Day 4', male: 3.826, female: 17.15 },
+    { label: 'Day 5', male: 2.68, female: 20.34 },
+    { label: 'Day 6', male: 3.26, female: 18.37 },
   ],
-  heatingValues: [27500, 27760], // kJ/kg, approximate
-  gwp: { male: 21.4, female: 108.4, combined: 129.7 }, // kg CO2-eq over the study period
+  generation: { male: 0.041, female: 0.209 }, // kg/person/day
+  composition: [
+    { label: 'Plastics', male: 78.46, female: 80.46 },
+    { label: 'Food', male: 5.1, female: 11.15 },
+    { label: 'Cardboard', male: 6.06, female: 3.2 },
+    { label: 'Paper', male: 3.48, female: 2.49 },
+    { label: 'Residual', male: 2.72, female: 1.36 },
+    { label: 'Metals', male: 2.4, female: 0.23 },
+    { label: 'Glass', male: 0.76, female: 0.2 },
+    { label: 'Dirt / soil', male: 0.61, female: 0.36 },
+    { label: 'Yard', male: 0.42, female: 0.54 },
+  ], // % by weight
+  plastics: { male: 78.46, female: 80.46 },
+  fractions: [
+    { label: 'Biodegradable', male: 15.07, female: 17.39 },
+    { label: 'Recyclable', male: 91.17, female: 86.58 },
+    { label: 'Combustible', male: 96.27, female: 99.21 },
+  ],
+  // Estimated from standard literature values (Tchobanoglous et al., 1993) weighted by the
+  // measured composition, not measured in a laboratory.
+  physchem: [
+    { label: 'Moisture content', unit: '%', male: '4.81', female: '8.77' },
+    { label: 'Volatile matter', unit: '%', male: '84.28', female: '84.28' },
+    { label: 'Carbon (ultimate analysis)', unit: '%', male: '54.74', female: '56.74' },
+    { label: 'Heating value', unit: 'kJ/kg', male: '27,498.60', female: '27,758.31' },
+    { label: 'Biological methane potential', unit: 'm³ CH₄/tonne', male: '7.110', female: '8.605' },
+  ],
+  formula: { male: 'C₂₉₂₄H₄₂₇₆O₉₇₇N₉S', female: 'C₂₅₂₂H₃₆₈₅O₈₄₃N₁₃S' },
+  heatingValues: [27498.6, 27758.31], // kJ/kg, male then female
+  gwp: { male: 21.388, female: 108.356, combined: 129.744 }, // kg CO2-eq over the study period
+  ipcc: 'IPCC 2006 Tier 1 default method; MCF 0.4, DOC 0.15, DOCf 0.77, F 0.5, OX 0; GWP100 of 28 (IPCC AR5)',
+  recommendations: {
+    'University management': [
+      'Labelled source-segregation bins for plastics, paper and cardboard, food waste and residual waste at hostel collection points.',
+      'Scheduled hostel collection, prioritising high-generation hostels such as the female hostel.',
+      'Composting or organic-waste diversion for the biodegradable fraction.',
+      'Periodic waste audits across other hostels to build a campus-wide database.',
+    ],
+    'Government and regulators': [
+      'A move from open dumping to managed disposal sites with gas control.',
+      'Plastic recycling infrastructure that tertiary institutions can use.',
+      'Environmental education on segregation, recycling and uncontrolled disposal.',
+    ],
+    'Students and residents': [
+      'Separate plastics and food waste at source.',
+      'Cut single-use packaging and disposable plastics where practicable.',
+      'Take part in clean-up and waste-awareness initiatives.',
+    ],
+  },
+  limitations: [
+    'Six sampling days spread over two weeks (three days a week), so day-to-day and seasonal variation may not be fully captured.',
+    'Twenty rooms per hostel (about 100 occupants) rather than the whole hostel population.',
+    'Physicochemical properties, heating values, methane potential and emissions were estimated from standard literature values and IPCC defaults, not laboratory tests of the samples.',
+    'Behavioural and dietary causes of the male–female difference were not investigated; the difference is reported as observed.',
+    'Manual sorting and weighing carry a small risk of measurement or classification error.',
+  ],
 };
 
 export const knowledge = [
