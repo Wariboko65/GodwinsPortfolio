@@ -7,7 +7,8 @@
   "trailingSlash": false,
   "redirects": [
     { "source": "/Images/Godwin_Resume.pdf", "destination": "/cv/john-godwin-oamien-software-cv.pdf", "permanent": true },
-    { "source": "/sitemap.xml", "destination": "/sitemap-index.xml", "permanent": true },
+    { "source": "/sitemap-index.xml", "destination": "/sitemap.xml", "permanent": true },
+    { "source": "/sitemap-0.xml", "destination": "/sitemap.xml", "permanent": true },
     { "source": "/index.html", "destination": "/", "permanent": true }
   ],
   "headers": [
