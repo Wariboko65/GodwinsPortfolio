@@ -168,11 +168,11 @@ const id = `cf-${profile}`;
     color: #d64545;
   }
 
-  [data-path='software'] .err {
+  :global([data-path='software']) .err {
     color: #ff8a80;
   }
 
-  [data-path='software'] [aria-invalid='true'] {
+  :global([data-path='software']) [aria-invalid='true'] {
     border-color: #ff8a80;
   }
 
@@ -196,24 +196,67 @@ const id = `cf-${profile}`;
     cursor: progress;
   }
 
+  /* Status message: a coloured box with an icon, so success and failure are
+     recognisable without reading the text. */
   .status {
+    --ok: #1f6b43;
+    --bad: #b42318;
     font-size: var(--step--1);
+    flex-basis: 100%;
+  }
+
+  :global([data-path='software']) .status {
+    --ok: #c8f169;
+    --bad: #ff8a80;
+  }
+
+  .status:empty {
+    display: none;
+  }
+
+  .status[data-state] {
+    display: flex;
+    gap: 0.6rem;
+    align-items: flex-start;
+    padding: 0.75rem 0.9rem;
+    border: 1px solid currentColor;
+    border-left-width: 4px;
+    border-radius: var(--radius);
+    font-weight: 600;
+    line-height: 1.45;
+  }
+
+  .status[data-state]::before {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 1.35rem;
+    height: 1.35rem;
+    border-radius: 50%;
+    font-size: 0.8rem;
+    font-weight: 800;
+    line-height: 1;
   }
 
   .status[data-state='ok'] {
-    color: var(--accent);
-    font-weight: 600;
+    color: var(--ok);
+    background: color-mix(in srgb, var(--ok) 10%, transparent);
   }
 
-  [data-path='engineering'] .status[data-state='ok'] {
-    color: #2c6e49;
+  .status[data-state='ok']::before {
+    content: '✓';
+    background: var(--ok);
+    color: var(--bg);
   }
 
   .status[data-state='error'] {
-    color: #d64545;
+    color: var(--bad);
+    background: color-mix(in srgb, var(--bad) 10%, transparent);
   }
 
-  [data-path='software'] .status[data-state='error'] {
-    color: #ff8a80;
+  .status[data-state='error']::before {
+    content: '!';
+    background: var(--bad);
+    color: var(--bg);
   }
 </style>
