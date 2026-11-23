@@ -1,0 +1,167 @@
+---
+import Profile from '../../../layouts/Profile.astro';
+import { person } from '../../../data/site';
+import { study, siwes } from '../../../data/engineering';
+---
+
+<Profile
+  path="engineering"
+  title={`Engineering projects and field work · ${person.fullName}`}
+  description={`Engineering work by ${person.fullName}: a final-year field study on hostel solid waste generation, characterization and methane emissions, and project monitoring field work during SIWES at the NDDC.`}
+>
+  <header class="wrap head">
+    <p class="label">Engineering · Projects</p>
+    <h1>Research and field work</h1>
+    <p class="lead muted">
+      One research project I led from fieldwork to write-up, and five months of site and office work on public
+      infrastructure projects.
+    </p>
+  </header>
+
+  <section class="wrap" aria-labelledby="fyp">
+    <a class="fyp" href={`/engineering/projects/${study.slug}`}>
+      <p class="label">Final-year research · {study.year}</p>
+      <h2 id="fyp">{study.title}</h2>
+      <p>
+        Waste from a male and a female hostel at {study.site}, sorted and weighed by hand over six days, then analysed
+        for generation rate, composition, recovery potential, heating value and methane emissions.
+      </p>
+      <dl class="fyp-facts">
+        <div><dt>Waste sorted</dt><dd>{study.design.totalKg} kg</dd></div>
+        <div><dt>Generation rate</dt><dd>{study.generation.male} / {study.generation.female} kg/person/day</dd></div>
+        <div><dt>Plastics</dt><dd>{study.plastics.male}% / {study.plastics.female}%</dd></div>
+      </dl>
+      <span class="fyp-go">Read the full study <span aria-hidden="true">→</span></span>
+    </a>
+  </section>
+
+  <section class="wrap section" id="field-work" aria-labelledby="fw">
+    <div class="fw-head">
+      <p class="label">Industrial training (SIWES) · {siwes.period}</p>
+      <h2 id="fw">Project monitoring and supervision at the NDDC</h2>
+      <p class="muted">
+        {siwes.role}, {siwes.department}, {siwes.org}, {siwes.orgNote}. The projects belonged to the Commission and its
+        contractors. My part was supporting the monitoring team on site and in the office.
+      </p>
+    </div>
+    <ol class="duties">
+      {
+        siwes.duties.map((d) => (
+          <li data-reveal>
+            <h3>{d.title}</h3>
+            <p>{d.text}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+</Profile>
+
+<style>
+  .head {
+    display: grid;
+    gap: var(--space-m);
+    padding-block: var(--space-2xl) var(--space-xl);
+  }
+
+  h1 {
+    font-size: var(--step-5);
+  }
+
+  .fyp {
+    display: grid;
+    gap: var(--space-l);
+    padding: clamp(1.5rem, 1rem + 3vw, 3.5rem);
+    background: var(--en-deep);
+    color: var(--en-deep-text);
+    text-decoration: none;
+    border-radius: var(--radius);
+  }
+
+  .fyp .label {
+    color: var(--en-deep-muted);
+  }
+
+  .fyp h2 {
+    font-size: var(--step-3);
+    max-width: 22em;
+  }
+
+  .fyp > p:not(.label) {
+    max-width: 40em;
+    color: var(--en-deep-muted);
+  }
+
+  .fyp-facts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+    gap: var(--space-l);
+    padding-top: var(--space-l);
+    border-top: 1px solid rgb(242 238 229 / 0.25);
+  }
+
+  .fyp-facts dt {
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--en-deep-muted);
+  }
+
+  .fyp-facts dd {
+    margin: 0.2rem 0 0;
+    font-family: var(--font-serif);
+    font-size: var(--step-1);
+    color: var(--en-deep-accent);
+  }
+
+  .fyp-go {
+    font-weight: 700;
+    color: var(--en-deep-accent);
+  }
+
+  .fyp:hover .fyp-go {
+    text-decoration: underline;
+  }
+
+  .fyp:focus-visible {
+    outline-color: var(--en-deep-accent);
+  }
+
+  .fw-head {
+    display: grid;
+    gap: var(--space-m);
+    max-width: 46em;
+    margin-bottom: var(--space-xl);
+  }
+
+  .fw-head h2 {
+    font-size: var(--step-3);
+  }
+
+  .duties {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+    border-top: 1.5px solid var(--en-text);
+    border-left: 1px solid var(--line);
+  }
+
+  .duties li {
+    display: grid;
+    gap: var(--space-xs);
+    align-content: start;
+    padding: var(--space-l);
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .duties h3 {
+    font-size: var(--step-1);
+  }
+
+  .duties p {
+    font-size: var(--step--1);
+    color: var(--muted);
+  }
+</style>

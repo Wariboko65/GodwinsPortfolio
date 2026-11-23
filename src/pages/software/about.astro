@@ -1,0 +1,136 @@
+---
+import { Picture } from 'astro:assets';
+import Profile from '../../layouts/Profile.astro';
+import { person, site } from '../../data/site';
+import { certification } from '../../data/software';
+import portrait from '../../assets/photos/portrait-office.jpg';
+---
+
+<Profile
+  path="software"
+  title={`About · ${person.fullName}, Frontend & Full Stack Developer`}
+  description={`About ${person.fullName}: a self-taught frontend and full stack developer from Port Harcourt, Nigeria, who learned through W3Schools and Frontend Mentor and now builds production web applications on contract.`}
+>
+  <div class="wrap about">
+    <header class="about-head">
+      <p class="label">~/software/about</p>
+      <h1>I learned to build for the web by building for the web.</h1>
+    </header>
+
+    <figure class="about-photo">
+      <Picture
+        src={portrait}
+        alt={`${person.fullName}`}
+        widths={[320, 520, 760]}
+        sizes="(min-width: 56rem) 30vw, 80vw"
+        formats={['avif', 'webp']}
+      />
+    </figure>
+
+    <div class="prose about-text">
+      <p class="lead">
+        I’m {person.fullName}, a frontend and full stack developer in Port Harcourt, Nigeria. I’m self-taught. I
+        started in 2020 with W3Schools and have been building things ever since.
+      </p>
+      <p>
+        Frontend Mentor became my training ground. Each challenge hands you a finished design and nothing else, so I
+        had to work out layout, responsive behaviour and state on my own, then publish the result for other developers
+        to review. That is where my habit of comparing what I built against the design, pixel by pixel, comes from.
+      </p>
+      <p>
+        In 2022 I started Vortex Horizon, a small studio for websites and 3D model showcases, and built its site from
+        scratch. Since then the work has moved further back into the stack. On my most recent contract, for JOPAD
+        Advisory, I wrote the Node.js and Express API, designed the MongoDB data, connected Google Calendar, Resend and
+        Airtable, and ran the production deployment across Vercel and Render. On another contract, a fundraising site
+        called Jason, I used React and TypeScript.
+      </p>
+
+      <h2>How I work</h2>
+      <ul>
+        <li>I put the rules that matter on the server, not just in the browser, which is why JOPAD checks every booking slot on the server.</li>
+        <li>I treat the unglamorous parts as part of the job: transactional emails, spam protection, analytics, sitemaps and environment configuration.</li>
+        <li>I match the tools to the project rather than reaching for the same stack every time. JOPAD’s frontend is plain HTML, CSS and JavaScript; Jason is React and TypeScript.</li>
+      </ul>
+
+      <h2>The engineering degree</h2>
+      <p>
+        Alongside all of this I completed a B.Eng. in Civil and Environmental Engineering at the University of Port
+        Harcourt, with the Environmental Engineering option, which included fieldwork, data analysis and technical
+        report writing. The engineering side
+        has <a href="/engineering">its own profile on this site</a>.
+      </p>
+
+      <h2>Certification</h2>
+      <p>
+        <strong>{certification.name}</strong>, {certification.issuer} ({certification.detail}).
+      </p>
+
+      <div class="actions">
+        <a class="btn" href="/software/contact">Get in touch</a>
+        <a class="btn btn--quiet" href={site.cv.software} download>Download CV (PDF)</a>
+      </div>
+    </div>
+  </div>
+</Profile>
+
+<style>
+  .about {
+    display: grid;
+    gap: var(--space-xl);
+    padding-top: var(--space-2xl);
+  }
+
+  .about-head {
+    display: grid;
+    gap: var(--space-m);
+  }
+
+  h1 {
+    font-size: var(--step-4);
+    font-weight: 800;
+    max-width: 16em;
+  }
+
+  .about-photo {
+    max-width: 24rem;
+  }
+
+  .about-photo :global(img) {
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    object-position: 50% 30%;
+    border-radius: var(--radius);
+  }
+
+  .about-text h2 {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-top: 2.5em;
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-s);
+    margin-top: 2em;
+  }
+
+  @media (min-width: 56rem) {
+    .about {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr);
+      column-gap: var(--space-3xl);
+    }
+    .about-head {
+      grid-column: 1 / -1;
+    }
+    .about-photo {
+      position: sticky;
+      top: 8rem;
+      align-self: start;
+    }
+  }
+</style>

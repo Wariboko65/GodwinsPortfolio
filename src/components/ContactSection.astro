@@ -1,0 +1,143 @@
+---
+import ContactForm from './ContactForm.astro';
+import { person, site, type Path } from '../data/site';
+
+interface Props {
+  path: Path;
+  kicker: string;
+  title: string;
+  intro: string;
+  topics: string[];
+}
+const { path, kicker, title, intro, topics } = Astro.props;
+
+const direct = [
+  { label: 'Email', value: person.email, href: `mailto:${person.email}` },
+  { label: 'Phone', value: person.phoneDisplay, href: person.phoneHref },
+  { label: 'WhatsApp', value: 'Message on WhatsApp', href: person.whatsapp },
+  { label: 'LinkedIn', value: 'View my LinkedIn profile', href: person.linkedin },
+  ...(path === 'software' ? [{ label: 'GitHub', value: 'github.com/wariboko65', href: person.github }] : []),
+];
+---
+
+<div class="wrap contact">
+  <header class="c-head">
+    <p class="label">{kicker}</p>
+    <h1>{title}</h1>
+    <p class="lead muted">{intro}</p>
+  </header>
+
+  <section class="c-form" aria-labelledby="form-title">
+    <h2 id="form-title">Send a message</h2>
+    <ContactForm profile={path} />
+  </section>
+
+  <aside class="c-side" aria-label="Other ways to reach me">
+    <div>
+      <h2>Good reasons to write</h2>
+      <ul class="topics">{topics.map((t) => <li>{t}</li>)}</ul>
+    </div>
+    <div>
+      <h2>Direct</h2>
+      <dl class="direct">
+        {
+          direct.map((d) => (
+            <div>
+              <dt>{d.label}</dt>
+              <dd>
+                <a href={d.href} rel={d.href.startsWith('http') ? 'noopener' : undefined}>
+                  {d.value}
+                </a>
+              </dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+    <p class="muted loc">Based in {person.location}.</p>
+    <a class="btn btn--quiet" href={site.cv[path]} download>Download CV (PDF)</a>
+  </aside>
+</div>
+
+<style>
+  .contact {
+    display: grid;
+    gap: var(--space-2xl);
+    padding-top: var(--space-2xl);
+  }
+
+  .c-head {
+    display: grid;
+    gap: var(--space-m);
+  }
+
+  h1 {
+    font-size: var(--step-5);
+  }
+
+  [data-path='software'] h1 {
+    font-weight: 800;
+  }
+
+  h2 {
+    font-family: var(--label);
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: var(--space-m);
+  }
+
+  .c-side {
+    display: grid;
+    gap: var(--space-xl);
+    align-content: start;
+    justify-items: start;
+  }
+
+  .topics {
+    padding-left: 1.1em;
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  .direct {
+    display: grid;
+    gap: var(--space-s);
+  }
+
+  .direct dt {
+    font-size: var(--step--1);
+    color: var(--muted);
+  }
+
+  .direct dd {
+    margin: 0;
+    font-weight: 600;
+    word-break: break-word;
+  }
+
+  .direct a {
+    text-decoration-color: var(--line);
+  }
+
+  .direct a:hover {
+    color: var(--accent);
+    text-decoration-color: currentColor;
+  }
+
+  .loc {
+    font-size: var(--step--1);
+  }
+
+  @media (min-width: 56rem) {
+    .contact {
+      grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+      column-gap: var(--space-3xl);
+    }
+    .c-head {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

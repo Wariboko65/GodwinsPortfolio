@@ -1,0 +1,583 @@
+---
+import { Picture } from 'astro:assets';
+import Profile from '../../layouts/Profile.astro';
+import { person, site } from '../../data/site';
+import { caseStudies, stack, experience, certification, archive, archiveCount } from '../../data/software';
+import portrait from '../../assets/photos/portrait-office.jpg';
+import vortexShot from '../../assets/projects/vortex-hero.png';
+
+const [jopad, jason, vortex] = caseStudies;
+const thumbs = archive.flatMap((g) => g.items).slice(0, 4);
+---
+
+<Profile
+  path="software"
+  title={`${person.fullName} · Frontend & Full Stack Developer`}
+  description={`${person.fullName} is a self-taught frontend and full stack developer in Port Harcourt, Nigeria, working with JavaScript, TypeScript, React, Node.js, Express and MongoDB. Case studies, projects and contact details.`}
+>
+  <!-- Hero -->
+  <section class="hero wrap">
+    <div class="hero-text">
+      <p class="label">~/software · Port Harcourt, Nigeria</p>
+      <h1>{person.fullName}</h1>
+      <p class="hero-role">Frontend &amp; full stack developer</p>
+      <p class="lead">
+        I build web applications end to end: the interface people use, the API behind it, and the third-party
+        services it has to talk to. My most recent contract was a booking platform that checks availability, creates
+        Google Meet links and sends its own confirmation emails.
+      </p>
+      <div class="hero-actions">
+        <a class="btn" href="#work">See selected work</a>
+        <a class="btn btn--quiet" href={site.cv.software} download>Download CV</a>
+      </div>
+    </div>
+    <figure class="hero-photo">
+      <Picture
+        src={portrait}
+        alt={`Portrait of ${person.fullName}`}
+        widths={[320, 480, 720]}
+        sizes="(min-width: 56rem) 26vw, 60vw"
+        formats={['avif', 'webp']}
+        loading="eager"
+        fetchpriority="high"
+      />
+      <figcaption class="label">Self-taught since 2020</figcaption>
+    </figure>
+  </section>
+
+  <!-- Selected work -->
+  <section class="section wrap" id="work" aria-labelledby="work-title">
+    <div class="section-head">
+      <p class="label">Selected work</p>
+      <h2 id="work-title">Three projects, three different jobs</h2>
+    </div>
+
+    <article class="feature" data-reveal>
+      <div class="feature-text">
+        <p class="label">{jopad.kind} · {jopad.year}</p>
+        <h3><a href={`/software/projects/${jopad.slug}`}>{jopad.name}</a></h3>
+        <p>{jopad.summary}</p>
+        <ul class="tags">{jopad.stack.map((t) => <li>{t}</li>)}</ul>
+        <a class="arrow-link" href={`/software/projects/${jopad.slug}`}>
+          Read the case study <span aria-hidden="true">→</span>
+        </a>
+      </div>
+      <ol class="mini-flow" aria-label="What happens when a client books a consultation">
+        <li><span>01</span>Client picks a slot in a multi-step form</li>
+        <li><span>02</span>Server checks availability and overlaps</li>
+        <li><span>03</span>Booking saved to MongoDB</li>
+        <li><span>04</span>Calendar event and Meet link created</li>
+        <li><span>05</span>Client and admin emails sent through Resend</li>
+      </ol>
+    </article>
+
+    <div class="pair">
+      <article class="card card--jason" data-reveal>
+        <p class="label">{jason.kind}</p>
+        <h3><a href={`/software/projects/${jason.slug}`}>{jason.name}</a></h3>
+        <p>{jason.summary}</p>
+        <ul class="tags">{jason.stack.map((t) => <li>{t}</li>)}</ul>
+        <a class="arrow-link" href={`/software/projects/${jason.slug}`}>
+          Read the case study <span aria-hidden="true">→</span>
+        </a>
+        <ul class="jason-points" aria-label="Key features">
+          <li>Persisted campaign progress</li>
+          <li>Bank details behind a confirmation step</li>
+          <li>Pre-written shares to WhatsApp, X and Facebook</li>
+        </ul>
+      </article>
+
+      <article class="card card--vortex" data-reveal>
+        <a class="card-shot" href={`/software/projects/${vortex.slug}`} tabindex="-1" aria-hidden="true">
+          <Picture
+            src={vortexShot}
+            alt=""
+            widths={[480, 720, 960]}
+            sizes="(min-width: 56rem) 40vw, 92vw"
+            formats={['avif', 'webp']}
+          />
+        </a>
+        <p class="label">{vortex.kind} · {vortex.year}</p>
+        <h3><a href={`/software/projects/${vortex.slug}`}>{vortex.name}</a></h3>
+        <p>{vortex.summary}</p>
+        <ul class="tags">{vortex.stack.map((t) => <li>{t}</li>)}</ul>
+      </article>
+    </div>
+
+    <a class="archive-teaser" href="/software/projects/frontend-mentor" data-reveal>
+      <div>
+        <p class="label">Archive</p>
+        <p class="archive-title">{archiveCount} published Frontend Mentor solutions</p>
+        <p class="muted">Where most of my fundamentals come from. Grouped by what each one taught me.</p>
+      </div>
+      <div class="thumbs" aria-hidden="true">
+        {
+          thumbs.map((t) => (
+            <Picture src={t.image} alt="" widths={[200, 320]} sizes="10rem" formats={['avif', 'webp']} />
+          ))
+        }
+      </div>
+      <span class="archive-arrow" aria-hidden="true">→</span>
+    </a>
+  </section>
+
+  <!-- Stack map -->
+  <section class="section stack-section" aria-labelledby="stack-title">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="label">Stack</p>
+        <h2 id="stack-title">What I use, and where it has shipped</h2>
+      </div>
+      <dl class="stack">
+        {
+          stack.map((row) => (
+            <div class="stack-row" data-reveal>
+              <dt>{row.layer}</dt>
+              <dd class="stack-tools">{row.tools.join(' · ')}</dd>
+              <dd class="stack-used">
+                <span class="visually-hidden">Used in: </span>
+                {row.usedIn}
+              </dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </section>
+
+  <!-- Experience -->
+  <section class="section wrap exp-section" aria-labelledby="exp-title">
+    <div class="section-head">
+      <p class="label">Experience</p>
+      <h2 id="exp-title">Where the work happened</h2>
+    </div>
+    <ol class="timeline">
+      {
+        experience.map((e) => (
+          <li data-reveal>
+            <p class="t-period">{e.period}</p>
+            <div>
+              <h3>
+                <a href={e.href}>{e.title}</a>
+              </h3>
+              <p class="t-org">{e.org}</p>
+              <p class="muted">{e.note}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+    <aside class="cert" aria-label="Certification" data-reveal>
+      <p class="label">Certification</p>
+      <p class="cert-name">{certification.name}</p>
+      <p class="muted">{certification.issuer} · {certification.detail}</p>
+    </aside>
+  </section>
+
+  <!-- CTA -->
+  <section class="wrap cta" aria-labelledby="cta-title">
+    <h2 id="cta-title">Have something that needs building?</h2>
+    <p class="lead muted">I am open to full-time roles, contracts and freelance work, remote or in Port Harcourt.</p>
+    <div class="hero-actions">
+      <a class="btn" href="/software/contact">Get in touch</a>
+      <a class="btn btn--quiet" href={`mailto:${person.email}`}>{person.email}</a>
+    </div>
+  </section>
+</Profile>
+
+<style>
+  /* ---------- Hero ---------- */
+  .hero {
+    display: grid;
+    gap: var(--space-xl);
+    padding-block: var(--space-2xl) var(--space-xl);
+    align-items: end;
+  }
+
+  .hero-text {
+    display: grid;
+    gap: var(--space-m);
+  }
+
+  h1 {
+    font-size: var(--step-5);
+    font-weight: 800;
+    line-height: 0.92;
+  }
+
+  .hero-role {
+    font-family: var(--font-mono);
+    font-size: var(--step-1);
+    color: var(--accent);
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-s);
+    margin-top: var(--space-xs);
+  }
+
+  .hero-photo {
+    display: grid;
+    gap: var(--space-xs);
+    max-width: 22rem;
+  }
+
+  .hero-photo :global(img) {
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    object-position: 50% 30%;
+    width: 100%;
+    filter: grayscale(0.25) contrast(1.05);
+  }
+
+  @media (min-width: 56rem) {
+    .hero {
+      grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+      padding-block: var(--space-3xl) var(--space-2xl);
+    }
+    .hero-photo {
+      justify-self: end;
+    }
+  }
+
+  /* ---------- Featured project ---------- */
+  .feature {
+    display: grid;
+    gap: var(--space-xl);
+    padding: clamp(1.25rem, 1rem + 2vw, 2.75rem);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+
+  .feature-text {
+    display: grid;
+    gap: var(--space-m);
+    align-content: start;
+  }
+
+  .feature h3 {
+    font-size: var(--step-4);
+    letter-spacing: -0.04em;
+  }
+
+  h3 a {
+    text-decoration: none;
+  }
+
+  h3 a:hover {
+    color: var(--accent);
+  }
+
+  .mini-flow {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 0;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    counter-reset: f;
+    align-self: center;
+  }
+
+  .mini-flow li {
+    position: relative;
+    display: grid;
+    grid-template-columns: 2.4rem 1fr;
+    align-items: center;
+    padding: 0.85rem 0;
+    border-top: 1px dashed var(--line);
+  }
+
+  .mini-flow li:last-child {
+    border-bottom: 1px dashed var(--line);
+  }
+
+  .mini-flow span {
+    color: var(--accent);
+  }
+
+  @media (min-width: 56rem) {
+    .feature {
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      gap: var(--space-2xl);
+    }
+  }
+
+  /* ---------- Pair ---------- */
+  .pair {
+    display: grid;
+    gap: var(--space-l);
+    margin-top: var(--space-l);
+  }
+
+  @media (min-width: 56rem) {
+    .pair {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+    }
+  }
+
+  .card {
+    display: grid;
+    gap: var(--space-m);
+    align-content: start;
+    padding: clamp(1.25rem, 1rem + 1.5vw, 2.25rem);
+    border-radius: var(--radius);
+  }
+
+  .card h3 {
+    font-size: var(--step-3);
+  }
+
+  .card--jason {
+    background: var(--sw-accent);
+    color: var(--sw-bg);
+    --muted: #2c3a10;
+    --accent: var(--sw-bg);
+  }
+
+  .card--jason {
+    grid-template-rows: auto auto auto auto auto 1fr;
+  }
+
+  .jason-points {
+    align-self: end;
+    list-style: none;
+    padding: var(--space-l) 0 0;
+    margin-top: var(--space-l);
+    border-top: 1px solid rgb(13 15 18 / 0.25);
+    display: grid;
+    gap: var(--space-xs);
+    font-size: var(--step-1);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+  }
+
+  .card--jason .label {
+    color: #2c3a10;
+  }
+
+  .card--jason .tags li::before {
+    color: var(--sw-bg);
+  }
+
+  .card--jason :focus-visible {
+    outline-color: var(--sw-bg);
+  }
+
+  .card--vortex {
+    border: 1px solid var(--line);
+  }
+
+  .card-shot {
+    display: block;
+    overflow: hidden;
+    border-radius: 2px;
+    border: 1px solid var(--line);
+    margin-bottom: var(--space-xs);
+  }
+
+  .card-shot :global(img) {
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    object-position: top;
+    width: 100%;
+    transition: transform 0.6s var(--ease);
+  }
+
+  .card--vortex:hover .card-shot :global(img) {
+    transform: scale(1.02);
+  }
+
+  /* ---------- Archive teaser ---------- */
+  .archive-teaser {
+    position: relative;
+    display: grid;
+    gap: var(--space-l);
+    margin-top: var(--space-l);
+    padding: clamp(1.25rem, 1rem + 1.5vw, 2rem);
+    border: 1px dashed var(--line);
+    border-radius: var(--radius);
+    text-decoration: none;
+    transition: border-color 0.2s var(--ease);
+  }
+
+  .archive-teaser:hover {
+    border-color: var(--accent);
+  }
+
+  .archive-title {
+    font-size: var(--step-2);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-block: var(--space-2xs);
+  }
+
+  .thumbs {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--space-xs);
+  }
+
+  .thumbs :global(img) {
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    object-position: top;
+    border-radius: 2px;
+    opacity: 0.85;
+  }
+
+  .archive-arrow {
+    position: absolute;
+    top: var(--space-l);
+    right: var(--space-l);
+    font-size: var(--step-2);
+    color: var(--accent);
+  }
+
+  @media (min-width: 56rem) {
+    .archive-teaser {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+      align-items: center;
+      padding-right: 4rem;
+    }
+    .archive-arrow {
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  }
+
+  /* ---------- Stack ---------- */
+  .stack-section {
+    background: var(--surface);
+    border-block: 1px solid var(--line);
+  }
+
+  .stack-row {
+    display: grid;
+    gap: var(--space-2xs) var(--space-xl);
+    padding-block: var(--space-l);
+    border-top: 1px solid var(--line);
+  }
+
+  .stack-row:last-child {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .stack-row dt {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--accent);
+  }
+
+  .stack-tools {
+    margin: 0;
+    font-size: var(--step-1);
+    font-weight: 600;
+  }
+
+  .stack-used {
+    margin: 0;
+    color: var(--muted);
+    font-size: var(--step--1);
+  }
+
+  @media (min-width: 56rem) {
+    .stack-row {
+      grid-template-columns: 10rem minmax(0, 1.4fr) minmax(0, 1fr);
+      align-items: baseline;
+    }
+  }
+
+  /* ---------- Experience ---------- */
+  .exp-section {
+    display: grid;
+    gap: var(--space-xl);
+  }
+
+  .exp-section .section-head {
+    margin-bottom: 0;
+  }
+
+  .timeline {
+    list-style: none;
+    padding: 0;
+    display: grid;
+  }
+
+  .timeline li {
+    display: grid;
+    gap: var(--space-2xs) var(--space-xl);
+    padding-block: var(--space-l);
+    border-top: 1px solid var(--line);
+  }
+
+  .t-period {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+
+  .timeline h3 {
+    font-size: var(--step-1);
+    letter-spacing: -0.01em;
+  }
+
+  .t-org {
+    font-weight: 500;
+  }
+
+  .cert {
+    padding: var(--space-l);
+    border-left: 3px solid var(--accent);
+    background: var(--surface);
+    display: grid;
+    gap: var(--space-2xs);
+    align-self: start;
+  }
+
+  .cert-name {
+    font-size: var(--step-1);
+    font-weight: 700;
+    line-height: 1.3;
+  }
+
+  @media (min-width: 56rem) {
+    .exp-section {
+      grid-template-columns: minmax(0, 1.8fr) minmax(0, 1fr);
+      grid-template-areas: 'head head' 'tl cert';
+      column-gap: var(--space-2xl);
+    }
+    .exp-section .section-head {
+      grid-area: head;
+    }
+    .timeline {
+      grid-area: tl;
+    }
+    .cert {
+      grid-area: cert;
+      position: sticky;
+      top: 8rem;
+    }
+    .timeline li {
+      grid-template-columns: 9rem minmax(0, 1fr);
+    }
+  }
+
+  /* ---------- CTA ---------- */
+  .cta {
+    display: grid;
+    gap: var(--space-m);
+    justify-items: start;
+    padding-top: var(--space-2xl);
+    border-top: 1px solid var(--line);
+  }
+
+  .cta h2 {
+    font-size: var(--step-4);
+    max-width: 14em;
+  }
+</style>

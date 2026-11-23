@@ -1,0 +1,159 @@
+---
+import Profile from '../../layouts/Profile.astro';
+import TitleBlock from '../../components/TitleBlock.astro';
+import { person, site } from '../../data/site';
+import { degree, coursework, siwes, study } from '../../data/engineering';
+---
+
+<Profile
+  path="engineering"
+  title={`Education · B.Eng. Civil & Environmental Engineering · ${person.fullName}`}
+  description={`${person.fullName}'s education: Bachelor of Engineering in Civil and Environmental Engineering, Environmental Engineering option, University of Port Harcourt (2020–2026), including SIWES industrial training at the NDDC and a final-year research project.`}
+>
+  <header class="wrap head">
+    <p class="label">Engineering · Education</p>
+    <h1>{degree.title}</h1>
+    <p class="programme">{degree.programme}<span>, {degree.option}</span></p>
+  </header>
+
+  <section class="wrap" aria-label="Degree details">
+    <TitleBlock
+      label="Degree details"
+      fields={[
+        { term: 'Institution', value: `${degree.institution}, ${degree.place}`, wide: true },
+        { term: 'Programme', value: degree.programme },
+        { term: 'Option', value: 'Environmental Engineering' },
+        { term: 'Period', value: degree.years },
+        { term: 'Status', value: degree.status },
+      ]}
+    />
+  </section>
+
+  <section class="wrap section timeline-wrap" aria-labelledby="tl">
+    <h2 id="tl" class="label">The parts of the programme I can show you</h2>
+    <ol class="timeline">
+      <li>
+        <p class="when">{degree.years}</p>
+        <div>
+          <h3>B.Eng. programme</h3>
+          <p class="muted">Bachelor of Engineering in Civil and Environmental Engineering, specialising in the Environmental Engineering option.</p>
+        </div>
+      </li>
+      <li>
+        <p class="when">{siwes.period}</p>
+        <div>
+          <h3>Industrial training (SIWES)</h3>
+          <p class="muted">{siwes.department}, {siwes.org}. Site handovers, inspections, road works monitoring and valuation.</p>
+          <a class="arrow-link" href="/engineering/projects#field-work">What I did <span aria-hidden="true">→</span></a>
+        </div>
+      </li>
+      <li>
+        <p class="when">{study.year}</p>
+        <div>
+          <h3>Final-year research project, defended</h3>
+          <p class="muted">{study.title}. Supervised by {study.supervisor}.</p>
+          <a class="arrow-link" href={`/engineering/projects/${study.slug}`}>Read the study <span aria-hidden="true">→</span></a>
+        </div>
+      </li>
+      <li>
+        <p class="when">Next</p>
+        <div>
+          <h3>National Youth Service Corps (NYSC)</h3>
+          <p class="muted">Yet to be mobilised.</p>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  {
+    coursework.length > 0 && (
+      <section class="wrap section" aria-labelledby="cw">
+        <h2 id="cw" class="label">Relevant coursework</h2>
+        <ul class="coursework">
+          {coursework.map((c) => (
+            <li>{c}</li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+
+  <section class="wrap cv" aria-label="Download">
+    <p>The engineering CV covers the degree, industrial training and research in two pages.</p>
+    <a class="btn" href={site.cv.engineering} download>Download engineering CV (PDF)</a>
+  </section>
+</Profile>
+
+<style>
+  .head {
+    display: grid;
+    gap: var(--space-s);
+    padding-block: var(--space-2xl) var(--space-xl);
+  }
+
+  h1 {
+    font-size: var(--step-4);
+  }
+
+  .programme {
+    font-family: var(--font-serif);
+    font-size: var(--step-2);
+    color: var(--accent);
+  }
+
+  .programme span {
+    color: var(--muted);
+  }
+
+  .timeline {
+    list-style: none;
+    padding: 0;
+    margin-top: var(--space-l);
+  }
+
+  .timeline li {
+    display: grid;
+    gap: var(--space-xs) var(--space-xl);
+    padding-block: var(--space-l);
+    border-top: 1px solid var(--line);
+  }
+
+  .timeline li > div {
+    display: grid;
+    gap: var(--space-xs);
+    justify-items: start;
+  }
+
+  .when {
+    font-family: var(--font-serif);
+    font-size: var(--step-1);
+    color: var(--accent);
+  }
+
+  .timeline h3 {
+    font-size: var(--step-2);
+  }
+
+  @media (min-width: 48rem) {
+    .timeline li {
+      grid-template-columns: 13rem minmax(0, 1fr);
+    }
+  }
+
+  .coursework {
+    columns: 2 16rem;
+    padding-left: 1.2em;
+    margin-top: var(--space-m);
+  }
+
+  .cv {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-m);
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-l);
+    background: var(--surface);
+    border: 1px solid var(--line);
+  }
+</style>

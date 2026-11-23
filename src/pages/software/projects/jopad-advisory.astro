@@ -1,0 +1,335 @@
+---
+import Profile from '../../../layouts/Profile.astro';
+import CaseHeader from '../../../components/CaseHeader.astro';
+import CaseNext from '../../../components/CaseNext.astro';
+import { person } from '../../../data/site';
+
+// JOPAD's frontend is vanilla HTML, CSS and JavaScript. It is not a React app.
+const layers = [
+  { name: 'Frontend', where: 'Vercel', tools: ['HTML', 'CSS', 'Vanilla JavaScript'] },
+  { name: 'Backend', where: 'Render', tools: ['Node.js', 'Express', 'REST API', 'MongoDB', 'Mongoose'] },
+  { name: 'Services', where: 'Third party', tools: ['Google Calendar API (OAuth2)', 'Google Meet', 'Resend', 'Airtable'] },
+  { name: 'Measurement', where: 'Google', tools: ['GA4 conversion tracking', 'Search Console', 'Sitemap'] },
+];
+
+const flow = [
+  { lane: 'Browser', step: 'The client works through a multi-step booking form. Their progress is kept in the browser, so a refresh does not lose it.' },
+  { lane: 'API', step: 'Express receives the request and validates it: is the slot inside working availability, and does it overlap an existing booking?' },
+  { lane: 'API', step: 'If the slot is free, the booking is written to MongoDB through a Mongoose model.' },
+  { lane: 'Google', step: 'The server creates a Google Calendar event using OAuth2 credentials, which generates a Google Meet link and sends the invite.' },
+  { lane: 'Resend', step: 'Two branded HTML emails go out: a confirmation to the client and a notification to the firm.' },
+];
+---
+
+<Profile
+  path="software"
+  title={`JOPAD Advisory booking platform · Case study · ${person.fullName}`}
+  description="Case study: a consulting and booking platform for JOPAD Advisory with a vanilla JavaScript frontend, a Node.js, Express and MongoDB backend, Google Calendar and Meet scheduling, Resend emails and an articles CMS."
+>
+  <CaseHeader
+    kicker="Case study · Full stack contract"
+    title="JOPAD Advisory"
+    intro="Jogos Partners & Advisory LP needed clients to be able to book consultations without the back-and-forth of email. I designed and built the platform from scratch on contract: booking, scheduling, emails, lead capture, an articles section, SEO and the production setup."
+    meta={[
+      { term: 'Client', value: 'Jogos Partners & Advisory LP' },
+      { term: 'Role', value: 'Full Stack Developer (contract)' },
+      { term: 'Year', value: '2026' },
+      { term: 'Live site', value: 'jopadconsulting.com', href: 'https://jopadconsulting.com/' },
+    ]}
+  />
+
+  <section class="wrap layers-wrap" aria-labelledby="layers-title">
+    <h2 id="layers-title" class="label">How it is put together</h2>
+    <div class="layers">
+      {
+        layers.map((l) => (
+          <div class="layer">
+            <p class="layer-name">{l.name}</p>
+            <p class="layer-where">{l.where}</p>
+            <ul>
+              {l.tools.map((t) => (
+                <li>{t}</li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+    <p class="note muted">
+      The interface is hand-written HTML, CSS and JavaScript with no frontend framework. Everything stateful lives on
+      the Node.js server.
+    </p>
+  </section>
+
+  <section class="wrap section flow-section" aria-labelledby="flow-title">
+    <div class="section-head">
+      <p class="label">The core feature</p>
+      <h2 id="flow-title">From “book a call” to a calendar invite</h2>
+      <p class="muted prose">
+        The goal was zero manual scheduling. Once a client confirms a slot, nobody at the firm has to touch it.
+      </p>
+    </div>
+    <ol class="flow">
+      {
+        flow.map((f, i) => (
+          <li data-reveal>
+            <span class="flow-n">{String(i + 1).padStart(2, '0')}</span>
+            <span class="flow-lane">{f.lane}</span>
+            <p>{f.step}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <div class="wrap body">
+    <section class="block" aria-labelledby="b1">
+      <h2 id="b1">Availability and overlap checks</h2>
+      <div class="prose">
+        <p>
+          Double bookings are the obvious way a booking system fails, so conflict detection happens on the server rather than
+          trusting what the browser sends. Each request is checked against the firm’s availability and against existing
+          bookings for overlapping time ranges before anything is saved.
+        </p>
+        <p>
+          The Google Calendar integration runs on OAuth2. Creating the event from the server is what produces the Meet
+          link and the invite, so every confirmed booking arrives in both calendars with a call attached.
+        </p>
+      </div>
+    </section>
+
+    <section class="block" aria-labelledby="b2">
+      <h2 id="b2">Lead intake that does not lose enquiries</h2>
+      <div class="prose">
+        <p>
+          General enquiries go through a separate intake form. A honeypot field filters out most bots without making
+          real visitors solve a puzzle. Each valid lead is written to MongoDB and to Airtable, so the firm still has a
+          copy if one of them is unavailable.
+        </p>
+        <p>
+          Every submission sends notification emails through Resend and fires a GA4 conversion event, so the firm can
+          see which pages actually bring in enquiries.
+        </p>
+      </div>
+    </section>
+
+    <section class="block" aria-labelledby="b3">
+      <h2 id="b3">An articles section the firm can grow</h2>
+      <div class="prose">
+        <p>
+          The firm publishes regulatory and advisory articles. I built a small content system for them: a MongoDB
+          schema, REST endpoints, and a frontend with live search, category filters and a responsive carousel that
+          rotates on its own.
+        </p>
+      </div>
+    </section>
+
+    <section class="block" aria-labelledby="b4">
+      <h2 id="b4">Production, SEO and configuration</h2>
+      <div class="prose">
+        <ul>
+          <li>The frontend is deployed on Vercel and the Express API on Render.</li>
+          <li>Secrets are kept in environment variables, not in the code, and the API runs behind a restrictive CORS policy.</li>
+          <li>I set up page metadata, corrected the sitemap, configured Search Console and added GA4.</li>
+          <li>After launch I kept maintaining the platform and its production configuration.</li>
+        </ul>
+      </div>
+    </section>
+
+    <aside class="takeaway" aria-label="What this project shows">
+      <p class="label">What this project shows</p>
+      <p>
+        I can take a business process, here scheduling consultations, and turn it into a working system across browser,
+        server, database and several outside services, then keep it running in production.
+      </p>
+      <a class="btn" href="https://jopadconsulting.com/" rel="noopener">Visit jopadconsulting.com <span aria-hidden="true">↗</span></a>
+    </aside>
+  </div>
+
+  <CaseNext current="jopad-advisory" />
+</Profile>
+
+<style>
+  .layers-wrap {
+    display: grid;
+    gap: var(--space-m);
+  }
+
+  .layers {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .layer {
+    padding: var(--space-l);
+    background: var(--surface);
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    margin: 0 -1px -1px 0;
+  }
+
+  .layer-name {
+    font-size: var(--step-1);
+    font-weight: 700;
+  }
+
+  .layer-where {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--accent);
+    margin-bottom: var(--space-s);
+  }
+
+  .layer ul {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 0.2rem;
+    color: var(--muted);
+    font-size: var(--step--1);
+  }
+
+  .note {
+    font-size: var(--step--1);
+  }
+
+  .flow {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 0;
+    position: relative;
+  }
+
+  .flow li {
+    position: relative;
+    display: grid;
+    grid-template-columns: 3rem minmax(0, 1fr);
+    gap: 0.2rem var(--space-m);
+    padding: var(--space-l) 0 var(--space-l);
+  }
+
+  .flow li::before {
+    content: '';
+    position: absolute;
+    left: calc(1rem - 0.5px);
+    top: 3.4rem;
+    bottom: 0;
+    border-left: 1px dashed var(--line);
+  }
+
+  .flow li:last-child::before {
+    display: none;
+  }
+
+  .flow-n {
+    grid-row: span 2;
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border: 1px solid var(--accent);
+    border-radius: 50%;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--accent);
+  }
+
+  .flow-lane {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+
+  .flow p {
+    max-width: 40em;
+  }
+
+  @media (min-width: 56rem) {
+    .flow {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: var(--space-l);
+    }
+    .flow li {
+      grid-template-columns: 1fr;
+      align-content: start;
+      padding: 0;
+      gap: var(--space-s);
+    }
+    .flow li::before {
+      left: 2.6rem;
+      right: calc(-1 * var(--space-l));
+      top: 1rem;
+      bottom: auto;
+      border-left: 0;
+      border-top: 1px dashed var(--line);
+    }
+    .flow-n {
+      grid-row: auto;
+      background: var(--bg);
+      position: relative;
+    }
+    .flow p {
+      font-size: var(--step--1);
+    }
+  }
+
+  .body {
+    display: grid;
+    gap: var(--space-2xl);
+  }
+
+  .block {
+    display: grid;
+    gap: var(--space-m);
+    padding-top: var(--space-xl);
+    border-top: 1px solid var(--line);
+  }
+
+  .block h2 {
+    font-size: var(--step-2);
+  }
+
+  @media (min-width: 56rem) {
+    .block {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr);
+      gap: var(--space-2xl);
+    }
+  }
+
+  /* Solid surface and high-contrast text: no gradient behind any copy. */
+  .takeaway {
+    display: grid;
+    gap: var(--space-m);
+    justify-items: start;
+    padding: clamp(1.25rem, 1rem + 2vw, 2.5rem);
+    background: var(--sw-accent);
+    color: var(--sw-bg);
+    border-radius: var(--radius);
+    font-size: var(--step-1);
+    font-weight: 600;
+    line-height: 1.4;
+  }
+
+  .takeaway .label {
+    color: #2c3a10;
+  }
+
+  .takeaway .btn {
+    background: var(--sw-bg);
+    color: var(--sw-text);
+    border-color: var(--sw-bg);
+  }
+
+  .takeaway .btn:hover {
+    background: transparent;
+    color: var(--sw-bg);
+  }
+
+  .takeaway :focus-visible {
+    outline-color: var(--sw-bg);
+  }
+</style>

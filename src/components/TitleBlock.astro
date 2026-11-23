@@ -1,0 +1,60 @@
+---
+// A drawing-sheet title block: the engineering profile's signature device.
+// Used sparingly (overview and case study headers), not on every section.
+interface Field {
+  term: string;
+  value: string;
+  wide?: boolean;
+}
+interface Props {
+  fields: Field[];
+  label?: string;
+}
+const { fields, label = 'Summary' } = Astro.props;
+---
+
+<dl class="tblock" aria-label={label}>
+  {
+    fields.map((f) => (
+      <div class={f.wide ? 'wide' : undefined}>
+        <dt>{f.term}</dt>
+        <dd>{f.value}</dd>
+      </div>
+    ))
+  }
+</dl>
+
+<style>
+  .tblock {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+    border: 1.5px solid var(--en-text);
+    background: var(--en-surface);
+  }
+
+  .tblock > div {
+    padding: 0.7rem 0.9rem 0.8rem;
+    border-right: 1px solid var(--en-text);
+    border-bottom: 1px solid var(--en-text);
+    margin: 0 -1px -1px 0;
+  }
+
+  .tblock .wide {
+    grid-column: 1 / -1;
+  }
+
+  dt {
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--en-muted);
+  }
+
+  dd {
+    margin: 0.2rem 0 0;
+    font-family: var(--font-serif);
+    font-size: var(--step-1);
+    line-height: 1.25;
+  }
+</style>

@@ -1,0 +1,154 @@
+---
+import { Picture } from 'astro:assets';
+import Profile from '../../../layouts/Profile.astro';
+import CaseHeader from '../../../components/CaseHeader.astro';
+import CaseNext from '../../../components/CaseNext.astro';
+import { person } from '../../../data/site';
+import hero from '../../../assets/projects/vortex-hero.png';
+import gallery from '../../../assets/projects/vortex-gallery.png';
+
+// Features confirmed from the source in github.com/wariboko65/Vortex_Horizon (index.js).
+const features = [
+  { name: 'Filterable work gallery', text: 'Two tabs switch the portfolio between web design and development work and 3D modelling, with a “See more” control to expand the grid.' },
+  { name: 'Light and dark themes', text: 'Follows the visitor’s system setting by default, reacts when it changes, and has a manual toggle.' },
+  { name: 'Validated contact form', text: 'Checks every field in the browser, then posts the enquiry to a Google Sheet through Google Apps Script.' },
+  { name: 'Always-available contact', text: 'A floating contact button and an email capture in the hero, so a visitor never has to hunt for a way to get in touch.' },
+  { name: 'Responsive navigation', text: 'A collapsible menu on small screens, and scroll-triggered fade and slide entrances.' },
+];
+---
+
+<Profile
+  path="software"
+  title={`Vortex Horizon studio website · Case study · ${person.fullName}`}
+  description="Case study: Vortex Horizon, the website for a small web design, development and 3D modelling studio, built with plain HTML, CSS and JavaScript, with a filterable gallery, theme switching and a Google Sheets contact form."
+>
+  <CaseHeader
+    kicker="Case study · Personal project"
+    title="Vortex Horizon"
+    intro="Vortex Horizon is the small studio I started for websites and 3D model showcases. I designed and built its website: the brand, the service pages, a gallery that separates web work from 3D work, and the contact flow."
+    meta={[
+      { term: 'Type', value: 'Personal project, 2022 – present' },
+      { term: 'Role', value: 'Founder, designer and developer' },
+      { term: 'Stack', value: 'HTML · CSS · JavaScript' },
+      { term: 'Live site', value: 'vortexhorizon.vercel.app', href: 'https://vortexhorizon.vercel.app/' },
+    ]}
+  />
+
+  <figure class="wrap shot shot--wide">
+    <Picture
+      src={hero}
+      alt="Vortex Horizon home page: the studio name and tagline over a field of white geometric shapes, with three service summaries below."
+      widths={[640, 960, 1440]}
+      sizes="(min-width: 76rem) 76rem, 100vw"
+      formats={['avif', 'webp']}
+    />
+    <figcaption class="muted">Home page at desktop width.</figcaption>
+  </figure>
+
+  <section class="wrap section" aria-labelledby="features-title">
+    <div class="section-head">
+      <p class="label">What it does</p>
+      <h2 id="features-title">No framework, a fair amount of behaviour</h2>
+      <p class="muted prose">
+        Everything below is around 300 lines of plain JavaScript, with no libraries apart from Bootstrap Icons.
+      </p>
+    </div>
+    <ol class="features">
+      {
+        features.map((f) => (
+          <li data-reveal>
+            <h3>{f.name}</h3>
+            <p class="muted">{f.text}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <section class="wrap split" aria-labelledby="gallery-title">
+    <figure class="shot">
+      <Picture
+        src={gallery}
+        alt="The ‘Journey Through Our Creations’ gallery section with tabs for Web Design & Development and 3D Modeling, above tilted project previews."
+        widths={[640, 960]}
+        sizes="(min-width: 56rem) 55vw, 100vw"
+        formats={['avif', 'webp']}
+      />
+    </figure>
+    <div class="prose">
+      <h2 id="gallery-title">One gallery, two kinds of work</h2>
+      <p>
+        The studio does two quite different things, so the portfolio section is split by discipline instead of mixing
+        landing pages with 3D renders. Switching tabs swaps the visible set, and “See more” reveals the rest of the
+        grid only when someone wants it.
+      </p>
+      <p>
+        <a class="arrow-link" href="https://github.com/wariboko65/Vortex_Horizon" rel="noopener">Source on GitHub <span aria-hidden="true">↗</span></a>
+      </p>
+    </div>
+  </section>
+
+  <CaseNext current="vortex-horizon" />
+</Profile>
+
+<style>
+  .shot {
+    display: grid;
+    gap: var(--space-xs);
+  }
+
+  .shot :global(img) {
+    width: 100%;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+
+  figcaption {
+    font-size: var(--step--1);
+  }
+
+  .features {
+    list-style: none;
+    padding: 0;
+    counter-reset: feat;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+    gap: var(--space-xl) var(--space-l);
+  }
+
+  .features li {
+    counter-increment: feat;
+    display: grid;
+    gap: var(--space-xs);
+    align-content: start;
+  }
+
+  .features li::before {
+    content: counter(feat, decimal-leading-zero);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--accent);
+  }
+
+  .features h3 {
+    font-size: var(--step-1);
+    letter-spacing: -0.01em;
+  }
+
+  .split {
+    display: grid;
+    gap: var(--space-xl);
+    align-items: center;
+  }
+
+  .split h2 {
+    font-size: var(--step-3);
+  }
+
+  @media (min-width: 56rem) {
+    .split {
+      grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+      gap: var(--space-2xl);
+    }
+  }
+</style>

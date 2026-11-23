@@ -1,0 +1,46 @@
+---
+import Base from '../layouts/Base.astro';
+import { person } from '../data/site';
+---
+
+<Base path="landing" title={`Page not found · ${person.fullName}`} description="This page does not exist." noindex>
+  <main id="main" class="nf">
+    <p class="code" aria-hidden="true">404</p>
+    <h1>This page does not exist.</h1>
+    <p class="muted">The link may be old, or the address may have a typo. Choose where to go next:</p>
+    <ul>
+      <li><a href="/software">Software Development profile</a></li>
+      <li><a href="/engineering">Civil &amp; Environmental Engineering profile</a></li>
+      <li><a href="/">Start page</a></li>
+    </ul>
+  </main>
+</Base>
+
+<style>
+  .nf {
+    min-height: 100svh;
+    display: grid;
+    align-content: center;
+    gap: var(--space-m);
+    width: min(100% - 2 * var(--gutter), 40rem);
+    margin-inline: auto;
+  }
+  .code {
+    font-family: var(--font-serif);
+    font-size: var(--step-5);
+    color: var(--accent);
+    line-height: 1;
+  }
+  h1 {
+    font-size: var(--step-3);
+  }
+  ul {
+    padding-left: 1.2em;
+    display: grid;
+    gap: 0.4rem;
+    font-weight: 600;
+  }
+  .muted {
+    color: var(--muted);
+  }
+</style>

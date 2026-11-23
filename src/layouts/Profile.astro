@@ -1,0 +1,257 @@
+---
+import Base from './Base.astro';
+import { paths, person, site, type Path } from '../data/site';
+
+interface Props {
+  path: Path;
+  title: string;
+  description: string;
+  ogImage?: string;
+  jsonLd?: Record<string, unknown>;
+}
+
+const { path, ...rest } = Astro.props;
+const current = paths[path];
+const otherKey: Path = path === 'software' ? 'engineering' : 'software';
+const other = paths[otherKey];
+const here = Astro.url.pathname.replace(/\/$/, '') || '/';
+const isCurrent = (href: string) =>
+  href === current.home ? here === href : here === href || here.startsWith(href + '/');
+---
+
+<Base path={path} {...rest}>
+  <header class="site-header">
+    <div class="wrap bar">
+      <a class="identity" href="/">
+        <span class="identity-name">{person.fullName}</span>
+        <span class="identity-path">{current.short}</span>
+        <span class="visually-hidden">, back to the start page</span>
+      </a>
+      <a class="switch" href={other.home}>
+        <span class="switch-pre">Switch to</span>
+        {other.short}
+        <span aria-hidden="true">↗</span>
+      </a>
+    </div>
+    <nav class="wrap nav" aria-label={`${current.label} sections`}>
+      <ul>
+        {
+          current.nav.map((item) => (
+            <li>
+              <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <slot />
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-grid">
+      <div class="footer-id">
+        <p class="footer-name">{person.fullName}</p>
+        <p class="muted">{current.role} · {person.location}</p>
+      </div>
+      <ul class="footer-links" aria-label="Contact">
+        <li><a href={`mailto:${person.email}`}>{person.email}</a></li>
+        <li><a href={person.phoneHref}>{person.phoneDisplay}</a></li>
+        <li><a href={person.linkedin} rel="noopener">LinkedIn</a></li>
+        {path === 'software' && <li><a href={person.github} rel="noopener">GitHub</a></li>}
+        <li><a href={site.cv[path]} download>Download CV (PDF)</a></li>
+      </ul>
+      <div class="footer-paths">
+        <p class="label">Also on this site</p>
+        <a href={other.home}>{other.label} profile <span aria-hidden="true">→</span></a>
+        <a href="/">Back to the start page <span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+    <p class="wrap footer-note muted">© {new Date().getFullYear()} {person.fullName}</p>
+  </footer>
+</Base>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-m);
+    padding-top: var(--space-s);
+  }
+
+  .identity {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    text-decoration: none;
+    min-width: 0;
+  }
+
+  .identity-name {
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+  }
+
+  .identity-path {
+    font-family: var(--label);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding-left: 0.6rem;
+    border-left: 1px solid var(--line);
+  }
+
+  [data-path='engineering'] .identity-name {
+    font-family: var(--font-serif);
+    font-weight: 600;
+    font-size: 1.12rem;
+  }
+
+  .switch {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35em;
+    flex: none;
+    padding: 0.4rem 0.75rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: border-color 0.2s var(--ease), color 0.2s var(--ease);
+  }
+
+  .switch:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .switch-pre {
+    color: var(--muted);
+    font-weight: 400;
+  }
+
+  .nav ul {
+    display: flex;
+    gap: var(--space-l);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .nav ul::-webkit-scrollbar {
+    display: none;
+  }
+
+  .nav a {
+    display: block;
+    padding: 0.7rem 0 0.65rem;
+    font-size: 0.92rem;
+    color: var(--muted);
+    text-decoration: none;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+  }
+
+  .nav a:hover {
+    color: var(--text);
+  }
+
+  .nav a[aria-current='page'] {
+    color: var(--text);
+    border-bottom-color: var(--accent);
+  }
+
+  @media (max-width: 34rem) {
+    .identity-path,
+    .switch-pre {
+      display: none;
+    }
+    .identity-name {
+      font-size: 0.98rem;
+    }
+    .nav ul {
+      gap: 0.85rem;
+    }
+    .nav a {
+      font-size: 0.86rem;
+    }
+  }
+
+  /* On very narrow phones the row can still scroll: fade the edge as a hint. */
+  @media (max-width: 23rem) {
+    .nav ul {
+      -webkit-mask-image: linear-gradient(90deg, #000 82%, transparent);
+      mask-image: linear-gradient(90deg, #000 82%, transparent);
+      padding-right: 1.5rem;
+    }
+  }
+
+  .site-footer {
+    margin-top: var(--space-3xl);
+    padding-block: var(--space-2xl) var(--space-l);
+    border-top: 1px solid var(--line);
+    font-size: var(--step--1);
+  }
+
+  .footer-grid {
+    display: grid;
+    gap: var(--space-xl);
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  }
+
+  .footer-name {
+    font-family: var(--display);
+    font-size: var(--step-1);
+    font-weight: 600;
+    margin-bottom: var(--space-2xs);
+  }
+
+  .footer-links {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  .footer-links a,
+  .footer-paths a {
+    text-decoration: none;
+  }
+
+  .footer-links a:hover,
+  .footer-paths a:hover {
+    color: var(--accent);
+    text-decoration: underline;
+  }
+
+  .footer-paths {
+    display: grid;
+    gap: 0.35rem;
+    align-content: start;
+  }
+
+  .footer-note {
+    margin-top: var(--space-2xl);
+    font-size: 0.8rem;
+  }
+</style>

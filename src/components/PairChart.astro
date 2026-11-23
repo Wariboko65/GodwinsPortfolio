@@ -1,0 +1,245 @@
+---
+// Horizontal paired bars comparing the male and female hostels.
+// Colours validated with the dataviz palette checker against #fbf9f4:
+// male #0089a3, female #c45a22 (CVD ΔE 17.5, both ≥ 3:1 contrast).
+interface Row {
+  label: string;
+  male: number;
+  female: number;
+}
+interface Props {
+  id: string;
+  title: string;
+  caption?: string;
+  unit: string;
+  rows: Row[];
+  max?: number;
+  decimals?: number;
+}
+const { id, title, caption, unit, rows, max, decimals = 1 } = Astro.props;
+const top = max ?? Math.max(...rows.flatMap((r) => [r.male, r.female])) * 1.08;
+const fmt = (n: number) => n.toLocaleString('en-GB', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+const pct = (n: number) => `${Math.max((n / top) * 100, 0.8).toFixed(2)}%`;
+const series = [
+  { key: 'male' as const, name: 'Male hostel (E)' },
+  { key: 'female' as const, name: 'Female hostel (D)' },
+];
+---
+
+<figure class="chart" aria-labelledby={`${id}-t`}>
+  <figcaption>
+    <p class="chart-title" id={`${id}-t`}>{title}</p>
+    {caption && <p class="chart-cap">{caption}</p>}
+    <ul class="legend" aria-label="Legend">
+      {series.map((s) => <li><span class={`sw sw--${s.key}`} aria-hidden="true"></span>{s.name}</li>)}
+    </ul>
+  </figcaption>
+
+  <div class="plot" role="img" aria-label={`${title}. ${rows.map((r) => `${r.label}: male ${fmt(r.male)} ${unit}, female ${fmt(r.female)} ${unit}`).join('; ')}.`}>
+    {
+      rows.map((r) => (
+        <div class="row" aria-hidden="true">
+          {rows.length > 1 && <p class="row-label">{r.label}</p>}
+          {series.map((s) => (
+            <div class="bar-line">
+              <span
+                class={`bar bar--${s.key}`}
+                style={`--w:${pct(r[s.key])}`}
+                data-tip={`${s.name}${rows.length > 1 ? ` · ${r.label}` : ''}: ${fmt(r[s.key])} ${unit}`}
+              />
+              <span class="val">
+                {fmt(r[s.key])} <span class="unit">{unit}</span>
+              </span>
+            </div>
+          ))}
+        </div>
+      ))
+    }
+  </div>
+
+  <details class="table-view">
+    <summary>Show as table</summary>
+    <table>
+      <caption class="visually-hidden">{title}</caption>
+      <thead>
+        <tr><th scope="col">{rows.length > 1 ? 'Measure' : ''}</th><th scope="col">Male hostel (E)</th><th scope="col">Female hostel (D)</th></tr>
+      </thead>
+      <tbody>
+        {rows.map((r) => (
+          <tr><th scope="row">{r.label}</th><td>{fmt(r.male)} {unit}</td><td>{fmt(r.female)} {unit}</td></tr>
+        ))}
+      </tbody>
+    </table>
+  </details>
+</figure>
+
+<style>
+  .chart {
+    --male: #0089a3;
+    --female: #c45a22;
+    display: grid;
+    gap: var(--space-m);
+    padding: clamp(1rem, 0.8rem + 1vw, 1.75rem);
+    background: var(--en-surface);
+    border: 1px solid var(--en-line);
+    border-radius: var(--radius);
+    color: var(--en-text);
+  }
+
+  figcaption {
+    display: grid;
+    gap: var(--space-2xs);
+  }
+
+  .chart-title {
+    font-weight: 700;
+    font-size: var(--step-0);
+  }
+
+  .chart-cap {
+    font-size: var(--step--1);
+    color: var(--en-muted);
+  }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem 1.2rem;
+    list-style: none;
+    padding: 0;
+    margin-top: var(--space-xs);
+    font-size: var(--step--1);
+    color: var(--en-muted);
+  }
+
+  .legend li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+
+  .sw {
+    width: 0.8rem;
+    height: 0.8rem;
+    border-radius: 2px;
+  }
+
+  .sw--male { background: var(--male); }
+  .sw--female { background: var(--female); }
+
+  .plot {
+    display: grid;
+    gap: var(--space-l);
+  }
+
+  .row {
+    display: grid;
+    gap: 2px;
+  }
+
+  .row-label {
+    font-size: var(--step--1);
+    font-weight: 600;
+    margin-bottom: var(--space-2xs);
+  }
+
+  .bar-line {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 7.5rem;
+    align-items: center;
+    gap: var(--space-s);
+  }
+
+  .bar {
+    position: relative;
+    display: block;
+    height: 1.15rem;
+    width: var(--w);
+    border-radius: 0 4px 4px 0;
+    outline-offset: 2px;
+  }
+
+  .bar--male { background: var(--male); }
+  .bar--female { background: var(--female); }
+
+  /* Hover / focus tooltip. */
+  .bar::after {
+    content: attr(data-tip);
+    position: absolute;
+    left: 0;
+    bottom: calc(100% + 6px);
+    z-index: 2;
+    padding: 0.35rem 0.55rem;
+    background: var(--en-text);
+    color: var(--en-bg);
+    font-size: 0.78rem;
+    font-weight: 600;
+    white-space: nowrap;
+    border-radius: 3px;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(3px);
+    transition: opacity 0.15s, transform 0.15s;
+  }
+
+  .bar:hover::after,
+  .bar:focus-visible::after {
+    opacity: 1;
+    transform: none;
+  }
+
+  .bar:hover {
+    filter: brightness(1.1);
+  }
+
+  .bar:focus-visible {
+    outline: 2px solid var(--en-text);
+  }
+
+  .val {
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+    font-size: var(--step--1);
+  }
+
+  .unit {
+    font-weight: 400;
+    color: var(--en-muted);
+  }
+
+  .table-view summary {
+    cursor: pointer;
+    font-size: var(--step--1);
+    color: var(--en-muted);
+    width: max-content;
+  }
+
+  .table-view summary:hover {
+    color: var(--en-text);
+  }
+
+  table {
+    width: 100%;
+    margin-top: var(--space-s);
+    border-collapse: collapse;
+    font-size: var(--step--1);
+    font-variant-numeric: tabular-nums;
+  }
+
+  th,
+  td {
+    text-align: left;
+    padding: 0.45rem 0.5rem 0.45rem 0;
+    border-bottom: 1px solid var(--en-line);
+  }
+
+  thead th {
+    color: var(--en-muted);
+    font-weight: 600;
+  }
+
+  @media (forced-colors: active) {
+    .bar--male { background: CanvasText; }
+    .bar--female { background: repeating-linear-gradient(45deg, CanvasText 0 3px, Canvas 3px 6px); border: 1px solid CanvasText; }
+  }
+</style>

@@ -1,0 +1,47 @@
+---
+import { caseStudies } from '../data/software';
+interface Props {
+  current: string;
+}
+const { current } = Astro.props;
+const i = caseStudies.findIndex((c) => c.slug === current);
+const next = caseStudies[(i + 1) % caseStudies.length];
+---
+
+<nav class="next wrap" aria-label="More projects">
+  <a class="next-card" href={`/software/projects/${next.slug}`}>
+    <span class="label">Next case study</span>
+    <span class="next-title">{next.name} <span aria-hidden="true">→</span></span>
+    <span class="muted">{next.kind}</span>
+  </a>
+  <a class="next-all" href="/software/projects">All projects</a>
+</nav>
+
+<style>
+  .next {
+    display: grid;
+    gap: var(--space-m);
+    margin-top: var(--space-3xl);
+  }
+  .next-card {
+    display: grid;
+    gap: var(--space-xs);
+    padding: var(--space-xl) 0;
+    border-block: 1px solid var(--line);
+    text-decoration: none;
+  }
+  .next-title {
+    font-size: var(--step-4);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    transition: color 0.2s var(--ease);
+  }
+  .next-card:hover .next-title {
+    color: var(--accent);
+  }
+  .next-all {
+    justify-self: start;
+    font-size: var(--step--1);
+  }
+</style>

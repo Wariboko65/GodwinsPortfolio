@@ -1,0 +1,171 @@
+---
+import Profile from '../../../layouts/Profile.astro';
+import { person } from '../../../data/site';
+import { caseStudies, archive, archiveCount } from '../../../data/software';
+---
+
+<Profile
+  path="software"
+  title={`Software projects · ${person.fullName}`}
+  description={`Software projects by ${person.fullName}: case studies for JOPAD Advisory, Jason and Vortex Horizon, plus an archive of ${archiveCount} Frontend Mentor solutions.`}
+>
+  <header class="wrap head">
+    <p class="label">~/software/projects</p>
+    <h1>Projects</h1>
+    <p class="lead muted">
+      Three case studies with the decisions behind them, and an archive of smaller builds that show how I got here.
+    </p>
+  </header>
+
+  <section class="wrap" aria-labelledby="cs-title">
+    <h2 id="cs-title" class="visually-hidden">Case studies</h2>
+    <ol class="index">
+      {
+        caseStudies.map((c, i) => (
+          <li>
+            <a href={`/software/projects/${c.slug}`}>
+              <span class="i-n">{String(i + 1).padStart(2, '0')}</span>
+              <span class="i-name">{c.name}</span>
+              <span class="i-kind">{c.kind}{c.year ? ` · ${c.year}` : ''}</span>
+              <span class="i-sum">{c.summary}</span>
+              <span class="i-stack">{c.stack.join(' · ')}</span>
+              <span class="i-arrow" aria-hidden="true">→</span>
+            </a>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <section class="wrap section" aria-labelledby="ar-title">
+    <a class="archive" href="/software/projects/frontend-mentor">
+      <p class="label">Archive</p>
+      <h2 id="ar-title">Frontend Mentor solutions <span aria-hidden="true">→</span></h2>
+      <p class="muted">
+        {archiveCount} solutions in three groups: {archive.map((g) => `${g.group.toLowerCase()} (${g.items.length})`).join(', ')}.
+      </p>
+    </a>
+  </section>
+</Profile>
+
+<style>
+  .head {
+    display: grid;
+    gap: var(--space-m);
+    padding-block: var(--space-2xl) var(--space-xl);
+  }
+
+  h1 {
+    font-size: var(--step-5);
+    font-weight: 800;
+  }
+
+  .index {
+    list-style: none;
+    padding: 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .index a {
+    display: grid;
+    grid-template-columns: 2.5rem minmax(0, 1fr) auto;
+    gap: var(--space-xs) var(--space-m);
+    padding: var(--space-xl) 0;
+    border-bottom: 1px solid var(--line);
+    text-decoration: none;
+  }
+
+  .i-n {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--muted);
+    padding-top: 0.6em;
+  }
+
+  .i-name {
+    font-size: var(--step-4);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    transition: color 0.2s var(--ease);
+  }
+
+  .i-kind,
+  .i-sum,
+  .i-stack {
+    grid-column: 2;
+  }
+
+  .i-kind {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--accent);
+  }
+
+  .i-sum {
+    max-width: 44em;
+    color: var(--muted);
+  }
+
+  .i-stack {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+
+  .i-arrow {
+    grid-column: 3;
+    grid-row: 1;
+    font-size: var(--step-3);
+    color: var(--muted);
+    transition:
+      transform 0.25s var(--ease),
+      color 0.2s var(--ease);
+  }
+
+  .index a:hover .i-name,
+  .index a:hover .i-arrow {
+    color: var(--accent);
+  }
+
+  .index a:hover .i-arrow {
+    transform: translateX(6px);
+  }
+
+  @media (min-width: 56rem) {
+    .index a {
+      grid-template-columns: 3rem minmax(0, 1.1fr) minmax(0, 1fr) auto;
+      align-items: start;
+    }
+    .i-kind {
+      grid-column: 2;
+    }
+    .i-sum {
+      grid-column: 3;
+      grid-row: 1 / span 2;
+    }
+    .i-stack {
+      grid-column: 3;
+    }
+    .i-arrow {
+      grid-column: 4;
+    }
+  }
+
+  .archive {
+    display: grid;
+    gap: var(--space-s);
+    padding: var(--space-xl);
+    border: 1px dashed var(--line);
+    border-radius: var(--radius);
+    text-decoration: none;
+  }
+
+  .archive:hover {
+    border-color: var(--accent);
+  }
+
+  .archive h2 {
+    font-size: var(--step-3);
+  }
+</style>
