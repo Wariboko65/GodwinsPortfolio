@@ -7,7 +7,7 @@ export const person = {
   phoneDisplay: '+234 814 165 7601',
   phoneHref: 'tel:+2348141657601',
   whatsapp: 'https://wa.me/2348141657601',
-  linkedin: 'https://www.linkedin.com/in/godwin-john-920915206',
+  linkedin: 'https://www.linkedin.com/in/oamienn',
   github: 'https://github.com/wariboko65',
   frontendMentor: 'https://www.frontendmentor.io/profile/wariboko65',
   telegram: 'https://t.me/Gdwin656',
