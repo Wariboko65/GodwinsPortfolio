@@ -3,7 +3,7 @@ import { Picture } from 'astro:assets';
 import Profile from '../../layouts/Profile.astro';
 import { person, site } from '../../data/site';
 import { caseStudies, stack, experience, certification, archive, archiveCount } from '../../data/software';
-import portrait from '../../assets/photos/portrait-office.jpg';
+import portrait from '../../assets/photos/portrait-software.jpg';
 import vortexShot from '../../assets/projects/vortex-hero.png';
 
 const [jopad, jason, vortex] = caseStudies;
@@ -34,7 +34,7 @@ const thumbs = archive.flatMap((g) => g.items).slice(0, 4);
     <figure class="hero-photo">
       <Picture
         src={portrait}
-        alt={`Portrait of ${person.fullName}`}
+        alt={`Portrait of ${person.fullName} in a light blue knit sweater`}
         widths={[320, 480, 720]}
         sizes="(min-width: 56rem) 26vw, 60vw"
         formats={['avif', 'webp']}
@@ -229,7 +229,6 @@ const thumbs = archive.flatMap((g) => g.items).slice(0, 4);
     object-fit: cover;
     object-position: 50% 30%;
     width: 100%;
-    filter: grayscale(0.25) contrast(1.05);
   }
 
   @media (min-width: 56rem) {

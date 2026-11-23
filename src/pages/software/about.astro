@@ -3,7 +3,7 @@ import { Picture } from 'astro:assets';
 import Profile from '../../layouts/Profile.astro';
 import { person, site } from '../../data/site';
 import { certification } from '../../data/software';
-import portrait from '../../assets/photos/portrait-office.jpg';
+import portrait from '../../assets/photos/portrait-software.jpg';
 ---
 
 <Profile
@@ -20,7 +20,7 @@ import portrait from '../../assets/photos/portrait-office.jpg';
     <figure class="about-photo">
       <Picture
         src={portrait}
-        alt={`${person.fullName}`}
+        alt={`Portrait of ${person.fullName} in a light blue knit sweater`}
         widths={[320, 520, 760]}
         sizes="(min-width: 56rem) 30vw, 80vw"
         formats={['avif', 'webp']}
