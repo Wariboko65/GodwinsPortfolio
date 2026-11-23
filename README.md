@@ -15,7 +15,7 @@ Live: https://godwins-portfolio.vercel.app
 - Plain CSS with design tokens (`src/styles/global.css`) and component-scoped styles
 - Self-hosted variable fonts via Fontsource: Schibsted Grotesk, Newsreader, JetBrains Mono
 - `astro:assets` for responsive AVIF/WebP images
-- `@astrojs/sitemap` for `sitemap-index.xml`
+- A generated `/sitemap.xml` (`src/pages/sitemap.xml.ts`) that lists every page automatically
 
 JavaScript on the page is limited to: scroll reveals (skipped when reduced motion is requested, and content is visible without JS), remembering the chosen path, and the contact form.
 
@@ -90,7 +90,7 @@ Both contact pages post to the existing Google Apps Script endpoint (`site.formE
 `vercel.json` pins the framework to Astro, the build command to `npm run build` and the output directory to `dist`. This matters because the repository used to be a plain static site with no build step. It also:
 
 - redirects `/Images/Godwin_Resume.pdf` (the old CV link) to the new software CV
-- redirects `/sitemap.xml` to `/sitemap-index.xml` (update Search Console to the new sitemap)
+- redirects the old `/sitemap-index.xml` and `/sitemap-0.xml` to `/sitemap.xml`; submit `https://godwins-portfolio.vercel.app/sitemap.xml` in Search Console
 - sets long-lived caching for hashed assets in `/_astro/`
 
 The Google Search Console verification tag is kept on the start page.

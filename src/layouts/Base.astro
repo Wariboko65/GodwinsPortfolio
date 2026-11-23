@@ -49,7 +49,7 @@ const themeColor = path === 'software' ? '#0d0f12' : '#f2eee5';
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
-    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="sitemap" href="/sitemap.xml" />
 
     {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
 
@@ -89,7 +89,5 @@ const themeColor = path === 'software' ? '#0d0f12' : '#f2eee5';
         } catch {}
       }
     </script>
-    <!-- Qualzo chat widget (existing integration), loaded without blocking rendering. -->
-    <script is:inline defer src="https://qualzo.app/widget.js" data-user="cmt2vv1l701objqtgmf4my28c"></script>
   </body>
 </html>
