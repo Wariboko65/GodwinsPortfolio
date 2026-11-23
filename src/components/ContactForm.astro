@@ -92,6 +92,10 @@ const id = `cf-${profile}`;
       try {
         const res = await fetch(form.action, { method: 'POST', body: data });
         if (!res.ok) throw new Error(String(res.status));
+        // The Apps Script replies 200 even when it fails internally, with
+        // {"result":"error"} in the body. Treat that as a failure too.
+        const reply = await res.json().catch(() => null);
+        if (reply && reply.result === 'error') throw new Error('script error');
         form.reset();
         fields.forEach((el) => el.removeAttribute('aria-invalid'));
         status.textContent = 'Thanks. Your message has been sent, and I will reply by email.';
