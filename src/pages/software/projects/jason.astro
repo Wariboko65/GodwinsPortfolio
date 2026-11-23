@@ -1,0 +1,225 @@
+---
+import Profile from '../../../layouts/Profile.astro';
+import CaseHeader from '../../../components/CaseHeader.astro';
+import CaseNext from '../../../components/CaseNext.astro';
+import { person } from '../../../data/site';
+
+const pieces = [
+  {
+    name: 'Progress bar',
+    text: 'Funds raised, donor count and percentage of the goal, read from a persisted Zustand store so the figures survive a reload.',
+  },
+  {
+    name: 'Modal system',
+    text: 'One reusable, accessible modal that powers the confirmation step.',
+  },
+  {
+    name: 'Accordion',
+    text: 'Expandable sections animated with Framer Motion.',
+  },
+  {
+    name: 'Share buttons',
+    text: 'WhatsApp, X and Facebook, each with a pre-written campaign message so people do not have to write their own.',
+  },
+];
+---
+
+<Profile
+  path="software"
+  title={`Jason medical fundraising site · Case study · ${person.fullName}`}
+  description="Case study: a React and TypeScript fundraising site for a child’s corrective surgery, with Zustand campaign progress, a privacy-gated donation flow, Framer Motion components and social sharing."
+>
+  <CaseHeader
+    kicker="Case study · Frontend contract"
+    title="Jason"
+    intro="A campaign site raising money for a child’s corrective surgery. It had two jobs: make it easy for people to give and to share the appeal, and protect the family from having their bank and contact details misused."
+    meta={[
+      { term: 'Type', value: 'Contract project' },
+      { term: 'Role', value: 'Frontend developer' },
+      { term: 'Stack', value: 'React · TypeScript · Zustand · Framer Motion' },
+      { term: 'Live site', value: 'jason-orpin.vercel.app', href: 'https://jason-orpin.vercel.app/' },
+    ]}
+  />
+
+  <section class="wrap section gate-section" aria-labelledby="gate-title">
+    <div class="gate-intro">
+      <p class="label">The decision that shaped the build</p>
+      <h2 id="gate-title">Sensitive details stay hidden until someone asks for them</h2>
+      <p class="muted">
+        A fundraising page has to publish where the money goes. Leaving account numbers in plain view also invites
+        misuse. The compromise was an explicit, deliberate step.
+      </p>
+    </div>
+    <ol class="gate" aria-label="How a donor reaches the bank details">
+      <li>
+        <span class="gate-n">1</span>
+        <p><strong>Reads the campaign.</strong> Story, progress and goal are public.</p>
+      </li>
+      <li>
+        <span class="gate-n">2</span>
+        <p><strong>Chooses to donate.</strong> The bank and contact details are not on the page yet.</p>
+      </li>
+      <li class="gate-lock">
+        <span class="gate-n" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="1.5"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg>
+        </span>
+        <p><strong>Confirms in a modal.</strong> Nothing sensitive appears until the donor explicitly confirms.</p>
+      </li>
+      <li>
+        <span class="gate-n">4</span>
+        <p><strong>Details are revealed</strong> and the donor can give directly.</p>
+      </li>
+    </ol>
+  </section>
+
+  <section class="wrap section" aria-labelledby="pieces-title">
+    <div class="section-head">
+      <p class="label">Components</p>
+      <h2 id="pieces-title">Small, reusable and accessible</h2>
+    </div>
+    <dl class="pieces">
+      {
+        pieces.map((p) => (
+          <div data-reveal>
+            <dt>{p.name}</dt>
+            <dd>{p.text}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </section>
+
+  <section class="wrap block" aria-labelledby="why-title">
+    <h2 id="why-title">How it is built</h2>
+    <div class="prose">
+      <p>
+        The campaign figures (amount raised, donors and progress towards the goal) are shown in more than one place, so
+        they live in a single persisted Zustand store that every component reads from. The store and the component
+        props are typed with TypeScript.
+      </p>
+      <p>
+        Framer Motion handles the scroll-triggered animations, the accordion and the progress bar. The share buttons open
+        each network with the campaign message already written, which matters for an appeal that spreads through
+        personal messages.
+      </p>
+      <p>
+        <a class="arrow-link" href="https://jason-orpin.vercel.app/" rel="noopener">Visit the live site <span aria-hidden="true">↗</span></a>
+      </p>
+    </div>
+  </section>
+
+  <CaseNext current="jason" />
+</Profile>
+
+<style>
+  .gate-section {
+    display: grid;
+    gap: var(--space-xl);
+  }
+
+  .gate-intro {
+    display: grid;
+    gap: var(--space-m);
+    align-content: start;
+  }
+
+  .gate-intro h2 {
+    font-size: var(--step-3);
+  }
+
+  .gate {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: var(--space-s);
+  }
+
+  .gate li {
+    display: grid;
+    grid-template-columns: 2.5rem minmax(0, 1fr);
+    gap: var(--space-m);
+    align-items: center;
+    padding: var(--space-m) var(--space-l);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--surface);
+  }
+
+  .gate-n {
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+  }
+
+  .gate li.gate-lock {
+    background: var(--sw-accent);
+    color: var(--sw-bg);
+    border-color: var(--sw-accent);
+  }
+
+  .gate-lock .gate-n {
+    border-color: var(--sw-bg);
+  }
+
+  @media (min-width: 56rem) {
+    .gate-section {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+      gap: var(--space-2xl);
+    }
+    .gate li:nth-child(2) {
+      margin-left: 1.5rem;
+    }
+    .gate li:nth-child(3) {
+      margin-left: 3rem;
+    }
+    .gate li:nth-child(4) {
+      margin-left: 4.5rem;
+    }
+  }
+
+  .pieces {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    gap: var(--space-xl) var(--space-l);
+  }
+
+  .pieces div {
+    display: grid;
+    gap: var(--space-xs);
+    padding-top: var(--space-m);
+    border-top: 2px solid var(--accent);
+  }
+
+  .pieces dt {
+    font-weight: 700;
+    font-size: var(--step-1);
+  }
+
+  .pieces dd {
+    margin: 0;
+    color: var(--muted);
+  }
+
+  .block {
+    display: grid;
+    gap: var(--space-m);
+    padding-top: var(--space-xl);
+    border-top: 1px solid var(--line);
+  }
+
+  .block h2 {
+    font-size: var(--step-2);
+  }
+
+  @media (min-width: 56rem) {
+    .block {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr);
+      gap: var(--space-2xl);
+    }
+  }
+</style>

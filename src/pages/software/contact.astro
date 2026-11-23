@@ -1,0 +1,24 @@
+---
+import Profile from '../../layouts/Profile.astro';
+import ContactSection from '../../components/ContactSection.astro';
+import { person } from '../../data/site';
+---
+
+<Profile
+  path="software"
+  title={`Contact · ${person.fullName}, Frontend & Full Stack Developer`}
+  description={`Contact ${person.fullName} about frontend or full stack developer roles, contracts and freelance web projects. Based in Port Harcourt, Nigeria, open to remote work.`}
+>
+  <ContactSection
+    path="software"
+    kicker="~/software/contact"
+    title="Let’s build something."
+    intro="I am open to full-time developer roles, contracts and freelance projects, remote or in Port Harcourt. Tell me what you are working on and I will reply by email."
+    topics={[
+      'Frontend or full stack developer roles',
+      'Contract work on an existing web app',
+      'A new website or web application',
+      'Integrations: calendars, email, forms and third-party APIs',
+    ]}
+  />
+</Profile>

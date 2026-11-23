@@ -1,0 +1,24 @@
+---
+import Profile from '../../layouts/Profile.astro';
+import ContactSection from '../../components/ContactSection.astro';
+import { person } from '../../data/site';
+---
+
+<Profile
+  path="engineering"
+  title={`Contact · ${person.fullName}, Civil & Environmental Engineering`}
+  description={`Contact ${person.fullName}, a B.Eng. Civil and Environmental Engineering graduate (Environmental option, University of Port Harcourt), about entry-level engineering, waste management and sustainability roles.`}
+>
+  <ContactSection
+    path="engineering"
+    kicker="Engineering · Contact"
+    title="Get in touch"
+    intro="I am looking for an entry-level role in environmental engineering, civil and infrastructure project delivery, waste management or sustainability. I am also glad to hear about research collaborations."
+    topics={[
+      'Graduate and entry-level engineering roles',
+      'Environmental and waste management work',
+      'Project monitoring and site supervision',
+      'Research and technical collaborations',
+    ]}
+  />
+</Profile>

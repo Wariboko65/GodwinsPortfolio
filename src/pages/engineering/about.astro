@@ -1,0 +1,127 @@
+---
+import { Picture } from 'astro:assets';
+import Profile from '../../layouts/Profile.astro';
+import { person, site } from '../../data/site';
+import { siwes, study, strengths } from '../../data/engineering';
+import portrait from '../../assets/photos/portrait-eng-headshot.jpg';
+---
+
+<Profile
+  path="engineering"
+  title={`About · ${person.fullName}, Civil & Environmental Engineering Graduate`}
+  description={`About ${person.fullName}: Civil and Environmental Engineering graduate (Environmental option) from the University of Port Harcourt with field experience in project monitoring and research in solid waste management.`}
+>
+  <div class="wrap about">
+    <header class="about-head">
+      <p class="label">Engineering · About</p>
+      <h1>Careful fieldwork, clear records, and an interest in what happens to waste.</h1>
+    </header>
+
+    <figure class="about-photo">
+      <Picture
+        src={portrait}
+        alt={`${person.fullName} in round glasses, a white shirt, dark waistcoat and striped tie, in front of the Department of Civil Engineering sign`}
+        widths={[320, 520, 760]}
+        sizes="(min-width: 56rem) 28vw, 80vw"
+        formats={['avif', 'webp']}
+      />
+    </figure>
+
+    <div class="prose text">
+      <p class="lead">
+        I’m {person.fullName}. I studied Civil and Environmental Engineering at the University of Port Harcourt, took
+        the Environmental Engineering option, and have defended my final-year project.
+      </p>
+      <p>
+        My industrial training placed me in the {siwes.department} at the {siwes.org}’s Rivers State office from{' '}
+        {siwes.period}. On site I supported handovers of emergency solar street-light projects, helped check plinth dimensions and earthing on installed lights, measuring finished roads with a wheel and tape,
+        and reconciling all of it against the Bill of Engineering Measurement and Evaluation. Back in the office I helped
+        value completed projects and compiled the inspection records, evaluation forms and photographs.
+      </p>
+      <p>
+        For my final-year research I went into two university hostels and measured their waste directly: {study.design.totalKg} kg,
+        sorted by hand into nine categories over six days. I then worked out what that waste could become, through
+        composting, recycling or energy recovery, and what it costs the climate if it is simply dumped. The female hostel produced
+        about five times more waste per person than the male hostel, and plastics made up around four-fifths of it in both.
+      </p>
+      <p>
+        I am looking for an entry-level role in environmental engineering, civil and infrastructure project delivery,
+        waste management or sustainability, where careful fieldwork and clear documentation feed into decisions.
+      </p>
+
+      <h2>What I am good at</h2>
+      <ul>{strengths.map((s) => <li>{s}</li>)}</ul>
+
+      <h2>The other half of my work</h2>
+      <p>
+        I am also a self-taught web developer and have built production web applications on contract. If that is
+        relevant to you, it has <a href="/software">its own profile on this site</a>.
+      </p>
+
+      <div class="actions">
+        <a class="btn" href="/engineering/contact">Contact me</a>
+        <a class="btn btn--quiet" href={site.cv.engineering} download>Download engineering CV</a>
+      </div>
+    </div>
+  </div>
+</Profile>
+
+<style>
+  .about {
+    display: grid;
+    gap: var(--space-xl);
+    padding-top: var(--space-2xl);
+  }
+
+  .about-head {
+    display: grid;
+    gap: var(--space-m);
+  }
+
+  h1 {
+    font-size: var(--step-4);
+    max-width: 18em;
+  }
+
+  .about-photo {
+    max-width: 24rem;
+  }
+
+  .about-photo :global(img) {
+    aspect-ratio: 1;
+    object-fit: cover;
+    border: 1.5px solid var(--en-text);
+  }
+
+  .text h2 {
+    font-family: var(--font-sans);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-top: 2.5em;
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-s);
+    margin-top: 2em;
+  }
+
+  @media (min-width: 56rem) {
+    .about {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr);
+      column-gap: var(--space-3xl);
+    }
+    .about-head {
+      grid-column: 1 / -1;
+    }
+    .about-photo {
+      position: sticky;
+      top: 8rem;
+      align-self: start;
+    }
+  }
+</style>

@@ -1,0 +1,93 @@
+---
+import '@fontsource-variable/schibsted-grotesk';
+import '@fontsource-variable/newsreader';
+import '@fontsource-variable/jetbrains-mono';
+import '../styles/global.css';
+import { person, site } from '../data/site';
+
+interface Props {
+  title: string;
+  description: string;
+  path: 'landing' | 'software' | 'engineering';
+  ogImage?: string;
+  jsonLd?: Record<string, unknown>;
+  noindex?: boolean;
+}
+
+const { title, description, path, ogImage, jsonLd, noindex = false } = Astro.props;
+const canonical = new URL(Astro.url.pathname.replace(/\/$/, '') || '/', site.url).href;
+const og = new URL(ogImage ?? (path === 'engineering' ? '/og/engineering.jpg' : path === 'software' ? '/og/software.jpg' : '/og/home.jpg'), site.url).href;
+const themeColor = path === 'software' ? '#0d0f12' : '#f2eee5';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="author" content={person.fullName} />
+    {noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonical} />}
+    <meta name="theme-color" content={themeColor} />
+    {path === 'landing' && <meta name="google-site-verification" content={site.googleVerification} />}
+
+    <meta property="og:type" content={path === 'landing' ? 'website' : 'profile'} />
+    <meta property="og:site_name" content={person.fullName} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={og} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={`${person.fullName}: ${title}`} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+
+    <script is:inline>
+      document.documentElement.classList.add('js');
+    </script>
+  </head>
+  <body data-path={path}>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <slot />
+
+    <script>
+      // Reveal-on-scroll, one observer for the whole page.
+      const items = document.querySelectorAll('[data-reveal]');
+      if ('IntersectionObserver' in window && items.length) {
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const e of entries) {
+              if (e.isIntersecting) {
+                e.target.classList.add('is-in');
+                io.unobserve(e.target);
+              }
+            }
+          },
+          { rootMargin: '0px 0px -8% 0px' },
+        );
+        items.forEach((el) => io.observe(el));
+      } else {
+        items.forEach((el) => el.classList.add('is-in'));
+      }
+
+      // Remember the last professional path the visitor explored.
+      const p = document.body.dataset.path;
+      if (p === 'software' || p === 'engineering') {
+        try {
+          localStorage.setItem('jgo:path', p);
+        } catch {}
+      }
+    </script>
+    <!-- Qualzo chat widget (existing integration), loaded without blocking rendering. -->
+    <script is:inline defer src="https://qualzo.app/widget.js" data-user="cmt2vv1l701objqtgmf4my28c"></script>
+  </body>
+</html>

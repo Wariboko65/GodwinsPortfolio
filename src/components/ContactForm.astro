@@ -1,0 +1,262 @@
+---
+import { person, site, type Path } from '../data/site';
+
+interface Props {
+  profile: Path;
+}
+const { profile } = Astro.props;
+const id = `cf-${profile}`;
+---
+
+<form class="cform" data-contact-form action={site.formEndpoint} method="post" novalidate>
+  <!-- Field names match the existing Google Sheet columns: Name, Email, Message. -->
+  <input type="hidden" name="Profile" value={profile === 'software' ? 'Software' : 'Engineering'} />
+
+  <div class="field">
+    <label for={`${id}-name`}>Your name</label>
+    <input id={`${id}-name`} name="Name" type="text" autocomplete="name" required maxlength="120" />
+    <p class="err" id={`${id}-name-err`} hidden>Please enter your name.</p>
+  </div>
+
+  <div class="field">
+    <label for={`${id}-email`}>Email address</label>
+    <input id={`${id}-email`} name="Email" type="email" autocomplete="email" required maxlength="200" />
+    <p class="err" id={`${id}-email-err`} hidden>Please enter a valid email address.</p>
+  </div>
+
+  <div class="field">
+    <label for={`${id}-msg`}>Message</label>
+    <textarea id={`${id}-msg`} name="Message" rows="6" required maxlength="5000"></textarea>
+    <p class="err" id={`${id}-msg-err`} hidden>Please write a short message.</p>
+  </div>
+
+  <!-- Honeypot: hidden from people, often filled in by bots. -->
+  <div class="hp" aria-hidden="true">
+    <label for={`${id}-website`}>Leave this field empty</label>
+    <input id={`${id}-website`} name="website" type="text" tabindex="-1" autocomplete="off" />
+  </div>
+
+  <div class="actions">
+    <button class="btn" type="submit" data-submit>Send message</button>
+    <p class="status" role="status" aria-live="polite" data-status></p>
+  </div>
+  <noscript>
+    <p class="muted">The form needs JavaScript. You can email me directly at <a href={`mailto:${person.email}`}>{person.email}</a>.</p>
+  </noscript>
+</form>
+
+<script>
+  for (const form of document.querySelectorAll<HTMLFormElement>('[data-contact-form]')) {
+    const status = form.querySelector<HTMLElement>('[data-status]')!;
+    const button = form.querySelector<HTMLButtonElement>('[data-submit]')!;
+    const fields = Array.from(form.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('input[required], textarea[required]'));
+
+    const check = (el: HTMLInputElement | HTMLTextAreaElement) => {
+      el.value = el.value.trimStart();
+      const ok = el.value.trim() !== '' && el.checkValidity();
+      const err = document.getElementById(el.id + '-err');
+      el.setAttribute('aria-invalid', String(!ok));
+      if (err) {
+        err.hidden = ok;
+        if (ok) el.removeAttribute('aria-describedby');
+        else el.setAttribute('aria-describedby', err.id);
+      }
+      return ok;
+    };
+
+    // Errors appear on submit and clear while typing. Nothing changes on blur, so the
+    // layout never shifts between pressing and releasing the submit button.
+    fields.forEach((el) =>
+      el.addEventListener('input', () => {
+        if (el.getAttribute('aria-invalid') === 'true') check(el);
+      }),
+    );
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const invalid = fields.filter((el) => !check(el));
+      if (invalid.length) {
+        invalid[0].focus();
+        status.textContent = 'Please fix the highlighted fields.';
+        status.dataset.state = 'error';
+        return;
+      }
+      const data = new FormData(form);
+      if (String(data.get('website') || '') !== '') return; // bot
+      data.delete('website');
+
+      button.disabled = true;
+      button.textContent = 'Sending…';
+      status.textContent = '';
+      delete status.dataset.state;
+      try {
+        const res = await fetch(form.action, { method: 'POST', body: data });
+        if (!res.ok) throw new Error(String(res.status));
+        // The Apps Script replies 200 even when it fails internally, with
+        // {"result":"error"} in the body. Treat that as a failure too.
+        const reply = await res.json().catch(() => null);
+        if (reply && reply.result === 'error') {
+          console.error('Contact form script error:', reply.error);
+          throw new Error('script error');
+        }
+        form.reset();
+        fields.forEach((el) => el.removeAttribute('aria-invalid'));
+        status.textContent = 'Thanks. Your message has been sent, and I will reply by email.';
+        status.dataset.state = 'ok';
+      } catch {
+        status.textContent = 'The message could not be sent. Please try again, or email me directly.';
+        status.dataset.state = 'error';
+      } finally {
+        button.disabled = false;
+        button.textContent = 'Send message';
+      }
+    });
+  }
+</script>
+
+<style>
+  .cform {
+    display: grid;
+    gap: var(--space-l);
+  }
+
+  .field {
+    display: grid;
+    gap: var(--space-xs);
+  }
+
+  label {
+    font-weight: 600;
+    font-size: var(--step--1);
+  }
+
+  input,
+  textarea {
+    width: 100%;
+    padding: 0.8rem 0.9rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--surface);
+    color: var(--text);
+    font-size: 1rem;
+    transition: border-color 0.2s var(--ease);
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 9rem;
+  }
+
+  input:hover,
+  textarea:hover {
+    border-color: var(--muted);
+  }
+
+  input:focus-visible,
+  textarea:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
+    border-color: var(--accent);
+  }
+
+  [aria-invalid='true'] {
+    border-color: #d64545;
+  }
+
+  .err {
+    font-size: var(--step--1);
+    color: #d64545;
+  }
+
+  :global([data-path='software']) .err {
+    color: #ff8a80;
+  }
+
+  :global([data-path='software']) [aria-invalid='true'] {
+    border-color: #ff8a80;
+  }
+
+  .hp {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-m);
+  }
+
+  .btn[disabled] {
+    opacity: 0.6;
+    cursor: progress;
+  }
+
+  /* Status message: a coloured box with an icon, so success and failure are
+     recognisable without reading the text. */
+  .status {
+    --ok: #1f6b43;
+    --bad: #b42318;
+    font-size: var(--step--1);
+    flex-basis: 100%;
+  }
+
+  :global([data-path='software']) .status {
+    --ok: #c8f169;
+    --bad: #ff8a80;
+  }
+
+  .status:empty {
+    display: none;
+  }
+
+  .status[data-state] {
+    display: flex;
+    gap: 0.6rem;
+    align-items: flex-start;
+    padding: 0.75rem 0.9rem;
+    border: 1px solid currentColor;
+    border-left-width: 4px;
+    border-radius: var(--radius);
+    font-weight: 600;
+    line-height: 1.45;
+  }
+
+  .status[data-state]::before {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 1.35rem;
+    height: 1.35rem;
+    border-radius: 50%;
+    font-size: 0.8rem;
+    font-weight: 800;
+    line-height: 1;
+  }
+
+  .status[data-state='ok'] {
+    color: var(--ok);
+    background: color-mix(in srgb, var(--ok) 10%, transparent);
+  }
+
+  .status[data-state='ok']::before {
+    content: '✓';
+    background: var(--ok);
+    color: var(--bg);
+  }
+
+  .status[data-state='error'] {
+    color: var(--bad);
+    background: color-mix(in srgb, var(--bad) 10%, transparent);
+  }
+
+  .status[data-state='error']::before {
+    content: '!';
+    background: var(--bad);
+    color: var(--bg);
+  }
+</style>

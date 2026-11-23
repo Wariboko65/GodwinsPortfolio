@@ -1,0 +1,403 @@
+---
+import { Picture } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Contours from '../components/Contours.astro';
+import { person, site } from '../data/site';
+import devPhoto from '../assets/photos/portrait-software.jpg';
+import engPhoto from '../assets/photos/portrait-eng-side.jpg';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: person.fullName,
+  url: site.url,
+  email: `mailto:${person.email}`,
+  jobTitle: ['Frontend / Full Stack Developer', 'Civil and Environmental Engineering graduate'],
+  address: { '@type': 'PostalAddress', addressLocality: 'Port Harcourt', addressRegion: 'Rivers State', addressCountry: 'NG' },
+  alumniOf: { '@type': 'CollegeOrUniversity', name: 'University of Port Harcourt' },
+  knowsAbout: ['Web development', 'JavaScript', 'React', 'Node.js', 'Environmental engineering', 'Solid waste management'],
+  sameAs: [person.linkedin, person.github, person.frontendMentor],
+};
+---
+
+<Base
+  path="landing"
+  title={`${person.fullName} · Software Developer & Environmental Engineering Graduate`}
+  description={`Personal website of ${person.fullName}, a frontend and full stack developer and a B.Eng. Civil and Environmental Engineering graduate from the University of Port Harcourt. Two professional profiles, one person.`}
+  jsonLd={jsonLd}
+>
+  <main id="main" class="landing">
+    <div class="intro">
+      <h1 class="name">{person.fullName}</h1>
+      <p class="intro-line">
+        I write software and I trained as an environmental engineer. Pick the side of my work you came to see.
+      </p>
+      <p class="resume" hidden data-resume>
+        Last time you were looking at the <a data-resume-link href="/software">Software profile</a>.
+      </p>
+    </div>
+
+    <section class="door door--software" aria-labelledby="door-software">
+      <div class="door-media">
+        <Picture
+          src={devPhoto}
+          alt={`${person.fullName} in a light blue knit sweater over a dark collared shirt`}
+          widths={[360, 560, 800]}
+          sizes="(min-width: 60rem) 22vw, 50vw"
+          formats={['avif', 'webp']}
+          loading="eager"
+          fetchpriority="high"
+        />
+      </div>
+      <div class="door-body">
+        <p class="door-for">For engineering teams, startups and clients</p>
+        <h2 id="door-software">Software<br />Development</h2>
+        <p class="door-text">
+          Frontend and full stack developer. I build the interface, the API behind it and the integrations that
+          connect them. Most recently: a booking platform that schedules calls and sends its own emails.
+        </p>
+        <p class="door-tags" aria-label="Main tools">JavaScript · TypeScript · React · Node.js</p>
+        <a class="door-cta" href="/software">
+          Enter the developer profile <span aria-hidden="true">→</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="door door--engineering" aria-labelledby="door-engineering">
+      <Contours class="door-contours" seed={11} />
+      <div class="door-media">
+        <Picture
+          src={engPhoto}
+          alt={`${person.fullName} in a waistcoat and tie, seated in front of the Department of Civil Engineering sign at the University of Port Harcourt`}
+          widths={[360, 560, 800]}
+          sizes="(min-width: 60rem) 22vw, 50vw"
+          formats={['avif', 'webp']}
+          loading="eager"
+        />
+      </div>
+      <div class="door-body">
+        <p class="door-for">For engineering employers and collaborators</p>
+        <h2 id="door-engineering">Civil &amp; Environmental<br />Engineering</h2>
+        <p class="door-text">
+          B.Eng. graduate, Environmental Engineering option, University of Port Harcourt. Project monitoring at the
+          NDDC and a field study of solid waste in university hostels.
+        </p>
+        <p class="door-tags" aria-label="Main areas">Waste management · Project monitoring · Field inspection</p>
+        <a class="door-cta" href="/engineering">
+          Enter the engineering profile <span aria-hidden="true">→</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    try {
+      const last = localStorage.getItem('jgo:path');
+      if (last === 'software' || last === 'engineering') {
+        const box = document.querySelector<HTMLElement>('[data-resume]');
+        const link = document.querySelector<HTMLAnchorElement>('[data-resume-link]');
+        if (box && link) {
+          link.href = '/' + last;
+          link.textContent = last === 'software' ? 'Software profile' : 'Engineering profile';
+          box.hidden = false;
+        }
+      }
+    } catch {}
+  </script>
+</Base>
+
+<style>
+  .landing {
+    --pad: clamp(1.25rem, 0.5rem + 3vw, 3.5rem);
+    display: grid;
+    grid-template-columns: 1fr;
+    min-height: 100svh;
+  }
+
+  /* ---------- Intro band ---------- */
+  .intro {
+    padding: calc(var(--pad) * 1.2) var(--pad) var(--pad);
+    text-align: center;
+    display: grid;
+    gap: var(--space-s);
+    justify-items: center;
+  }
+
+  .name {
+    font-size: var(--step-5);
+    font-weight: 800;
+    letter-spacing: -0.045em;
+    line-height: 0.95;
+  }
+
+  .intro-line {
+    max-width: 34em;
+    color: var(--muted);
+  }
+
+  .resume {
+    font-size: var(--step--1);
+  }
+
+  .resume a {
+    font-weight: 600;
+  }
+
+  /* ---------- Doors ---------- */
+  .door {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1fr);
+    gap: var(--pad);
+    align-items: end;
+    padding: var(--pad);
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  .door--software {
+    background: var(--sw-bg);
+    color: var(--sw-text);
+    --door-accent: var(--sw-accent);
+    --door-muted: var(--sw-muted);
+  }
+
+  .door--engineering {
+    background: var(--en-bg);
+    color: var(--en-text);
+    --door-accent: var(--en-accent);
+    --door-muted: var(--en-muted);
+    border-top: 1px solid var(--en-line);
+  }
+
+  .door :global(.door-contours) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    color: #b8ae9a;
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  .door-media {
+    position: relative;
+    overflow: hidden;
+    min-width: 0;
+    aspect-ratio: 4 / 5;
+    background: color-mix(in srgb, currentColor 8%, transparent);
+  }
+
+  .door-media :global(picture) {
+    position: absolute;
+    inset: 0;
+  }
+
+  .door-media :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .door--software .door-media :global(img) {
+    object-position: 50% 30%;
+  }
+
+  .door--engineering .door-media :global(img) {
+    object-position: 50% 20%;
+  }
+
+  .door-body {
+    display: grid;
+    gap: var(--space-m);
+    align-content: end;
+    padding-bottom: var(--space-2xs);
+  }
+
+  .door-for {
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--door-muted);
+  }
+
+  .door--software .door-for {
+    font-family: var(--font-mono);
+    letter-spacing: 0.02em;
+  }
+
+  .door h2 {
+    font-size: clamp(2.2rem, 1.4rem + 3.6vw, 3.4rem);
+    line-height: 0.98;
+  }
+
+  .door--software h2 {
+    font-family: var(--font-sans);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+  }
+
+  .door--engineering h2 {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+  }
+
+  .door-text {
+    max-width: 30em;
+  }
+
+  .door-tags {
+    font-size: var(--step--1);
+    color: var(--door-muted);
+  }
+
+  .door--software .door-tags {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+  }
+
+  .door-cta {
+    justify-self: start;
+    display: inline-flex;
+    gap: 0.5em;
+    align-items: center;
+    margin-top: var(--space-xs);
+    padding: 0.85rem 1.25rem;
+    border: 1px solid currentColor;
+    border-radius: var(--radius);
+    font-weight: 700;
+    text-decoration: none;
+    transition:
+      background-color 0.2s var(--ease),
+      color 0.2s var(--ease),
+      border-color 0.2s var(--ease);
+  }
+
+  /* The whole door is clickable through its call to action. */
+  .door-cta::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+
+  .door-cta span {
+    transition: transform 0.25s var(--ease);
+  }
+
+  .door:hover .door-cta,
+  .door-cta:focus-visible {
+    background: var(--door-accent);
+    border-color: var(--door-accent);
+    color: var(--door--ink, #0d0f12);
+  }
+
+  .door--engineering:hover .door-cta,
+  .door--engineering .door-cta:focus-visible {
+    color: #fff;
+  }
+
+  .door:hover .door-cta span {
+    transform: translateX(4px);
+  }
+
+  .door-cta:focus-visible {
+    outline: 2px solid var(--door-accent);
+    outline-offset: 4px;
+  }
+
+  .door-media :global(img) {
+    transition: transform 0.8s var(--ease);
+  }
+
+  .door:hover .door-media :global(img) {
+    transform: scale(1.03);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .door:hover .door-media :global(img),
+    .door:hover .door-cta span {
+      transform: none;
+    }
+  }
+
+  /* ---------- Small screens: stacked doors ---------- */
+  @media (max-width: 40rem) {
+    .door {
+      grid-template-columns: 1fr;
+      align-items: start;
+    }
+    .door-media {
+      aspect-ratio: 16 / 10;
+    }
+    .door--engineering .door-media :global(img) {
+      object-position: 50% 12%;
+    }
+    .door-cta {
+      justify-self: stretch;
+      justify-content: space-between;
+    }
+  }
+
+  /* ---------- Wide screens: the two doors side by side ---------- */
+  @media (min-width: 60rem) {
+    .landing {
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto 1fr;
+      background: linear-gradient(90deg, var(--sw-bg) 50%, var(--en-bg) 50%);
+    }
+
+    /* The name spans the seam. Blending white text with `difference` renders it
+       light on the dark half and dark on the paper half. */
+    .intro {
+      grid-column: 1 / -1;
+      color: #fff;
+      mix-blend-mode: difference;
+      padding-bottom: var(--space-l);
+    }
+
+    .intro-line,
+    .resume {
+      color: #fff;
+    }
+
+    .door {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto 1fr;
+      align-items: start;
+      gap: var(--space-xl);
+    }
+
+    .door--engineering {
+      border-top: 0;
+    }
+
+    .door-media {
+      aspect-ratio: 16 / 9;
+    }
+    .door h2 {
+      font-size: clamp(2.2rem, 0.6rem + 2.7vw, 3.4rem);
+    }
+  }
+
+  @media (min-width: 80rem) {
+    .door {
+      grid-template-columns: minmax(0, 0.85fr) minmax(0, 1fr);
+      grid-template-rows: auto;
+      align-items: end;
+    }
+    .door--engineering {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 0.85fr);
+    }
+    .door--engineering .door-media {
+      order: 2;
+    }
+    .door h2 {
+      font-size: clamp(2.2rem, 0.4rem + 2.4vw, 3.4rem);
+    }
+    .door-media {
+      aspect-ratio: 4 / 5;
+    }
+  }
+</style>

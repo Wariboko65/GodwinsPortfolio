@@ -1,0 +1,448 @@
+---
+import { Picture } from 'astro:assets';
+import Profile from '../../layouts/Profile.astro';
+import Contours from '../../components/Contours.astro';
+import TitleBlock from '../../components/TitleBlock.astro';
+import FieldGallery from '../../components/FieldGallery.astro';
+import { person, site } from '../../data/site';
+import { degree, siwes, study, knowledge } from '../../data/engineering';
+import portrait from '../../assets/photos/portrait-eng-front.jpg';
+
+---
+
+<Profile
+  path="engineering"
+  title={`${person.fullName} · Civil & Environmental Engineering Graduate`}
+  description={`${person.fullName}: B.Eng. Civil and Environmental Engineering (Environmental option), University of Port Harcourt. SIWES project monitoring at the NDDC and a final-year field study on hostel solid waste, waste-to-energy and methane emissions.`}
+>
+  <section class="hero">
+    <Contours class="hero-contours" seed={23} rings={16} />
+    <div class="wrap hero-grid">
+      <div class="hero-text">
+        <p class="label">Civil &amp; Environmental Engineering</p>
+        <h1>{person.fullName}</h1>
+        <p class="hero-role">B.Eng. graduate, Environmental Engineering option</p>
+        <p class="lead">
+          I studied Civil and Environmental Engineering at the University of Port Harcourt. My industrial training was
+          in project monitoring at the Niger Delta Development Commission, and my final-year research measured how much
+          waste university hostels produce, what it is made of and what it could become.
+        </p>
+        <div class="actions">
+          <a class="btn" href={`/engineering/projects/${study.slug}`}>Read the research</a>
+          <a class="btn btn--quiet" href={site.cv.engineering} download>Download engineering CV</a>
+        </div>
+      </div>
+      <figure class="hero-photo">
+        <Picture
+          src={portrait}
+          alt={`${person.fullName} in glasses, a waistcoat and tie, seated in front of the Department of Civil Engineering sign and facing the camera`}
+          widths={[360, 560, 800]}
+          sizes="(min-width: 56rem) 32vw, 90vw"
+          formats={['avif', 'webp']}
+          loading="eager"
+          fetchpriority="high"
+        />
+        <figcaption>Department of Civil Engineering, University of Port Harcourt</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="wrap glance" aria-labelledby="glance-title">
+    <h2 id="glance-title" class="visually-hidden">At a glance</h2>
+    <TitleBlock
+      label="Profile at a glance"
+      fields={[
+        { term: 'Degree', value: `${degree.title}, ${degree.programme}` , wide: true },
+        { term: 'Option', value: 'Environmental Engineering' },
+        { term: 'Institution', value: degree.institution },
+        { term: 'Period', value: degree.years },
+        { term: 'Status', value: degree.status },
+        { term: 'Industrial training', value: `NDDC, ${siwes.period}` },
+      ]}
+    />
+  </section>
+
+  <section class="research" aria-labelledby="research-title">
+    <div class="wrap research-grid">
+      <div class="research-text">
+        <p class="label">Final-year research · {study.year}</p>
+        <h2 id="research-title">{study.title}</h2>
+        <p>
+          A comparative field study of a male and a female hostel at {study.site}: {study.design.roomsPerHostel} rooms
+          and {study.design.occupantsPerHostel} occupants in each, sampled over {study.design.samplingDays} days.
+          I hand-sorted and weighed {study.design.totalKg} kg of waste into {study.design.categories} categories, then
+          estimated its recovery potential, heating value and methane emissions.
+        </p>
+        <a class="research-link" href={`/engineering/projects/${study.slug}`}>
+          Method, findings and recommendations <span aria-hidden="true">→</span>
+        </a>
+      </div>
+      <dl class="findings">
+        <div data-reveal>
+          <dt>Waste per person per day</dt>
+          <dd>
+            <span class="big">{study.generation.male}</span> vs <span class="big">{study.generation.female}</span> kg
+          </dd>
+          <dd class="sub">Male vs female hostel, about five times higher in the female hostel</dd>
+        </div>
+        <div data-reveal>
+          <dt>Plastics by weight</dt>
+          <dd><span class="big">{study.plastics.male}–{study.plastics.female}</span> %</dd>
+          <dd class="sub">The dominant stream in both hostels, followed by food waste</dd>
+        </div>
+        <div data-reveal>
+          <dt>Methane impact if openly dumped</dt>
+          <dd><span class="big">{study.gwp.combined}</span> kg CO₂-eq</dd>
+          <dd class="sub">Both hostels, over the study period only (IPCC 2006 Tier 1)</dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="wrap section field" aria-labelledby="field-title">
+    <div class="field-head">
+      <p class="label">Industrial training · {siwes.period}</p>
+      <h2 id="field-title">Project monitoring at the NDDC</h2>
+      <p class="muted">
+        {siwes.role}, {siwes.department}, {siwes.org} ({siwes.orgNote}).
+      </p>
+      <a class="arrow-link" href="/engineering/projects#field-work">Field work in detail <span aria-hidden="true">→</span></a>
+      <div class="field-photos">
+        <FieldGallery limit={2} cols={2} />
+      </div>
+    </div>
+    <ul class="field-list">
+      {
+        siwes.duties.slice(0, 4).map((d) => (
+          <li data-reveal>
+            <h3>{d.title}</h3>
+            <p class="muted">{d.text}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section class="wrap section knowledge" aria-labelledby="k-title">
+    <div class="section-head">
+      <p class="label">Knowledge and skills</p>
+      <h2 id="k-title">What I can bring to a team</h2>
+      <p class="muted prose">Grouped by where I gained them, so it is clear what comes from research, what from site work and what is working knowledge.</p>
+    </div>
+    <div class="k-grid">
+      {
+        knowledge.map((k) => (
+          <section class="k" aria-label={k.area}>
+            <p class="k-basis">{k.basis}</p>
+            <h3>{k.area}</h3>
+            <ul>
+              {k.items.map((i) => (
+                <li>{i}</li>
+              ))}
+            </ul>
+          </section>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="wrap cta" aria-labelledby="cta-title">
+    <h2 id="cta-title">Looking for an entry-level engineer?</h2>
+    <p class="lead muted">
+      I am seeking roles in environmental engineering, civil and infrastructure project delivery, waste management or
+      sustainability. My NYSC service is yet to be mobilised, and referees are available on request.
+    </p>
+    <div class="actions">
+      <a class="btn" href="/engineering/contact">Contact me</a>
+      <a class="btn btn--quiet" href="/engineering/about">More about me</a>
+    </div>
+  </section>
+</Profile>
+
+<style>
+  /* ---------- Hero ---------- */
+  .hero {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .hero :global(.hero-contours) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    color: #c4baa6;
+    z-index: -1;
+  }
+
+  .hero-grid {
+    display: grid;
+    gap: var(--space-xl);
+    padding-block: var(--space-xl);
+    align-items: center;
+  }
+
+  .hero-text {
+    display: grid;
+    gap: var(--space-m);
+  }
+
+  h1 {
+    font-size: clamp(2.4rem, 1.5rem + 3.4vw, 4.5rem);
+    line-height: 1;
+  }
+
+  .hero-role {
+    font-size: var(--step-1);
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  .lead {
+    max-width: 34em;
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-s);
+    margin-top: var(--space-xs);
+  }
+
+  .hero-photo {
+    position: relative;
+    max-width: 22rem;
+    justify-self: center;
+  }
+
+  .hero-photo :global(img) {
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    object-position: 50% 15%;
+    width: 100%;
+  }
+
+  .hero-photo figcaption {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    padding: 0.4rem 0.7rem;
+    background: var(--en-text);
+    color: var(--en-bg);
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+  }
+
+  @media (min-width: 56rem) {
+    .hero-grid {
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+      gap: var(--space-2xl);
+      padding-block: var(--space-xl) var(--space-2xl);
+    }
+    .hero-photo {
+      justify-self: end;
+    }
+  }
+
+  /* ---------- Glance ---------- */
+  .glance {
+    margin-top: var(--space-2xl);
+  }
+
+  /* ---------- Research (deep teal band, solid colour behind all text) ---------- */
+  .research {
+    margin-top: var(--space-3xl);
+    background: var(--en-deep);
+    color: var(--en-deep-text);
+    padding-block: var(--space-3xl);
+    --accent: var(--en-deep-accent);
+  }
+
+  .research .label {
+    color: var(--en-deep-muted);
+  }
+
+  .research-grid {
+    display: grid;
+    gap: var(--space-2xl);
+  }
+
+  .research-text {
+    display: grid;
+    gap: var(--space-l);
+    align-content: start;
+  }
+
+  .research h2 {
+    font-size: var(--step-3);
+  }
+
+  .research-text p:not(.label) {
+    color: var(--en-deep-muted);
+    max-width: 36em;
+  }
+
+  .research-link {
+    justify-self: start;
+    color: var(--en-deep-accent);
+    font-weight: 600;
+  }
+
+  .research :focus-visible {
+    outline-color: var(--en-deep-accent);
+  }
+
+  .findings {
+    display: grid;
+    gap: 0;
+  }
+
+  .findings div {
+    padding-block: var(--space-l);
+    border-top: 1px solid rgb(242 238 229 / 0.25);
+  }
+
+  .findings dt {
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--en-deep-muted);
+  }
+
+  .findings dd {
+    margin: 0.3rem 0 0;
+    font-family: var(--font-serif);
+    font-size: var(--step-1);
+  }
+
+  .findings .big {
+    font-size: var(--step-4);
+    line-height: 1;
+    color: var(--en-deep-accent);
+  }
+
+  .findings .sub {
+    font-family: var(--font-sans);
+    font-size: var(--step--1);
+    color: var(--en-deep-muted);
+  }
+
+  @media (min-width: 56rem) {
+    .research-grid {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: var(--space-3xl);
+    }
+  }
+
+  /* ---------- Field ---------- */
+  .field {
+    display: grid;
+    gap: var(--space-xl);
+  }
+
+  .field-head {
+    display: grid;
+    gap: var(--space-m);
+    align-content: start;
+    justify-items: start;
+  }
+
+  .field-head h2 {
+    font-size: var(--step-3);
+  }
+
+  .field-photos {
+    width: 100%;
+    margin-top: var(--space-s);
+  }
+
+  .field-list {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: var(--space-l);
+    counter-reset: duty;
+  }
+
+  .field-list li {
+    display: grid;
+    gap: var(--space-xs);
+    padding-left: var(--space-l);
+    border-left: 2px solid var(--accent);
+  }
+
+  .field-list h3 {
+    font-size: var(--step-1);
+  }
+
+  @media (min-width: 56rem) {
+    .field {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr);
+      gap: var(--space-3xl);
+    }
+    .field-head {
+      position: sticky;
+      top: 8rem;
+      align-self: start;
+    }
+  }
+
+  /* ---------- Knowledge ---------- */
+  .knowledge {
+    padding-top: 0;
+  }
+
+  .k-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+    border-top: 1.5px solid var(--en-text);
+  }
+
+  .k {
+    display: grid;
+    gap: var(--space-s);
+    align-content: start;
+    padding: var(--space-l) var(--space-l) var(--space-l) 0;
+  }
+
+  .k-basis {
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  .k h3 {
+    font-size: var(--step-1);
+  }
+
+  .k ul {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 0.35rem;
+    font-size: var(--step--1);
+  }
+
+  .k li {
+    padding-bottom: 0.35rem;
+    border-bottom: 1px dotted var(--line);
+  }
+
+  /* ---------- CTA ---------- */
+  .cta {
+    display: grid;
+    gap: var(--space-m);
+    justify-items: start;
+    padding-top: var(--space-2xl);
+    border-top: 1px solid var(--line);
+  }
+
+  .cta h2 {
+    font-size: var(--step-4);
+    max-width: 14em;
+  }
+</style>
