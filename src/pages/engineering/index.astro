@@ -180,19 +180,18 @@ import portrait from '../../assets/photos/portrait-eng-front.jpg';
   .hero-grid {
     display: grid;
     gap: var(--space-xl);
-    padding-block: var(--space-2xl) 0;
-    align-items: end;
+    padding-block: var(--space-xl);
+    align-items: center;
   }
 
   .hero-text {
     display: grid;
     gap: var(--space-m);
-    padding-bottom: var(--space-2xl);
   }
 
   h1 {
-    font-size: var(--step-5);
-    line-height: 0.98;
+    font-size: clamp(2.4rem, 1.5rem + 3.4vw, 4.5rem);
+    line-height: 1;
   }
 
   .hero-role {
@@ -214,7 +213,7 @@ import portrait from '../../assets/photos/portrait-eng-front.jpg';
 
   .hero-photo {
     position: relative;
-    max-width: 26rem;
+    max-width: 22rem;
     justify-self: center;
   }
 
@@ -240,7 +239,7 @@ import portrait from '../../assets/photos/portrait-eng-front.jpg';
     .hero-grid {
       grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
       gap: var(--space-2xl);
-      padding-top: var(--space-3xl);
+      padding-block: var(--space-xl) var(--space-2xl);
     }
     .hero-photo {
       justify-self: end;

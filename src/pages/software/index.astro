@@ -190,8 +190,8 @@ const thumbs = archive.flatMap((g) => g.items).slice(0, 4);
   .hero {
     display: grid;
     gap: var(--space-xl);
-    padding-block: var(--space-2xl) var(--space-xl);
-    align-items: end;
+    padding-block: var(--space-xl);
+    align-items: center;
   }
 
   .hero-text {
@@ -200,9 +200,9 @@ const thumbs = archive.flatMap((g) => g.items).slice(0, 4);
   }
 
   h1 {
-    font-size: var(--step-5);
+    font-size: clamp(2.4rem, 1.5rem + 3.4vw, 4.5rem);
     font-weight: 800;
-    line-height: 0.92;
+    line-height: 0.95;
   }
 
   .hero-role {
@@ -221,7 +221,7 @@ const thumbs = archive.flatMap((g) => g.items).slice(0, 4);
   .hero-photo {
     display: grid;
     gap: var(--space-xs);
-    max-width: 22rem;
+    max-width: 20rem;
   }
 
   .hero-photo :global(img) {
@@ -235,7 +235,8 @@ const thumbs = archive.flatMap((g) => g.items).slice(0, 4);
   @media (min-width: 56rem) {
     .hero {
       grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
-      padding-block: var(--space-3xl) var(--space-2xl);
+      gap: var(--space-2xl);
+      padding-block: var(--space-xl) var(--space-2xl);
     }
     .hero-photo {
       justify-self: end;
