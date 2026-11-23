@@ -4,7 +4,7 @@ import Base from '../layouts/Base.astro';
 import Contours from '../components/Contours.astro';
 import { person, site } from '../data/site';
 import devPhoto from '../assets/photos/portrait-office.jpg';
-import engPhoto from '../assets/photos/portrait-civil-dept.jpg';
+import engPhoto from '../assets/photos/portrait-eng-side.jpg';
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -68,7 +68,7 @@ const jsonLd = {
       <div class="door-media">
         <Picture
           src={engPhoto}
-          alt={`${person.fullName} in a waistcoat and tie, holding a bound report outside the Department of Civil Engineering, University of Port Harcourt`}
+          alt={`${person.fullName} in a waistcoat and tie, seated in front of the Department of Civil Engineering sign at the University of Port Harcourt`}
           widths={[360, 560, 800]}
           sizes="(min-width: 60rem) 22vw, 50vw"
           formats={['avif', 'webp']}

@@ -3,7 +3,7 @@ import { Picture } from 'astro:assets';
 import Profile from '../../layouts/Profile.astro';
 import { person, site } from '../../data/site';
 import { siwes, study, strengths } from '../../data/engineering';
-import portrait from '../../assets/photos/portrait-civil-dept-close.jpg';
+import portrait from '../../assets/photos/portrait-eng-headshot.jpg';
 ---
 
 <Profile
@@ -20,7 +20,7 @@ import portrait from '../../assets/photos/portrait-civil-dept-close.jpg';
     <figure class="about-photo">
       <Picture
         src={portrait}
-        alt={`${person.fullName} in glasses, a waistcoat and tie, outside the Department of Civil Engineering`}
+        alt={`Close-up of ${person.fullName} in round glasses, a white shirt, waistcoat and striped tie, in front of the Department of Civil Engineering sign`}
         widths={[320, 520, 760]}
         sizes="(min-width: 56rem) 28vw, 80vw"
         formats={['avif', 'webp']}

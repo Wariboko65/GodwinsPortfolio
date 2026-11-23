@@ -6,7 +6,7 @@ import TitleBlock from '../../components/TitleBlock.astro';
 import FieldGallery from '../../components/FieldGallery.astro';
 import { person, site } from '../../data/site';
 import { degree, siwes, study, knowledge } from '../../data/engineering';
-import portrait from '../../assets/photos/portrait-civil-dept.jpg';
+import portrait from '../../assets/photos/portrait-eng-front.jpg';
 
 ---
 
@@ -35,7 +35,7 @@ import portrait from '../../assets/photos/portrait-civil-dept.jpg';
       <figure class="hero-photo">
         <Picture
           src={portrait}
-          alt={`${person.fullName} outside the Department of Civil Engineering, University of Port Harcourt, holding a bound report`}
+          alt={`${person.fullName} in glasses, a waistcoat and tie, seated in front of the Department of Civil Engineering sign and facing the camera`}
           widths={[360, 560, 800]}
           sizes="(min-width: 56rem) 32vw, 90vw"
           formats={['avif', 'webp']}
