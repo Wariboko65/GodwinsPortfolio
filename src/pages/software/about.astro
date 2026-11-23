@@ -21,8 +21,9 @@ import portrait from '../../assets/photos/portrait-software.jpg';
       <Picture
         src={portrait}
         alt={`Portrait of ${person.fullName} in a light blue knit sweater`}
-        widths={[320, 520, 760]}
-        sizes="(min-width: 56rem) 30vw, 80vw"
+        widths={[384, 768, 1152]}
+        sizes="min(24rem, 92vw)"
+        quality={82}
         formats={['avif', 'webp']}
       />
     </figure>

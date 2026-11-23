@@ -36,8 +36,9 @@ import portrait from '../../assets/photos/portrait-eng-front.jpg';
         <Picture
           src={portrait}
           alt={`${person.fullName} in glasses, a waistcoat and tie, seated in front of the Department of Civil Engineering sign and facing the camera`}
-          widths={[360, 560, 800]}
-          sizes="(min-width: 56rem) 32vw, 90vw"
+          widths={[360, 720, 1000]}
+          sizes="min(22rem, 92vw)"
+          quality={82}
           formats={['avif', 'webp']}
           loading="eager"
           fetchpriority="high"
