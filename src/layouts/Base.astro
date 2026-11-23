@@ -16,7 +16,9 @@ interface Props {
 
 const { title, description, path, ogImage, jsonLd, noindex = false } = Astro.props;
 const canonical = new URL(Astro.url.pathname.replace(/\/$/, '') || '/', site.url).href;
-const og = new URL(ogImage ?? (path === 'engineering' ? '/og/engineering.jpg' : path === 'software' ? '/og/software.jpg' : '/og/home.jpg'), site.url).href;
+// Bump OG_VERSION whenever a share image changes, so apps that cache link previews fetch the new one.
+const OG_VERSION = '2';
+const og = new URL((ogImage ?? (path === 'engineering' ? '/og/engineering.jpg' : path === 'software' ? '/og/software.jpg' : '/og/home.jpg')) + `?v=${OG_VERSION}`, site.url).href;
 const themeColor = path === 'software' ? '#0d0f12' : '#f2eee5';
 ---
 
