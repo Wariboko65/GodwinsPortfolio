@@ -29,12 +29,12 @@ const duration = await page.evaluate(() => window.DURATION);
 const from = opt('from', 0), to = opt('to', duration);
 const f0 = Math.round(from * fps), f1 = Math.round(to * fps);
 
-const vf = `tmix=frames=${sub},select='eq(mod(n\\,${sub})\\,${sub - 1})',setpts=N/(${fps}*TB),noise=alls=5:allf=t,format=yuv420p`;
+const vf = `tmix=frames=${sub},select='eq(mod(n\\,${sub})\\,${sub - 1})',setpts=N/(${fps}*TB),noise=alls=5:allf=t,hqdn3d=1.5:1.5:8:8,format=yuv420p`; // grain, then calm its frame-to-frame flicker so the file stays ~30 MB
 const audioIn = audio ? ['-ss', String(from), '-t', String(to - from), '-i', audio] : [];
 const audioOut = audio ? ['-map', '0:v', '-map', '1:a', '-af', 'loudnorm=I=-14:TP=-1.0:LRA=9', '-ar', '48000', '-c:a', 'aac', '-b:a', '256k', '-shortest'] : [];
 const ff = spawn('ffmpeg', ['-y', '-loglevel', 'error', '-f', 'image2pipe', '-framerate', String(fps * sub), '-c:v', 'mjpeg', '-i', '-',
   ...audioIn, '-vf', vf, '-r', String(fps), ...audioOut,
-  '-c:v', 'libx264', '-preset', 'slow', '-crf', '16', '-movflags', '+faststart', out], { stdio: ['pipe', 'inherit', 'inherit'] });
+  '-c:v', 'libx264', '-preset', 'slow', '-crf', '19', '-movflags', '+faststart', out], { stdio: ['pipe', 'inherit', 'inherit'] });
 
 const started = Date.now();
 for (let f = f0; f < f1; f++) {
