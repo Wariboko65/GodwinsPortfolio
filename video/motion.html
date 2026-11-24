@@ -1,0 +1,788 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Portfolio motion piece</title>
+<!--
+  30-second motion-graphics piece for the portfolio, in 16:9 (default) or 9:16 (?v).
+  A small 3D engine: every element is an actor in a CSS 3D world, a virtual camera
+  (target, rotation, distance, depth of field) flies through it, and window.seek(t)
+  draws the frame at t seconds. render-motion.mjs records it with motion blur.
+  The cut points sit on the beat of the 120 BPM soundtrack (one bar = 2 s).
+  Every fact shown comes from src/data/*.ts; keep it that way when editing.
+  Open with ?play (and optionally ?v) to watch it live in a browser.
+-->
+<style>
+  @font-face { font-family: 'Grotesk'; src: url('../node_modules/@fontsource-variable/schibsted-grotesk/files/schibsted-grotesk-latin-wght-normal.woff2') format('woff2'); font-weight: 400 900; }
+  @font-face { font-family: 'Serif'; src: url('../node_modules/@fontsource-variable/newsreader/files/newsreader-latin-wght-normal.woff2') format('woff2'); font-weight: 200 800; }
+  @font-face { font-family: 'Mono'; src: url('../node_modules/@fontsource-variable/jetbrains-mono/files/jetbrains-mono-latin-wght-normal.woff2') format('woff2'); font-weight: 100 800; }
+  :root {
+    --sw-bg: #0d0f12; --sw-surface: #16191e; --sw-line: #2b3038; --sw-text: #eceae4; --sw-muted: #9ea3ab; --sw-accent: #c8f169;
+    --en-bg: #f2eee5; --en-surface: #fbf9f4; --en-line: #d6cfbf; --en-text: #13272e; --en-muted: #4f5b5e; --en-accent: #a9471f;
+    --deep: #0f3a44; --deep-text: #f2eee5; --deep-muted: #b9c9cc; --deep-accent: #f0a46f;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { overflow: hidden; background: #000; }
+  body { font-family: 'Grotesk', sans-serif; -webkit-font-smoothing: antialiased; }
+  .stage { position: relative; overflow: hidden; background: var(--sw-bg); }
+  .world { position: absolute; left: 50%; top: 50%; width: 0; height: 0; transform-style: preserve-3d; }
+  .shot { position: absolute; left: 0; top: 0; transform-style: preserve-3d; display: none; }
+  .a { position: absolute; left: 0; top: 0; will-change: transform, opacity, filter; }
+  .p3 { transform-style: preserve-3d; }
+  .hud { position: absolute; inset: 0; pointer-events: none; perspective: 1200px; }
+  .hud .shot { left: 50%; top: 50%; }
+  .vignette { position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(ellipse at center, transparent 50%, rgba(0, 0, 0, 0.45) 100%); }
+  .fade { position: absolute; inset: 0; background: #000; opacity: 0; pointer-events: none; }
+  img { display: block; }
+  .mono { font-family: 'Mono', monospace; }
+  .serif { font-family: 'Serif', serif; }
+
+  /* letters */
+  .word { white-space: nowrap; line-height: 0.95; text-align: center; }
+  .word span { display: inline-block; white-space: pre; }
+
+  /* generic cards */
+  .card { border-radius: 14px; overflow: hidden; }
+  .dark-card { background: var(--sw-surface); border: 1px solid var(--sw-line); color: var(--sw-text); }
+  .paper-card { background: var(--en-surface); border: 1px solid var(--en-line); color: var(--en-text); box-shadow: 0 18px 40px rgba(19, 39, 46, 0.12); }
+  .shot-card { border-radius: 10px; overflow: hidden; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.55); border: 1px solid #ffffff14; }
+  .shot-card img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
+  .label { font-family: 'Mono', monospace; text-transform: uppercase; letter-spacing: 0.06em; }
+
+  /* particles */
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: #c8f169; }
+
+  /* JOPAD */
+  .grid-floor { background-image: linear-gradient(#2b303899 2px, transparent 2px), linear-gradient(90deg, #2b303899 2px, transparent 2px);
+    background-size: 120px 120px; }
+  .node { padding: 30px; border: 2px solid var(--sw-line); background: var(--sw-surface); border-radius: 14px; color: var(--sw-text); }
+  .node .n { font-family: 'Mono', monospace; font-size: 22px; color: var(--sw-muted); }
+  .node .t { margin-top: 16px; font-size: 36px; font-weight: 650; line-height: 1.12; }
+  .node .d { margin-top: 14px; font-family: 'Mono', monospace; font-size: 20px; color: var(--sw-muted); }
+  .node.lit { border-color: var(--sw-accent); }
+  .node.lit .n { color: var(--sw-accent); }
+  .wire { background: var(--sw-line); }
+  .wire b { position: absolute; inset: 0; background: var(--sw-accent); box-shadow: 0 0 18px #c8f169aa; }
+  .chip { font-family: 'Mono', monospace; font-size: 26px; padding: 12px 20px; border: 1px solid var(--sw-line); border-radius: 8px;
+    background: var(--sw-surface); color: var(--sw-text); white-space: nowrap; }
+
+  /* NDDC */
+  .drafting { background-image: linear-gradient(#d6cfbf88 1px, transparent 1px), linear-gradient(90deg, #d6cfbf88 1px, transparent 1px);
+    background-size: 40px 40px; }
+  .tile { border-radius: 18px; overflow: hidden; }
+  .tile.photo img { width: 100%; height: 100%; object-fit: cover; }
+  .tile .tag { position: absolute; left: 16px; bottom: 16px; font-family: 'Mono', monospace; font-size: 20px; background: var(--en-surface);
+    color: var(--en-text); padding: 6px 12px; border-radius: 6px; }
+  .tile.text { padding: 36px; }
+  .tile.ink { background: var(--deep); color: var(--deep-text); border: none; }
+
+  /* waste chart */
+  .bar { border-radius: 6px 6px 0 0; transform-origin: 50% 100%; }
+  .bar.f { background: linear-gradient(180deg, #ffc08f, var(--deep-accent)); }
+  .bar.m { background: #b9c9cc; }
+
+  /* outro */
+  .url { font-family: 'Mono', monospace; font-weight: 600; padding: 22px 42px; background: var(--sw-accent); color: var(--sw-bg);
+    border-radius: 10px; white-space: nowrap; box-shadow: 0 0 60px #c8f16966; }
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+  <div class="world" id="world"></div>
+  <div class="hud" id="hud"></div>
+  <div class="vignette" id="vig"></div>
+  <div class="fade" id="fade"></div>
+</div>
+
+<script>
+/* ======================================================================
+   Engine
+   ====================================================================== */
+const V = /[?&]v\b/.test(location.search);       // vertical 9:16
+const W = V ? 1080 : 1920, H = V ? 1920 : 1080;
+const P = V ? 1700 : 1400;                          // perspective distance (px)
+const BPM = 120, BEAT = 60 / BPM, BAR = BEAT * 4;
+const DURATION = 30;
+
+const stage = document.getElementById('stage');
+stage.style.width = W + 'px'; stage.style.height = H + 'px';
+stage.style.perspective = P + 'px';
+document.body.style.width = W + 'px'; document.body.style.height = H + 'px';
+const world = document.getElementById('world');
+const hud = document.getElementById('hud');
+
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const E = {
+  linear: (p) => p,
+  in: (p) => p * p * p,
+  out: (p) => 1 - Math.pow(1 - p, 3),
+  inOut: (p) => (p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2),
+  outExpo: (p) => (p >= 1 ? 1 : 1 - Math.pow(2, -10 * p)),
+  inExpo: (p) => (p <= 0 ? 0 : Math.pow(2, 10 * p - 10)),
+  inOutExpo: (p) => (p <= 0 ? 0 : p >= 1 ? 1 : p < 0.5 ? Math.pow(2, 20 * p - 10) / 2 : (2 - Math.pow(2, -20 * p + 10)) / 2),
+  outBack: (p) => { const c1 = 1.7, c3 = c1 + 1; return 1 + c3 * Math.pow(p - 1, 3) + c1 * Math.pow(p - 1, 2); },
+  outQuint: (p) => 1 - Math.pow(1 - p, 5),
+  step: (p) => (p < 1 ? 0 : 1),
+};
+const lerp = (a, b, k) => a + (b - a) * k;
+
+function track(keys, t) {
+  if (t <= keys[0][0]) return keys[0][1];
+  for (let i = 1; i < keys.length; i++) {
+    const [t1, v1, e] = keys[i];
+    if (t <= t1) {
+      const [t0, v0] = keys[i - 1];
+      const p = t1 === t0 ? 1 : (t - t0) / (t1 - t0);
+      return lerp(v0, v1, E[e || 'inOut'](clamp(p)));
+    }
+  }
+  return keys[keys.length - 1][1];
+}
+
+// seeded random, so every render is identical
+let seed = 7;
+const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+const rr = (a, b) => a + (b - a) * rnd();
+
+const shots = [];
+let curShot = null;
+const actors = [];
+const CUES = [];
+
+function shot(start, end, bg, opts = {}) {
+  const g = document.createElement('div'); g.className = 'shot';
+  world.appendChild(g);
+  const h = document.createElement('div'); h.className = 'shot';
+  hud.appendChild(h);
+  const s = { start, end, bg, g, h, cam: {}, ...opts };
+  shots.push(s);
+  if (!opts.always) curShot = s;
+  return s;
+}
+
+class Actor {
+  constructor(parent, html, o = {}) {
+    const n = document.createElement('div');
+    n.className = 'a ' + (o.cls || '');
+    if (o.w) n.style.width = o.w + 'px';
+    if (o.h) n.style.height = o.h + 'px';
+    if (o.style) Object.assign(n.style, o.style);
+    n.innerHTML = html;
+    parent.appendChild(n);
+    this.n = n;
+    this.hud = !!o.hud;
+    this.noDof = !!o.noDof;
+    this.p = { x: 0, y: 0, z: 0, rx: 0, ry: 0, rz: 0, s: 1, sx: 1, sy: 1, o: 1, blur: 0 };
+    for (const k of Object.keys(this.p)) if (o[k] !== undefined) this.p[k] = o[k];
+    this.base = { ...this.p };
+    this.tr = {};
+    this.fx = o.fx || null;
+    this.shot = o.shot;
+    actors.push(this);
+  }
+  k(prop, keys) {
+    this.tr[prop] = (this.tr[prop] || []).concat(keys).sort((a, b) => a[0] - b[0]);
+    return this;
+  }
+  // animate from `from` to the base values
+  in(t, from, dur = 0.6, ease = 'outExpo') {
+    for (const [k, v] of Object.entries(from)) this.k(k, [[t, v], [t + dur, this.base[k], ease]]);
+    return this;
+  }
+  // animate from base values to `to`
+  out(t, to, dur = 0.5, ease = 'in') {
+    for (const [k, v] of Object.entries(to)) this.k(k, [[t, this.base[k]], [t + dur, v, ease]]);
+    return this;
+  }
+  at(t) {
+    const q = { ...this.p };
+    for (const k in this.tr) q[k] = track(this.tr[k], t);
+    return q;
+  }
+}
+
+function A(s, html, o = {}) { return new Actor(o.hud ? s.h : s.g, html, { ...o, shot: s }); }
+function cue(t, kind, actor = null, extra = {}) { CUES.push({ t, kind, actor, ...extra }); }
+
+// camera: an orbit camera around a target point; each shot has its own path, so cuts are clean
+const CAM0 = { tx: 0, ty: 0, tz: 0, rx: 0, ry: 0, rz: 0, dist: P, dof: 0, shake: 1 };
+
+function letters(text, cls = '') {
+  return [...text].map((c) => `<span class="${cls}">${c === ' ' ? ' ' : c}</span>`).join('');
+}
+
+// per-letter fly-in for a .word actor: each letter comes from deep z with its own drift
+function letterFly(actorOrList, t0, stagger = 0.035, dur = 0.75, depth = 1400, reverse = false) {
+  const list = Array.isArray(actorOrList) ? actorOrList : [actorOrList];
+  const actor = list[0];
+  const n0 = actor.n.querySelectorAll('span').length;
+  const params = Array.from({ length: n0 }, () => ({ dx: rr(-500, 500), dy: rr(-300, 300), ry: rr(-90, 90), rz: rr(-30, 30) }));
+  for (const ac of list) applyLetters(ac, params, t0, stagger, dur, depth, reverse);
+  const spans = [...actor.n.querySelectorAll('span')];
+  cue(t0, 'letters', actor, { n: spans.filter((s) => s.textContent.trim()).length, gap: stagger });
+}
+function applyLetters(actor, params, t0, stagger, dur, depth, reverse) {
+  const spans = [...actor.n.querySelectorAll('span')];
+  const prev = actor.fx;
+  actor.fx = (t, q) => {
+    prev && prev(t, q);
+    spans.forEach((sp, i) => {
+      const p = clamp((t - (t0 + i * stagger)) / dur);
+      const e = reverse ? 1 - E.in(p) : E.outExpo(p);
+      const k = 1 - e;
+      const r = params[i];
+      sp.style.transform = `translate3d(${k * r.dx}px, ${k * r.dy}px, ${-k * depth}px) rotateY(${k * r.ry}deg) rotateZ(${k * r.rz}deg)`;
+      sp.style.opacity = reverse ? 1 - p : clamp(p * 4);
+    });
+  };
+}
+
+/* ======================================================================
+   Timeline (seconds; 120 BPM, one bar = 2 s)
+   ====================================================================== */
+const T = {
+  intro: [0, 4], profiles: [4, 6], jopad: [6, 12], cloud: [12, 16], nddc: [16, 22], waste: [22, 27], outro: [27, 30],
+};
+const BG = { dark: '#0d0f12', paper: '#f2eee5', deep: '#0f3a44' };
+const SPLIT = V ? `linear-gradient(180deg, ${BG.dark} 50%, ${BG.paper} 50%)` : `linear-gradient(90deg, ${BG.dark} 50%, ${BG.paper} 50%)`;
+
+// ---------------------------------------------------------------- camera path
+const C = (keys) => {
+  for (const [prop, ks] of Object.entries(keys)) curShot.cam[prop] = (curShot.cam[prop] || []).concat(ks).sort((a, b) => a[0] - b[0]);
+};
+
+/* ---------------------------------------------------------------- particles (depth cue in dark shots) */
+const dust = shot(0, DURATION, null, { always: true });
+for (let i = 0; i < 46; i++) {
+  const a = A(dust, '', { cls: 'dot', x: rr(-1800, 1800), y: rr(-1400, 1400), z: rr(-3600, 900), s: rr(0.6, 1.8), noDof: false });
+  a.p.o = a.base.o = rr(0.15, 0.5);
+  a.dust = true;
+}
+
+/* ======================================================================
+   1. Intro — name assembles in depth, then two slams on the beat
+   ====================================================================== */
+{
+  const s = shot(...T.intro, (t) => (t < 3 ? BG.dark : BG.paper));
+  const fs = V ? 150 : 176;
+  const name = A(s, `<div class="word p3" style="font-size:${fs}px;font-weight:800;letter-spacing:-0.035em;color:#eceae4">${letters('John Godwin')}<br>${letters('Oamien')}</div>`,
+    { cls: 'p3', y: -20, noDof: true });
+  letterFly(name, 0.15, 0.035, 0.8);
+  name.out(1.72, { z: -900, y: V ? -500 : -320, o: 0, blur: 8 }, 0.28, 'in');
+
+  const l1 = A(s, `<div class="word" style="font-size:${V ? 110 : 130}px;font-weight:800;letter-spacing:-0.03em;color:#eceae4">
+      <span style="color:#c8f169">Software</span>${V ? '<br>' : ' '}developer.</div>`, { o: 0 });
+  l1.k('o', [[1.99, 0], [2.0, 1, 'step'], [2.99, 1], [3.0, 0, 'step']]);
+  l1.in(2.0, { z: 900, s: 1.25, blur: 8 }, 0.35, 'outExpo');
+  cue(2.0, 'slam', l1);
+
+  const l2 = A(s, `<div class="word serif" style="font-size:${V ? 120 : 140}px;font-weight:500;color:#13272e">
+      <span style="color:#a9471f">Environmental</span>${V ? '<br>' : ' '}engineer.</div>`, { o: 0 });
+  l2.k('o', [[2.99, 0], [3.0, 1, 'step']]);
+  l2.in(3.0, { z: 900, s: 1.25, blur: 8 }, 0.35, 'outExpo');
+  cue(3.0, 'flip', l2);
+
+  C({
+    dist: [[0, P + 1100], [1.9, P, 'inOut'], [3.5, P - 140, 'linear'], [4.0, P - 260, 'in']],
+    rx: [[0, 16], [1.9, 0, 'inOut']],
+    ry: [[0, -26], [1.9, 0, 'inOut'], [3.55, 0], [4.0, -75, 'inExpo']],
+    rz: [[0, -4], [1.9, 0, 'inOut']],
+    tx: [[0, 0], [3.55, 0], [4.0, 500, 'inExpo']],
+  });
+  cue(3.6, 'whip', null, { dur: 0.4, dir: 1 });
+}
+
+/* ======================================================================
+   2. Two profiles — cards fly in from either side and land on the split
+   ====================================================================== */
+{
+  const s = shot(...T.profiles, SPLIT);
+  const cw = V ? 560 : 520, ch = V ? 660 : 640;
+  const mk = (img, dark, label, sub) => `
+    <div class="card ${dark ? 'dark-card' : 'paper-card'}" style="width:${cw}px;height:${ch}px;padding:18px">
+      <img src="../src/assets/photos/${img}" style="width:100%;height:${ch - 150}px;object-fit:cover;border-radius:8px" alt="">
+      <div style="margin-top:18px;font-size:52px;${dark ? 'font-weight:800' : 'font-family:Serif;font-weight:500'}">${label}</div>
+      <div class="label" style="margin-top:6px;font-size:18px;color:${dark ? '#c8f169' : '#a9471f'}">${sub}</div>
+    </div>`;
+  const off = V ? 520 : 400;
+  const a = A(s, mk('portrait-software.jpg', true, 'Software', 'Frontend / full stack'), { x: V ? 0 : -off, y: V ? -off : 0, rz: -2 });
+  const b = A(s, mk('portrait-eng-front.jpg', false, 'Engineering', 'Civil &amp; environmental'), { x: V ? 0 : off, y: V ? off : 0, rz: 2 });
+  a.in(4.05, V ? { y: -1500, z: -500, rx: 60, rz: -14 } : { x: -1500, z: -500, ry: -70, rz: -14 }, 0.6, 'outExpo');
+  b.in(4.2, V ? { y: 1500, z: -500, rx: -60, rz: 14 } : { x: 1500, z: -500, ry: 70, rz: 14 }, 0.6, 'outExpo');
+  cue(4.05, 'fly', a, { dur: 0.6 });
+  cue(4.2, 'fly', b, { dur: 0.6 });
+  cue(4.5, 'slam', null, { soft: true });
+  // exit: both rush past the camera
+  a.out(5.55, { z: 1500, x: V ? 0 : -700, y: V ? -800 : 0 }, 0.45, 'inExpo');
+  b.out(5.6, { z: 1500, x: V ? 0 : 700, y: V ? 800 : 0 }, 0.4, 'inExpo');
+  cue(5.55, 'through', null, { dur: 0.45 });
+
+  C({
+    tx: [[4.0, -300], [4.6, 0, 'outExpo']],
+    ry: [[4.0, 55], [4.6, 0, 'outExpo'], [5.6, -8, 'linear']],
+    dist: [[4.0, P + 200], [4.6, P + 60, 'outExpo'], [5.6, P - 40, 'linear']],
+    rx: [[4.0, 0], [5.6, V ? 6 : 4, 'linear']],
+  });
+}
+
+/* ======================================================================
+   3. JOPAD — drone pass low over the booking flow, then rise to reveal
+   ====================================================================== */
+{
+  const s = shot(...T.jopad, BG.dark);
+  A(s, '', { cls: 'grid-floor', w: 5200, h: 5200, z: -4, noDof: true });
+  const nodes = [
+    ['01 / BOOK', 'Client picks a consultation slot', 'HTML · CSS · JS'],
+    ['02 / CHECK', 'Server confirms the slot is free', 'Node · Express · MongoDB'],
+    ['03 / SCHEDULE', 'Calendar invite and Meet link', 'Google Calendar API'],
+    ['04 / CONFIRM', 'Confirmation emails go out', 'Resend'],
+  ];
+  const nw = V ? 640 : 340, nh = V ? 250 : 250, gap = V ? 400 : 390;
+  const pos = (i) => (V ? [0, (i - 1.5) * gap] : [(i - 1.5) * gap, 40]);
+  const lit = [6.5, 7.5, 8.5, 9.5];
+  nodes.forEach(([n, t, d], i) => {
+    const [x, y] = pos(i);
+    const a = A(s, `<div class="node" style="width:${nw}px;height:${nh}px"><p class="n">${n}</p><p class="t">${t}</p><p class="d">${d}</p></div>`, { x, y, noDof: false });
+    a.in(6.0 + i * 0.12, { z: -260, s: 0.8, o: 0 }, 0.55, 'outBack');
+    cue(6.0 + i * 0.12, 'pop', a, { idx: i });
+    const node = a.n.firstElementChild;
+    a.fx = (tt) => {
+      const g = clamp((tt - lit[i]) / 0.25);
+      node.classList.toggle('lit', tt >= lit[i]);
+      node.style.boxShadow = tt >= lit[i] ? `0 0 ${20 + 60 * (1 - g) + 20}px rgba(200,241,105,${0.25 + 0.4 * (1 - g)})` : 'none';
+    };
+    cue(lit[i], 'lit', a, { idx: i });
+    if (i < 3) {
+      const [x2, y2] = pos(i + 1);
+      const len = V ? gap - nh : gap - nw;
+      const wx = V ? x : (x + x2) / 2, wy = V ? (y + y2) / 2 : y;
+      const w = A(s, '<b></b>', { cls: 'wire', w: V ? 4 : len, h: V ? len : 4, x: wx, y: wy });
+      const b = w.n.firstElementChild;
+      b.style.transformOrigin = V ? '50% 0' : '0 50%';
+      const t0 = lit[i] + 0.1, t1 = lit[i + 1] - 0.08;
+      w.fx = (tt) => { const k = E.inOut(clamp((tt - t0) / (t1 - t0))); b.style.transform = V ? `scaleY(${k})` : `scaleX(${k})`; };
+      cue(t0, 'wire', w, { dur: t1 - t0 });
+    }
+  });
+
+  const ty = V ? -1000 : -330;
+  const lab = A(s, `<div class="label" style="font-size:26px;color:#c8f169;white-space:nowrap">Contract · Full stack · 2026</div>`, { y: ty - 90 });
+  const title = A(s, `<div style="font-size:${V ? 120 : 124}px;font-weight:800;letter-spacing:-0.03em;color:#eceae4;white-space:nowrap">JOPAD Advisory</div>`, { y: ty });
+  const sub = A(s, `<div style="font-size:34px;color:#9ea3ab;white-space:nowrap">A booking platform that runs itself</div>`, { y: ty + 95 });
+  title.in(9.85, { z: 1100, o: 0, blur: 10 }, 0.5, 'outExpo');
+  lab.in(10.05, { y: ty - 40, o: 0 }, 0.4, 'outExpo');
+  sub.in(10.15, { y: ty + 140, o: 0 }, 0.4, 'outExpo');
+  cue(9.85, 'slam', title);
+
+  const chips = ['HTML', 'CSS', 'JavaScript', 'Node.js', 'Express', 'MongoDB', 'Google Calendar API'];
+  const cy = V ? 860 : 330;
+  const widths = chips.map((c) => c.length * 16.5 + 46);
+  const rows = V ? [chips.slice(0, 4), chips.slice(4)] : [chips];
+  let ci = 0;
+  rows.forEach((row, r) => {
+    const ws = row.map((c) => c.length * 16.5 + 46);
+    const total = ws.reduce((a, b) => a + b, 0) + 14 * (row.length - 1);
+    let x = -total / 2;
+    row.forEach((c, j) => {
+      const a = A(s, `<div class="chip">${c}</div>`, { x: x + ws[j] / 2, y: cy + r * 80 });
+      x += ws[j] + 14;
+      const t0 = 10.35 + ci * 0.07;
+      a.in(t0, { s: 0, z: -200, o: 0 }, 0.45, 'outBack');
+      cue(t0, 'tick', a, { idx: ci });
+      ci++;
+    });
+  });
+
+  const [n1x, n1y] = pos(0), [n2x, n2y] = pos(1), [n3x, n3y] = pos(2), [n4x, n4y] = pos(3);
+  C({
+    tx: [[6.0, n1x], [6.35, n1x], [7.35, n2x], [8.35, n3x], [9.35, n4x], [10.3, 0, 'inOut']],
+    ty: [[6.0, n1y], [6.35, n1y], [7.35, n2y], [8.35, n3y], [9.35, n4y], [10.3, V ? -60 : -40, 'inOut']],
+    tz: [[6.0, 0]],
+    rx: [[6.0, V ? 58 : 62], [9.4, V ? 58 : 62], [10.3, 0, 'inOut']],
+    ry: [[6.0, V ? 0 : -10], [9.4, V ? 0 : -4], [10.3, 0, 'inOut']],
+    rz: [[6.0, V ? -8 : -14], [9.4, V ? -4 : -6], [10.3, 0, 'inOut']],
+    dist: [[6.0, P - 380], [9.4, P - 330], [10.3, V ? P + 500 : P + 300, 'inOut'], [11.5, V ? P + 380 : P + 180, 'linear'], [12.0, P - 1900, 'inExpo']],
+    dof: [[6.0, 1.2], [9.4, 1.2], [10.3, 0.2]],
+  });
+  cue(9.45, 'rise', null, { dur: 0.85 });
+  cue(11.5, 'through', null, { dur: 0.5 });
+}
+
+/* ======================================================================
+   4. Projects — fly through a cloud of screenshots
+   ====================================================================== */
+{
+  const s = shot(...T.cloud, BG.dark);
+  const imgs = ['extensions-manager', 'conference-ticket', 'multi-step-form', 'calculator', 'advice-generator', 'newsletter', 'huddle',
+    'clipboard', 'fylo-storage', 'testimonials-grid', 'chat-illustration', 'nft-preview', 'order-summary', 'three-column', 'vortex-hero', 'vortex-gallery'];
+  const cw = V ? 400 : 440;
+  imgs.forEach((im, i) => {
+    let x, y;
+    do { x = rr(V ? -620 : -1150, V ? 620 : 1150); y = rr(V ? -1050 : -640, V ? 1050 : 640); }
+    while (Math.abs(x) < (V ? 330 : 420) && Math.abs(y) < (V ? 330 : 250));
+    const z = -300 - i * 190 + rr(-80, 80);
+    const label = im.startsWith('vortex') ? '<div class="label" style="position:absolute;left:12px;bottom:12px;font-size:16px;background:#0d0f12cc;color:#c8f169;padding:5px 9px;border-radius:5px">Vortex Horizon</div>' : '';
+    const a = A(s, `<div class="shot-card" style="width:${cw}px;height:${cw * 0.625}px;position:relative"><img src="../src/assets/projects/${im}.png" alt="">${label}</div>`,
+      { x, y, z, ry: rr(-28, 28), rz: rr(-8, 8) });
+    a.k('ry', [[12.0, a.base.ry - 10], [16.0, a.base.ry + 10, 'linear']]); // slow drift
+    const t0 = 12.0 + i * 0.055;
+    a.in(t0, { z: z - 2600, o: 0 }, 0.8, 'outExpo');
+    if (i % 4 === 0) cue(t0, 'fly', a, { dur: 0.5, soft: true });
+    cue(t0 + 0.12, 'tile', a, { idx: i });
+  });
+  // Jason: no screenshot, so a text card in the cloud
+  const j = A(s, `<div class="card dark-card" style="width:${V ? 440 : 460}px;padding:30px">
+      <div class="label" style="font-size:18px;color:#c8f169">Contract · Frontend</div>
+      <div style="font-size:52px;font-weight:800;margin:8px 0 6px">Jason</div>
+      <div style="font-size:24px;color:#9ea3ab;line-height:1.35">Fundraising site for a child’s corrective surgery</div>
+      <div class="mono" style="font-size:18px;margin-top:14px;color:#eceae4">React · TypeScript · Zustand</div></div>`,
+    { x: V ? 300 : 640, y: V ? -620 : -300, z: -1450, ry: -16, rz: 3 });
+  j.in(12.6, { z: -4000, o: 0 }, 0.9, 'outExpo');
+  cue(12.6, 'fly', j, { dur: 0.6 });
+
+  // HUD counter, in screen space
+  const plate = A(s, `<div style="width:${V ? 1000 : 1300}px;height:${V ? 900 : 760}px;background:radial-gradient(closest-side, rgba(13,15,18,0.92), rgba(13,15,18,0.6) 55%, transparent)"></div>`,
+    { hud: true, y: V ? 0 : 20 });
+  plate.in(12.5, { o: 0 }, 0.5, 'out');
+  plate.out(15.3, { o: 0 }, 0.3, 'in');
+  const big = A(s, `<div style="font-size:${V ? 300 : 280}px;font-weight:800;color:#c8f169;letter-spacing:-0.05em;line-height:1;text-shadow:0 0 60px #c8f16966"><span class="n">0</span></div>`,
+    { hud: true, y: V ? -110 : -60 });
+  const cap = A(s, `<div style="text-align:center;font-size:${V ? 52 : 50}px;font-weight:700;color:#eceae4;white-space:nowrap;text-shadow:0 2px 30px #000">Frontend Mentor solutions
+      <div class="mono" style="font-size:${V ? 24 : 24}px;font-weight:400;color:#9ea3ab;margin-top:12px">From CSS components to React apps</div></div>`,
+    { hud: true, y: V ? 140 : 150 });
+  big.in(12.55, { s: 0.4, o: 0, blur: 12 }, 0.5, 'outExpo');
+  cap.in(12.75, { y: V ? 200 : 210, o: 0 }, 0.5, 'outExpo');
+  const num = big.n.querySelector('.n');
+  big.fx = (t) => { num.textContent = Math.round(14 * E.out(clamp((t - 12.7) / 1.3))); };
+  cue(12.7, 'count', big, { value: 14, dur: 1.3, step: 1 });
+  big.out(15.3, { s: 1.6, o: 0, blur: 14 }, 0.4, 'in');
+  cap.out(15.3, { o: 0 }, 0.3, 'in');
+
+  // paper plane rushes up to fill the frame: into the engineering half
+  const wipe = A(s, `<div style="width:${W}px;height:${H}px;background:${BG.paper};border-radius:40px"></div>`, { hud: true, s: 0.04, rz: -14, o: 0 });
+  wipe.k('o', [[15.45, 0], [15.5, 1, 'step']]);
+  wipe.k('s', [[15.5, 0.04], [16.0, 1.15, 'inExpo']]);
+  wipe.k('rz', [[15.5, -14], [16.0, 0, 'inExpo']]);
+  cue(15.5, 'through', null, { dur: 0.5, bright: true });
+
+  C({
+    tx: [[12.0, 0]], ty: [[12.0, 0]],
+    tz: [[12.0, -400], [15.9, -2300, 'linear']],
+    dist: [[12.0, P + 700], [15.9, P - 150, 'out']],
+    rx: [[12.0, -4], [15.9, 6, 'linear']],
+    ry: [[12.0, 14], [15.9, -12, 'inOut']],
+    rz: [[12.0, 3], [15.9, -3, 'inOut']],
+    dof: [[12.0, 1.0]],
+  });
+}
+
+/* ======================================================================
+   5. NDDC — a bento grid of field work; the camera glides tile to tile
+   ====================================================================== */
+{
+  const s = shot(...T.nddc, BG.paper);
+  A(s, '', { cls: 'drafting', w: 6000, h: 6000, z: -6, noDof: true });
+  const gapc = 28;
+  const cols = V ? [470, 470] : [560, 440, 380, 460];
+  const rowsH = V ? [360, 430, 360, 430, 330] : [380, 380];
+  const colX = [], rowY = [];
+  { let x = -(cols.reduce((a, b) => a + b, 0) + gapc * (cols.length - 1)) / 2; cols.forEach((w) => { colX.push(x); x += w + gapc; }); }
+  { let y = -(rowsH.reduce((a, b) => a + b, 0) + gapc * (rowsH.length - 1)) / 2; rowsH.forEach((h) => { rowY.push(y); y += h + gapc; }); }
+  const cell = (c, r, cs = 1, rs = 1) => {
+    const w = cols.slice(c, c + cs).reduce((a, b) => a + b, 0) + gapc * (cs - 1);
+    const h = rowsH.slice(r, r + rs).reduce((a, b) => a + b, 0) + gapc * (rs - 1);
+    return { x: colX[c] + w / 2, y: rowY[r] + h / 2, w, h };
+  };
+  const plinthSvg = (w, h) => `
+    <svg viewBox="0 0 400 300" width="${w - 60}" height="${h - 110}" style="display:block;margin-top:12px">
+      <g fill="none" stroke="#13272e" stroke-width="3" stroke-linecap="round">
+        <rect class="dr" x="30" y="40" width="110" height="110" pathLength="1"/>
+        <rect class="dr" x="230" y="20" width="60" height="250" pathLength="1"/>
+        <line class="dr" x1="245" y1="20" x2="245" y2="-30" pathLength="1" stroke="#a9471f" stroke-width="10"/>
+      </g>
+      <g fill="none" stroke="#a9471f" stroke-width="2">
+        <path class="dr" d="M30 175 H140 M30 168 V182 M140 168 V182" pathLength="1"/>
+        <path class="dr" d="M315 20 V270 M308 20 H322 M308 270 H322" pathLength="1"/>
+      </g>
+      <g class="dims" font-family="JetBrains Mono" font-size="22" fill="#a9471f">
+        <text x="85" y="210" text-anchor="middle">450</text>
+        <text x="330" y="150">1000</text>
+        <text x="85" y="102" text-anchor="middle" fill="#4f5b5e" font-size="18">450</text>
+      </g>
+    </svg>`;
+  const tiles = V ? [
+    ['title', cell(0, 0, 2)], ['photo:plinth-measurement:Measuring a plinth', cell(0, 1)], ['photo:pole-measurement:Pole dimensions', cell(1, 1)],
+    ['draw', cell(0, 2)], ['stat', cell(1, 2)], ['photo:earthing-installation:Earthing', cell(0, 3)], ['photo:streetlights-night:Night check', cell(1, 3)],
+    ['list', cell(0, 4, 2)],
+  ] : [
+    ['title', cell(0, 0)], ['photo:plinth-measurement:Measuring a plinth', cell(1, 0)], ['photo:pole-measurement:Pole dimensions', cell(2, 0)], ['stat', cell(3, 0)],
+    ['list', cell(0, 1)], ['draw', cell(1, 1)], ['photo:earthing-installation:Earthing', cell(2, 1)], ['photo:streetlights-night:Night check', cell(3, 1)],
+  ];
+  const byKind = {};
+  tiles.forEach(([kind, c], i) => {
+    let html;
+    if (kind === 'title') {
+      html = `<div class="tile text paper-card" style="width:${c.w}px;height:${c.h}px">
+        <div class="label" style="font-size:20px;color:#a9471f">SIWES · July – December 2025</div>
+        <div class="serif" style="font-size:${V ? 70 : 58}px;font-weight:500;line-height:1.02;margin-top:14px">Field inspection at the NDDC</div>
+        <div style="font-size:22px;color:#4f5b5e;margin-top:16px">Project Monitoring &amp; Supervision · Rivers State Office</div></div>`;
+    } else if (kind === 'stat') {
+      html = `<div class="tile text ink" style="width:${c.w}px;height:${c.h}px">
+        <div class="label" style="font-size:18px;color:#f0a46f">Inspected</div>
+        <div class="serif" style="font-size:${V ? 120 : 110}px;line-height:1;margin-top:18px;color:#f0a46f">100 W</div>
+        <div style="font-size:24px;color:#b9c9cc;margin-top:12px;line-height:1.3">all-in-one solar street lights</div></div>`;
+    } else if (kind === 'list') {
+      const items = ['Pole and plinth dimensions', 'Earthing rod connections', 'Reconciled against BEME', 'Night-time functional checks'];
+      html = `<div class="tile text paper-card" style="width:${c.w}px;height:${c.h}px">
+        <div class="label" style="font-size:18px;color:#a9471f;margin-bottom:10px">Checklist</div>
+        ${items.map((it, k) => `<div class="li" style="font-size:${V ? 28 : 25}px;padding:${V ? 9 : 10}px 0;border-top:1px solid #d6cfbf;display:flex;gap:14px;opacity:0">
+          <span class="mono" style="color:#a9471f;font-size:18px;padding-top:5px">0${k + 1}</span>${it}</div>`).join('')}</div>`;
+    } else if (kind === 'draw') {
+      html = `<div class="tile text paper-card" style="width:${c.w}px;height:${c.h}px">
+        <div class="label" style="font-size:18px;color:#a9471f">Plinth · 450 × 450 × 1000 mm</div>${plinthSvg(c.w, c.h)}</div>`;
+    } else {
+      const [, img, tag] = kind.split(':');
+      html = `<div class="tile photo" style="width:${c.w}px;height:${c.h}px;position:relative">
+        <img src="../src/assets/field/${img}.jpg" alt=""><span class="tag">${tag}</span></div>`;
+    }
+    const a = A(s, html, { x: c.x, y: c.y });
+    const t0 = 16.08 + i * 0.09;
+    a.in(t0, { s: 0.3, z: -300, o: 0 }, 0.55, 'outBack');
+    cue(t0, kind.startsWith('photo') ? 'photo' : 'pop', a, { idx: i });
+    byKind[kind.split(':')[0] + (kind.startsWith('photo') ? i : '')] = { a, c };
+  });
+  // the drawing draws itself
+  const draw = Object.entries(byKind).find(([k]) => k === 'draw')[1];
+  const parts = [...draw.a.n.querySelectorAll('.dr')];
+  const dims = draw.a.n.querySelector('.dims');
+  parts.forEach((p) => { p.style.strokeDasharray = 1; });
+  const dt0 = 18.5;
+  draw.a.fx = (t) => {
+    parts.forEach((p, k) => { p.style.strokeDashoffset = 1 - E.inOut(clamp((t - dt0 - k * 0.14) / 0.45)); });
+    dims.style.opacity = clamp((t - 19.2) / 0.2);
+  };
+  cue(dt0, 'draw', draw.a, { dur: 1.1 });
+  // checklist items
+  const list = Object.entries(byKind).find(([k]) => k === 'list')[1];
+  const lis = [...list.a.n.querySelectorAll('.li')];
+  const lt = [19.9, 20.15, 20.4, 20.65];
+  list.a.fx = (t) => lis.forEach((li, k) => {
+    const p = E.outBack(clamp((t - lt[k]) / 0.35));
+    li.style.opacity = clamp((t - lt[k]) / 0.15);
+    li.style.transform = `translateX(${(1 - p) * 40}px)`;
+  });
+  lt.forEach((t, k) => cue(t, 'item', list.a, { idx: k }));
+
+  const at = (kind) => Object.entries(byKind).find(([k]) => k.startsWith(kind))[1].c;
+  const tl = at('title'), d = at('draw'), st = at('stat'), ls = at('list');
+  const photos = Object.entries(byKind).filter(([k]) => k.startsWith('photo')).map(([, v]) => v.c);
+  const gridW = cols.reduce((a, b) => a + b, 0) + gapc * (cols.length - 1);
+  const gridH = rowsH.reduce((a, b) => a + b, 0) + gapc * (rowsH.length - 1);
+  const fit = V ? P * Math.max(gridW / (W * 0.92), gridH / (H * 0.9)) : P * Math.max(gridW / (W * 0.92), gridH / (H * 0.86));
+  const path = V
+    ? [[16.0, tl], [17.1, tl], [17.7, photos[0]], [18.4, d], [19.4, d], [19.9, st], [20.3, photos[3]], [20.6, ls]]
+    : [[16.0, tl], [17.1, tl], [17.7, photos[0]], [18.4, d], [19.4, d], [19.9, ls], [20.3, photos[3]], [20.6, st]];
+  C({
+    tx: [...path.map(([t, c]) => [t, c.x, 'inOut']), [21.3, 0, 'inOut']],
+    ty: [...path.map(([t, c]) => [t, c.y, 'inOut']), [21.3, 0, 'inOut'], [22.0, V ? 900 : 520, 'inExpo']],
+    tz: [[16.0, 0]],
+    rx: [[16.0, 20], [17.1, 14], [18.4, 8, 'inOut'], [20.6, 10, 'inOut'], [21.3, 0, 'inOut'], [21.55, 0], [22.0, 78, 'inExpo']],
+    ry: [[16.0, -26], [17.1, -14, 'inOut'], [18.4, 6, 'inOut'], [19.4, 4], [20.6, 16, 'inOut'], [21.3, 0, 'inOut']],
+    rz: [[16.0, 6], [18.4, -2, 'inOut'], [20.6, 3, 'inOut'], [21.3, 0, 'inOut']],
+    dist: [[16.0, P - 420], [17.1, P - 380, 'linear'], [17.7, P - 260, 'inOut'], [18.4, P - 380, 'inOut'], [19.4, P - 420, 'linear'],
+      [20.6, P - 200, 'inOut'], [21.3, fit, 'inOut'], [21.55, fit], [22.0, P - 600, 'inExpo']],
+    dof: [[16.0, 0.8], [20.6, 0.8], [21.3, 0]],
+  });
+  cue(20.6, 'rise', null, { dur: 0.7 });
+  cue(21.55, 'whip', null, { dur: 0.45, dir: -1 });
+}
+
+/* ======================================================================
+   6. Waste study — drone fly-over of the daily chart, then the numbers
+   ====================================================================== */
+{
+  const s = shot(...T.waste, BG.deep);
+  const daily = [[23.895, 8.95], [27.75, 4.054], [18.14, 2.03], [17.15, 3.826], [20.34, 2.68], [18.37, 3.26]]; // female, male kg/day
+  const maxH = V ? 620 : 470, bw = V ? 56 : 54, groupW = V ? 150 : 152;
+  const cx = V ? 0 : 330, base = V ? 820 : 270;
+  const gx = (i) => cx + (i - 2.5) * groupW;
+  A(s, '', { w: groupW * 6 + 60, h: 3, x: cx, y: base + 1.5, style: { background: '#b9c9cc66' } });
+  const fBars = [];
+  daily.forEach(([f, m], i) => {
+    [[f, 'f', -bw / 2 - 3], [m, 'm', bw / 2 + 3]].forEach(([v, k, dx], j) => {
+      const h = (v / 27.75) * maxH;
+      const a = A(s, `<div class="bar ${k}" style="width:${bw}px;height:${h}px"></div>`, { x: gx(i) + dx, y: base - h / 2 });
+      a.n.style.transformOrigin = '50% 100%';
+      const t0 = 22.15 + i * 0.22 + j * 0.07;
+      const bar = a.n.firstElementChild;
+      a.fx = (t) => { bar.style.transform = `scaleY(${E.out(clamp((t - t0) / 0.6))})`; };
+      cue(t0, 'grow', a, { pitch: v / 27.75, dur: 0.6 });
+      if (k === 'f') fBars.push([a, bar]); else a.male = bar;
+    });
+    A(s, `<div class="mono" style="font-size:22px;color:#b9c9cc;white-space:nowrap">Day ${i + 1}</div>`, { x: gx(i), y: base + 34 });
+  });
+  // glow on the female bars
+  fBars.forEach(([a, bar]) => {
+    const prev = a.fx;
+    a.fx = (t) => { prev(t); const g = clamp((t - 25.3) / 0.4); bar.style.boxShadow = `0 0 ${g * 50}px rgba(240,164,111,${g * 0.9})`; bar.style.filter = `brightness(${1 + 0.25 * g})`; };
+  });
+  A(s, `<div class="mono" style="font-size:20px;color:#b9c9cc;white-space:nowrap"><span style="color:#f0a46f">■</span> Female hostel &nbsp; <span>■</span> Male hostel · kg per day</div>`,
+    { x: cx, y: base + 80 });
+
+  const tx0 = V ? 0 : -560, ty0 = V ? -560 : -110;
+  const lab = A(s, `<div class="label" style="font-size:22px;color:#f0a46f;white-space:nowrap">B.Eng. final-year research · 2026</div>`, { x: tx0, y: ty0 - (V ? 310 : 300) });
+  const tt = A(s, `<div class="serif" style="font-size:${V ? 58 : 50}px;color:#f2eee5;white-space:nowrap">Hostel solid waste study</div>`, { x: tx0, y: ty0 - (V ? 245 : 238) });
+  const kg = A(s, `<div class="serif" style="font-size:${V ? 230 : 200}px;line-height:1;color:#f0a46f;white-space:nowrap;text-shadow:0 0 50px #f0a46f55"><span class="n">0</span><span style="font-size:0.32em"> kg</span></div>`,
+    { x: tx0, y: ty0 - 60 });
+  const kgs = A(s, `<div class="mono" style="font-size:24px;color:#b9c9cc;white-space:nowrap">weighed · 6 days · 2 hostels · 9 categories</div>`, { x: tx0, y: ty0 + (V ? 90 : 70) });
+  const five = A(s, `<div style="font-size:${V ? 44 : 42}px;color:#f2eee5;white-space:nowrap">Female hostel: <b style="color:#f0a46f">~5×</b> more per day</div>`, { x: tx0, y: ty0 + (V ? 170 : 160) });
+  const pl = A(s, `<div style="white-space:nowrap;color:#f2eee5;font-size:${V ? 44 : 42}px"><span class="serif" style="font-size:2.2em;color:#f0a46f">~80%</span> plastic</div>`,
+    { x: tx0, y: ty0 + (V ? 300 : 285) });
+  lab.in(24.3, { o: 0, y: lab.base.y + 30 }, 0.4, 'outExpo');
+  tt.in(24.35, { o: 0, y: tt.base.y + 30 }, 0.4, 'outExpo');
+  kg.in(24.45, { o: 0, z: 700, blur: 10 }, 0.45, 'outExpo');
+  kgs.in(24.7, { o: 0, y: kgs.base.y + 30 }, 0.4, 'outExpo');
+  const kn = kg.n.querySelector('.n');
+  kg.fx = (t) => { kn.textContent = (150.4 * E.out(clamp((t - 24.5) / 1.2))).toFixed(1); };
+  cue(24.45, 'slam', kg, { soft: true });
+  cue(24.5, 'count', kg, { value: 150.4, dur: 1.2, step: 6 });
+  five.in(25.3, { o: 0, x: tx0 - 80 }, 0.45, 'outExpo');
+  cue(25.3, 'glow', five, { dur: 0.6 });
+  pl.in(26.0, { o: 0, s: 1.6, z: 500, blur: 8 }, 0.35, 'outExpo');
+  cue(26.0, 'stat', pl);
+
+  C({
+    tx: [[22.0, gx(0)], [22.2, gx(0)], [23.7, gx(5), 'inOut'], [24.4, V ? 0 : 0, 'inOut']],
+    ty: [[22.0, base - 220], [23.7, base - 240, 'inOut'], [24.4, V ? 140 : 40, 'inOut']],
+    tz: [[22.0, 0]],
+    rx: [[22.0, 50], [23.7, 46], [24.4, 0, 'inOut']],
+    ry: [[22.0, V ? 0 : -8], [23.7, V ? 0 : 6], [24.4, 0, 'inOut']],
+    rz: [[22.0, V ? -6 : -12], [23.7, V ? 4 : 6, 'inOut'], [24.4, 0, 'inOut']],
+    dist: [[22.0, P - 300], [23.7, P - 260], [24.4, V ? P + 420 : P + 120, 'inOut'], [26.5, V ? P + 320 : P + 20, 'linear'], [27.0, P + 2600, 'inExpo']],
+    dof: [[22.0, 1.3], [23.7, 1.3], [24.4, 0.15]],
+  });
+  cue(23.7, 'rise', null, { dur: 0.7 });
+  cue(26.55, 'through', null, { dur: 0.45, reverse: true });
+}
+
+/* ======================================================================
+   7. Outro — the name re-assembles on the split, then the URL
+   ====================================================================== */
+{
+  const s = shot(...T.outro, SPLIT);
+  const txt = V ? letters('John') + '<br>' + letters('Godwin') + '<br>' + letters('Oamien') : letters('John Godwin Oamien');
+  const nameLayer = (color, clip) => A(s, `<div style="width:${W}px;height:${H}px;clip-path:${clip};display:flex;align-items:center;justify-content:center">
+      <div class="word" style="perspective:1400px;transform-style:preserve-3d;font-size:${V ? 150 : 132}px;font-weight:800;letter-spacing:-0.035em;color:${color};margin-top:${V ? -500 : -180}px">${txt}</div></div>`,
+    { hud: true });
+  const n1 = nameLayer('#eceae4', V ? 'inset(0 0 50% 0)' : 'inset(0 50% 0 0)');
+  const n2 = nameLayer('#13272e', V ? 'inset(50% 0 0 0)' : 'inset(0 0 0 50%)');
+  letterFly([n1, n2], 27.1, 0.025, 0.7, 1600);
+  const sw = A(s, `<div class="mono" style="font-size:40px;color:#c8f169;white-space:nowrap">/software</div>`, { x: V ? 0 : -480, y: V ? -650 : 70 });
+  const en = A(s, `<div class="serif" style="font-size:48px;font-style:italic;color:#a9471f;white-space:nowrap">/engineering</div>`, { x: V ? 0 : 480, y: V ? 220 : 70 });
+  sw.in(27.6, { x: V ? -300 : -900, o: 0 }, 0.5, 'outExpo');
+  en.in(27.7, { x: V ? 300 : 900, o: 0 }, 0.5, 'outExpo');
+  cue(27.6, 'fly', sw, { dur: 0.4, soft: true });
+  cue(27.7, 'fly', en, { dur: 0.4, soft: true });
+  const url = A(s, `<div class="url" style="font-size:${V ? 40 : 40}px">godwins-portfolio.vercel.app</div>`, { y: V ? 480 : 260 });
+  url.in(28.1, { s: 0, o: 0 }, 0.55, 'outBack');
+  cue(28.1, 'cta', url);
+  C({
+    tx: [[27.0, 0]], ty: [[27.0, 0]], tz: [[27.0, 0]],
+    dist: [[27.0, P + 900], [28.0, P, 'outExpo'], [30.0, P - 120, 'linear']],
+    rx: [[27.0, -12], [28.0, 0, 'outExpo']],
+    ry: [[27.0, 18], [28.0, 0, 'outExpo'], [30.0, -3, 'linear']],
+    rz: [[27.0, 4], [28.0, 0, 'outExpo']],
+    dof: [[27.0, 0]],
+  });
+}
+
+/* ======================================================================
+   Frame
+   ====================================================================== */
+const fade = document.getElementById('fade');
+const vig = document.getElementById('vig');
+let lastBg = '';
+
+function camAt(t) {
+  const s = shots.find((x) => !x.always && t >= x.start && t < x.end) || shots[shots.length - 1];
+  const c = { ...CAM0 };
+  for (const k in s.cam) c[k] = track(s.cam[k], t);
+  // a gentle drone float on top of every move
+  c.rx += 0.5 * Math.sin(t * 1.3) * c.shake;
+  c.ry += 0.6 * Math.sin(t * 0.9 + 1) * c.shake;
+  c.ty += 4 * Math.sin(t * 1.7) * c.shake;
+  return c;
+}
+
+function seek(t) {
+  const c = camAt(t);
+  const wt = `translateZ(${P - c.dist}px) rotateX(${c.rx}deg) rotateY(${c.ry}deg) rotateZ(${c.rz}deg) translate3d(${-c.tx}px, ${-c.ty}px, ${-c.tz}px)`;
+  world.style.transform = wt;
+  const M = new DOMMatrix(wt);
+  const focusZ = P - c.dist;
+
+  let current = null;
+  for (const s of shots) {
+    const on = s.always || (t >= s.start && t < s.end) || (s === shots[shots.length - 1] && t >= s.end);
+    s.g.style.display = on ? 'block' : 'none';
+    s.h.style.display = on ? 'block' : 'none';
+    s.on = on;
+    if (on && !s.always) current = s;
+  }
+  const bg = current ? (typeof current.bg === 'function' ? current.bg(t) : current.bg) : BG.dark;
+  if (bg !== lastBg) { stage.style.background = bg; lastBg = bg; }
+  const darkScene = current && (bg === BG.dark || bg === BG.deep);
+
+  for (const a of actors) {
+    if (!a.shot.on) continue;
+    const q = a.at(t);
+    let o = q.o, blur = q.blur;
+    if (a.dust) o *= darkScene ? 1 : 0;
+    if (!a.hud) {
+      const pt = M.transformPoint(new DOMPoint(q.x, q.y, q.z));
+      if (pt.z > P - 60) o = 0;                         // behind the camera
+      else if (pt.z > P - 400) o *= (P - 60 - pt.z) / 340;
+      if (!a.noDof && c.dof > 0) blur += Math.min(16, c.dof * Math.max(0, Math.abs(pt.z - focusZ) - 160) / 110);
+    }
+    a.n.style.transform = `translate(-50%, -50%) translate3d(${q.x}px, ${q.y}px, ${q.z}px) rotateY(${q.ry}deg) rotateX(${q.rx}deg) rotateZ(${q.rz}deg) scale(${q.s * q.sx}, ${q.s * q.sy})`;
+    a.n.style.opacity = o.toFixed(3);
+    a.n.style.visibility = o < 0.004 ? 'hidden' : 'visible';
+    const f = blur > 0.3 ? `blur(${blur.toFixed(1)}px)` : 'none';
+    if (a._f !== f) { a.n.style.filter = f; a._f = f; }
+    if (a.fx) a.fx(t, q);
+  }
+  vig.style.opacity = darkScene ? 1 : 0.3;
+  fade.style.opacity = clamp((t - 29.4) / 0.6);
+}
+
+// Resolve sound cues to screen positions (for stereo panning)
+function resolveCues() {
+  return CUES.map((c) => {
+    let x = 0.5;
+    if (c.actor) {
+      seek(Math.min(DURATION - 0.01, c.t + 0.12));
+      const r = c.actor.n.getBoundingClientRect();
+      if (r.width) x = clamp((r.left + r.width / 2) / W);
+    }
+    const { actor, ...rest } = c;
+    return { ...rest, x };
+  }).sort((a, b) => a.t - b.t);
+}
+
+window.DURATION = DURATION;
+window.SIZE = { W, H };
+window.TIMELINE = { bpm: BPM, duration: DURATION, groove: [4, 27], breakdown: [16, 18], outro: 27, drops: [4, 6, 12, 16, 22, 27] };
+window.seek = seek;
+window.resolveCues = resolveCues;
+window.ready = Promise.all([document.fonts.ready, ...[...document.images].map((i) => i.decode().catch(() => {}))]);
+seek(0);
+
+if (location.search.includes('play')) {
+  const t0 = performance.now();
+  const loop = () => { seek(((performance.now() - t0) / 1000) % DURATION); requestAnimationFrame(loop); };
+  requestAnimationFrame(loop);
+}
+</script>
+</body>
+</html>
