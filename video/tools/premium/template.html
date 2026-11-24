@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Bread explainer premium</title>
+<!--
+  Premium edit of the stickman lice explainer (1080×1920, 30 fps).
+  Layers: graded source frames (frames/NNNNN.jpg) with a virtual camera (push-ins, punch-ins,
+  cut flashes, shake), motion-graphics overlays, and word-by-word captions (chunks.json).
+  await window.seek(t) draws the frame at t seconds. Every graphic is timed to the narration.
+-->
+<style>
+  @font-face { font-family: 'Mono'; src: url('jbmono.woff2') format('woff2'); font-weight: 100 800; }
+  :root { --orange: #ff7a1a; --red: #e8332a; --yellow: #ffd84d; --glass: rgba(12, 14, 20, 0.80); --ink: #0b0d12; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1080px; height: 1920px; overflow: hidden; background: #000; }
+  body { font-family: 'Inter Display', 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+  .stage { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #000; }
+  #foot { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; transform-origin: 50% 45%; will-change: transform, filter; }
+  .layer { position: absolute; inset: 0; perspective: 1400px; }
+  .a { position: absolute; left: 540px; top: 0; will-change: transform, opacity; }
+  .flash { position: absolute; inset: 0; background: #fff; opacity: 0; pointer-events: none; }
+  .dim { position: absolute; inset: 0; background: #000; opacity: 0; }
+  .vig { position: absolute; inset: 0; background: radial-gradient(ellipse 75% 60% at 50% 45%, transparent 55%, rgba(0,0,0,0.5) 100%); }
+  .topshade { position: absolute; left: 0; right: 0; top: 0; height: 900px; background: linear-gradient(rgba(0,0,0,0.42), transparent); opacity: 0; }
+
+  /* hook */
+  .hook { background: var(--red); color: #fff; font-weight: 900; font-size: 64px; line-height: 1.04; text-transform: uppercase; letter-spacing: -0.01em;
+    padding: 22px 30px 24px; border-radius: 14px; text-align: center; width: 940px; box-shadow: 0 16px 50px rgba(0,0,0,0.45); }
+  .hook em { font-style: normal; color: var(--yellow); }
+
+  /* glass card */
+  .card { background: var(--glass); border: 2px solid rgba(255, 122, 26, 0.55); border-radius: 26px; color: #fff; text-align: center;
+    box-shadow: 0 0 60px rgba(255, 122, 26, 0.35), 0 20px 60px rgba(0,0,0,0.5); padding: 26px 40px 30px; backdrop-filter: blur(6px); }
+  .big { font-weight: 900; font-size: 150px; line-height: 0.95; letter-spacing: -0.04em; color: #fff; text-shadow: 0 0 40px rgba(255,122,26,0.65); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .big.mid { font-size: 112px; }
+  .lab { font-family: 'Mono', monospace; font-weight: 700; font-size: 30px; letter-spacing: 0.12em; color: var(--orange); text-transform: uppercase; margin-top: 10px; white-space: nowrap; }
+
+  /* pills, chips, stamps */
+  .pill { display: flex; align-items: center; gap: 16px; background: var(--orange); color: #fff; font-weight: 900; font-size: 50px; text-transform: uppercase;
+    padding: 14px 30px 14px 16px; border-radius: 999px; white-space: nowrap; box-shadow: 0 10px 40px rgba(255,122,26,0.5); }
+  .pill .n { background: #fff; color: var(--orange); border-radius: 999px; font-size: 38px; padding: 6px 18px; font-family: 'Mono', monospace; font-weight: 800; }
+  .chip { display: flex; align-items: center; gap: 14px; background: var(--glass); color: #fff; font-weight: 800; font-size: 40px; text-transform: uppercase;
+    padding: 14px 28px 14px 18px; border-radius: 18px; white-space: nowrap; border: 2px solid rgba(255,255,255,0.18); box-shadow: 0 12px 40px rgba(0,0,0,0.45); }
+  .chip svg { width: 46px; height: 46px; }
+  .stamp { border: 10px solid var(--red); color: var(--red); font-weight: 900; font-size: 92px; text-transform: uppercase; padding: 10px 34px; border-radius: 18px;
+    white-space: nowrap; background: rgba(255,255,255,0.88); letter-spacing: -0.01em; box-shadow: 0 20px 60px rgba(0,0,0,0.45); }
+  .stamp.green { border-color: #1fbf5a; color: #149a46; }
+  .slam { font-weight: 900; font-size: 128px; line-height: 0.95; color: #fff; text-transform: uppercase; text-align: center; letter-spacing: -0.03em;
+    text-shadow: 0 0 50px rgba(255,122,26,0.8), 0 8px 0 rgba(0,0,0,0.35); white-space: nowrap; }
+  .slam em { font-style: normal; color: var(--orange); }
+
+  /* diagram + timeline */
+  .diagram { width: 940px; height: 400px; }
+  .tl { width: 980px; height: 360px; }
+  svg text { font-family: 'Inter Display', sans-serif; }
+
+  /* captions */
+  #cap { position: absolute; left: 0; right: 0; top: 1330px; display: flex; justify-content: center; flex-wrap: wrap; gap: 0 18px; padding: 0 70px;
+    font-weight: 900; font-size: 80px; line-height: 1.15; text-transform: uppercase; color: #fff; text-align: center; letter-spacing: -0.01em; }
+  #cap span { display: inline-block; padding: 0 10px; border-radius: 14px; paint-order: stroke fill; -webkit-text-stroke: 14px #000;
+    text-shadow: 0 6px 14px rgba(0,0,0,0.55); transition: none; }
+  #cap span.on { color: var(--yellow); }
+  #cap span.key.on { color: #fff; background: var(--orange); -webkit-text-stroke: 0; text-shadow: none; box-shadow: 0 8px 26px rgba(255,122,26,0.55); }
+</style>
+<style>
+  body, svg text { font-family: 'Inter Display', 'Inter', 'Noto Color Emoji', sans-serif; }
+  .emo { font-family: 'Noto Color Emoji'; -webkit-text-stroke: 0 !important; text-shadow: none !important; font-style: normal; }
+  #cap .emo { display: inline-block; margin-left: 12px; font-size: 76px; transform-origin: 50% 60%; }
+  .chip .emo, .pill .emo { font-size: 1.05em; margin-right: 2px; }
+  .step { display: flex; align-items: center; gap: 18px; background: var(--glass); color: #fff; font-weight: 900; font-size: 50px; text-transform: uppercase;
+    padding: 12px 34px 12px 14px; border-radius: 999px; white-space: nowrap; border: 2px solid rgba(255,255,255,0.18); box-shadow: 0 12px 40px rgba(0,0,0,0.45); width: 560px; }
+  .step .n { background: var(--orange); color: #fff; border-radius: 999px; font-size: 36px; padding: 6px 16px; font-family: 'Mono', monospace; font-weight: 800; }
+  .step .ck { margin-left: auto; width: 54px; height: 54px; border-radius: 50%; background: #1fbf5a; display: grid; place-items: center; }
+  .step .ck svg { width: 34px; height: 34px; }
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+  <img id="foot" src="frames/00000.jpg" alt="">
+  <div class="dim" id="dim"></div>
+  <div class="vig"></div>
+  <div class="topshade" id="topshade"></div>
+  <div class="layer" id="gfx"></div>
+  <div id="cap"></div>
+  <div class="flash" id="flash"></div>
+</div>
+
+<script>
+const FPS = 30, SRC_FPS = 24, NSRC = 1347, DURATION = 56.05;
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const E = {
+  linear: (p) => p, in: (p) => p * p * p, out: (p) => 1 - Math.pow(1 - p, 3),
+  inOut: (p) => (p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2),
+  outExpo: (p) => (p >= 1 ? 1 : 1 - Math.pow(2, -10 * p)), inExpo: (p) => (p <= 0 ? 0 : Math.pow(2, 10 * p - 10)),
+  outBack: (p) => { const c1 = 1.9, c3 = c1 + 1; return 1 + c3 * Math.pow(p - 1, 3) + c1 * Math.pow(p - 1, 2); },
+  step: (p) => (p < 1 ? 0 : 1),
+};
+function track(keys, t) {
+  if (t <= keys[0][0]) return keys[0][1];
+  for (let i = 1; i < keys.length; i++) {
+    const [t1, v1, e] = keys[i];
+    if (t <= t1) { const [t0, v0] = keys[i - 1]; const p = t1 === t0 ? 1 : (t - t0) / (t1 - t0); return v0 + (v1 - v0) * E[e || 'inOut'](clamp(p)); }
+  }
+  return keys[keys.length - 1][1];
+}
+const gfx = document.getElementById('gfx');
+const actors = [];
+const CUES = [];
+const cue = (t, kind, extra = {}) => CUES.push({ t, kind, ...extra });
+
+class Actor {
+  constructor(html, o = {}) {
+    const n = document.createElement('div');
+    n.className = 'a';
+    n.innerHTML = html;
+    gfx.appendChild(n);
+    this.n = n;
+    this.p = { x: 0, y: 0, z: 0, rx: 0, ry: 0, rz: 0, s: 1, o: 1, blur: 0 };
+    for (const k of Object.keys(this.p)) if (o[k] !== undefined) this.p[k] = o[k];
+    this.base = { ...this.p };
+    this.tr = {};
+    this.fx = null;
+    this.win = [o.from ?? 0, o.to ?? DURATION];
+    actors.push(this);
+  }
+  k(prop, keys) { this.tr[prop] = (this.tr[prop] || []).concat(keys).sort((a, b) => a[0] - b[0]); return this; }
+  in(t, from, dur = 0.45, ease = 'outBack') { for (const [k, v] of Object.entries(from)) this.k(k, [[t, v], [t + dur, this.base[k], ease]]); return this; }
+  out(t, to, dur = 0.3, ease = 'in') { for (const [k, v] of Object.entries(to)) this.k(k, [[t, this.base[k]], [t + dur, v, ease]]); return this; }
+  at(t) { const q = { ...this.p }; for (const k in this.tr) q[k] = track(this.tr[k], t); return q; }
+}
+const A = (html, o) => new Actor(html, o);
+const PIN = `<svg viewBox="0 0 24 24"><path fill="#ff7a1a" d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7z"/><circle cx="12" cy="9" r="2.8" fill="#fff"/></svg>`;
+const fmt = (v) => Math.round(v).toLocaleString('en-US');
+
+// standard enter/exit for a graphic: pop in, hold, fly out
+function show(a, tIn, tOut, style = 'pop') {
+  a.win = [tIn - 0.05, tOut + 0.4];
+  if (style === 'pop') a.in(tIn, { s: 0.3, o: 0, rx: -40 }, 0.45, 'outBack');
+  if (style === 'drop') a.in(tIn, { y: a.base.y - 160, o: 0, s: 1.1 }, 0.4, 'outBack');
+  if (style === 'slam') a.in(tIn, { s: 2.4, o: 0, blur: 14 }, 0.28, 'outExpo');
+  if (style === 'left') a.in(tIn, { x: a.base.x - 700, o: 0, rz: -8 }, 0.45, 'outBack');
+  if (style === 'right') a.in(tIn, { x: a.base.x + 700, o: 0, rz: 8 }, 0.45, 'outBack');
+  a.out(tOut, { y: a.base.y - 120, o: 0, s: 0.85 }, 0.28, 'in');
+  return a;
+}
+function counter(a, sel, t0, dur, from, to, fmtFn = fmt) {
+  const el = a.n.querySelector(sel);
+  const prev = a.fx;
+  a.fx = (t) => { prev && prev(t); el.textContent = fmtFn(from + (to - from) * E.out(clamp((t - t0) / dur))); };
+  cue(t0, 'count', { dur, steps: 18 });
+}
+const em = (e) => `<i class="emo">${e}</i>`;
+const CHECK = `<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" stroke="#fff" stroke-width="3.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+
+/* =================================================================== graphics */
+
+// 0. hook, on screen from the first frame
+const hook = A(`<div class="hook" style="font-size:60px;white-space:nowrap;width:auto;padding:22px 36px 24px">They baked bread ${em('🍞')}<br><em>before farming existed</em></div>`, { y: 250 });
+hook.win = [0, 6.2];
+hook.k('s', [[0, 1.08], [0.3, 1, 'outBack']]);
+hook.k('rz', [[0, -2.5], [0.3, 0, 'outBack']]);
+hook.out(5.6, { y: -200, o: 0 }, 0.32, 'in');
+cue(0, 'hook'); cue(5.6, 'swish', { dur: 0.3 });
+
+const c14 = A(`<div class="card"><div class="big"><span class="v">0</span></div><div class="lab">years ago</div></div>`, { y: 560 });
+show(c14, 2.55, 7.5, 'pop');
+counter(c14, '.v', 2.62, 1.5, 0, 14400);
+cue(2.55, 'pop'); cue(4.15, 'ding');
+const nofarm = A(`<div class="chip">${em('🚜')}Before farming <span style="color:#ff5a4d;margin-left:6px">✕</span></div>`, { y: 790 });
+show(nofarm, 6.6, 7.5, 'drop'); cue(6.6, 'drop');
+
+// 1. Jordan's Black Desert, charred crumbs, Shubayqa 1
+const jor = A(`<div class="chip">${PIN}Black Desert · Jordan</div>`, { y: 250 });
+show(jor, 8.9, 15.2, 'drop'); cue(8.9, 'drop');
+const crumbs = A(`<div class="pill"><span class="n">${em('🔥')}</span>Charred crumbs</div>`, { y: 390 });
+show(crumbs, 11.74, 15.2, 'left'); cue(11.74, 'pill');
+const site = A(`<div class="card" style="padding:20px 44px 24px"><div class="big mid" style="font-size:96px">Shubayqa 1</div><div class="lab">ancient fireplaces</div></div>`, { y: 590 });
+show(site, 14.2, 15.2, 'pop'); cue(14.2, 'pop');
+
+// 2. microscope: air pockets = real bread
+const mic = A(`<div class="chip">${em('🔬')}Under the microscope</div>`, { y: 240 });
+show(mic, 15.9, 22.7, 'drop'); cue(15.9, 'drop');
+const bub = A(`<svg viewBox="0 0 600 260" style="width:600px;height:260px">
+    <rect x="0" y="0" width="600" height="260" rx="28" fill="rgba(12,14,20,0.82)" stroke="rgba(255,122,26,0.55)" stroke-width="3"/>
+    ${[[90,150,34],[170,95,22],[230,170,28],[300,110,40],[380,175,20],[430,100,26],[510,150,34],[140,200,14],[350,205,12],[470,205,16]]
+      .map(([x,y,r],i)=>`<circle class="b" data-i="${i}" cx="${x}" cy="${y}" r="${r}" fill="rgba(255,216,77,0.15)" stroke="#ffd84d" stroke-width="5"/>`).join('')}
+    <text x="300" y="52" text-anchor="middle" font-size="34" font-weight="900" fill="#fff" letter-spacing="3">TINY AIR POCKETS</text>
+  </svg>`, { y: 470 });
+show(bub, 17.95, 22.7, 'pop'); cue(17.95, 'pop');
+{
+  const bs = [...bub.n.querySelectorAll('.b')];
+  bs.forEach((b, i) => { b.style.transformBox = 'fill-box'; b.style.transformOrigin = 'center'; if (i % 2 === 0) cue(18.5 + i * 0.07, 'tick'); });
+  bub.fx = (t) => bs.forEach((b, i) => { const p = clamp((t - 18.5 - i * 0.07) / 0.3); b.style.opacity = clamp(p * 3); b.style.transform = `scale(${E.outBack(p) * (1 + 0.04 * Math.sin(t * 5 + i))})`; });
+}
+const real = A(`<div class="stamp green" style="font-size:78px">Real bread ${em('✅')}</div>`, { y: 1090, rz: -5 });
+show(real, 21.2, 22.7, 'slam'); cue(21.2, 'stamp');
+
+// 3. the recipe
+const rec = A(`<div class="pill"><span class="n">${em('🫓')}</span>The recipe</div>`, { y: 230 });
+show(rec, 23.6, 29.95, 'left'); cue(23.6, 'pill');
+const ing1 = A(`<div class="chip" style="font-size:46px">${em('🌾')}Wild einkorn</div>`, { y: 370 });
+show(ing1, 25.8, 29.95, 'right'); cue(25.8, 'swish', { dur: 0.25 }); cue(25.95, 'pop');
+const plus = A(`<div class="slam" style="font-size:90px;color:#ffd84d">+</div>`, { y: 470 });
+show(plus, 27.3, 29.95, 'pop'); cue(27.3, 'click');
+const ing2 = A(`<div class="chip" style="font-size:46px">${em('🥔')}Club-rush tubers</div>`, { y: 570 });
+show(ing2, 27.6, 29.95, 'left'); cue(27.6, 'swish', { dur: 0.25 }); cue(27.75, 'pop');
+
+// 4. real work: four steps, ticked off as they're said
+const work = A(`<div class="stamp" style="font-size:96px">Real work ${em('💪')}</div>`, { y: 1090, rz: -4 });
+show(work, 30.94, 32.2, 'slam'); cue(30.94, 'stamp');
+const STEPS = [['01', 'De-husk', 33.28], ['02', 'Grind', 34.64], ['03', 'Knead', 35.24], ['04', 'Bake', 36.2]];
+STEPS.forEach(([n, label, t0], i) => {
+  const s = A(`<div class="step"><span class="n">${n}</span>${label}<span class="ck">${CHECK}</span></div>`, { y: 250 + i * 115 });
+  show(s, t0 - 0.1, 37.05, i % 2 ? 'right' : 'left');
+  cue(t0 - 0.1, 'swish', { dur: 0.22 });
+  const ck = s.n.querySelector('.ck');
+  s.fx = (t) => { const p = clamp((t - t0 - 0.3) / 0.3); ck.style.transform = `scale(${E.outBack(p)})`; ck.style.opacity = clamp(p * 3); };
+  cue(t0 + 0.3, 'tick');
+});
+// pattern interrupt: "Phew!"
+const phew = A(`<div class="slam" style="font-size:200px">Phew${em('😮‍💨')}</div>`, { y: 760 });
+phew.win = [37.1, 37.9];
+phew.in(37.22, { s: 2.6, o: 0, blur: 16 }, 0.25, 'outExpo');
+phew.out(37.6, { s: 0.6, o: 0, blur: 10 }, 0.2, 'in');
+cue(36.6, 'riser', { dur: 0.6 }); cue(37.22, 'impact');
+
+// 5. special occasions
+const eff = A(`<div class="chip">${em('⏳')}Too much effort for every day</div>`, { y: 260 });
+show(eff, 39.1, 43.8, 'drop'); cue(39.1, 'drop');
+const party = A(`<div class="stamp" style="font-size:74px;border-color:#ff7a1a;color:#ff7a1a">Special occasions ${em('🎉')}</div>`, { y: 470, rz: 4 });
+show(party, 42.9, 43.8, 'slam'); cue(42.9, 'stamp'); cue(43.0, 'ding');
+
+// 6. Europe: 30,000-year-old grindstones
+const eu = A(`<div class="chip">${PIN}Europe</div>`, { y: 240 });
+show(eu, 44.2, 49.85, 'drop'); cue(44.2, 'drop');
+const c30 = A(`<div class="card"><div class="big"><span class="v3">0</span></div><div class="lab">year-old grindstones ${em('🪨')}</div></div>`, { y: 460 });
+show(c30, 44.9, 47.3, 'pop'); cue(44.9, 'pop');
+counter(c30, '.v3', 44.96, 1.0, 0, 30000); cue(45.95, 'ding');
+const flour = A(`<div class="pill"><span class="n">${em('🌾')}</span>Possible flour</div>`, { y: 400 });
+show(flour, 47.45, 49.85, 'left'); cue(47.45, 'pill');
+const cat = A(`<div class="chip" style="font-size:44px">${em('🌿')}Cattails</div>`, { x: -200, y: 540 });
+show(cat, 48.55, 49.85, 'left'); cue(48.55, 'pop');
+const fern = A(`<div class="chip" style="font-size:44px">${em('🌿')}Ferns</div>`, { x: 220, y: 540 });
+show(fern, 49.3, 49.85, 'right'); cue(49.3, 'pop');
+
+// 7. timeline: bread came first?
+const tl = A(`<svg class="tl" viewBox="0 0 980 360">
+    <rect x="0" y="0" width="980" height="360" rx="28" fill="rgba(12,14,20,0.84)" stroke="rgba(255,122,26,0.55)" stroke-width="3"/>
+    <text x="40" y="62" font-size="30" font-weight="800" fill="#ffffffaa" letter-spacing="3">YEARS AGO</text>
+    <line class="axis" x1="60" y1="210" x2="920" y2="210" stroke="#ffffff55" stroke-width="8" stroke-linecap="round" pathLength="1"/>
+    <g class="m"><circle cx="90" cy="210" r="16" fill="#fff"/><text x="90" y="160" text-anchor="middle" font-size="36" font-weight="900" fill="#fff">30K</text><text x="90" y="275" text-anchor="middle" font-size="24" font-weight="800" fill="#fffc">GRINDSTONES</text></g>
+    <g class="m"><circle cx="500" cy="210" r="22" fill="#ff7a1a"/><text x="500" y="160" text-anchor="middle" font-size="40" font-weight="900" fill="#ff7a1a">14.4K</text><text x="500" y="275" text-anchor="middle" font-size="24" font-weight="800" fill="#ff7a1a">BREAD 🍞</text></g>
+    <g class="m fm"><circle cx="720" cy="210" r="22" fill="#ffd84d"/><text x="720" y="160" text-anchor="middle" font-size="40" font-weight="900" fill="#ffd84d">~10K</text><text x="720" y="275" text-anchor="middle" font-size="24" font-weight="800" fill="#ffd84d">FARMING 🌾</text></g>
+    <g class="m"><circle cx="900" cy="210" r="12" fill="#ffffff88"/><text x="900" y="160" text-anchor="middle" font-size="30" font-weight="900" fill="#ffffff88">NOW</text></g>
+    <path class="arc" d="M510 120 C560 66 670 66 715 120" stroke="#fff" stroke-width="5" stroke-dasharray="0.03 0.025" fill="none" pathLength="1"/>
+    <text class="q" x="612" y="62" text-anchor="middle" font-size="64" font-weight="900" fill="#fff">?</text>
+  </svg>`, { y: 400 });
+show(tl, 50.3, 54.0, 'pop'); cue(50.3, 'pop'); cue(50.4, 'zip', { dur: 0.5 });
+{
+  const axis = tl.n.querySelector('.axis'), arc = tl.n.querySelector('.arc'), q = tl.n.querySelector('.q');
+  axis.style.strokeDasharray = 1;
+  const ms = [...tl.n.querySelectorAll('.m')];
+  const mt = [50.6, 50.78, 51.23, 51.5];
+  ms.forEach((m, i) => { m.style.transformBox = 'fill-box'; m.style.transformOrigin = 'center'; cue(mt[i], 'tick'); });
+  tl.fx = (t) => {
+    axis.style.strokeDashoffset = 1 - E.inOut(clamp((t - 50.4) / 0.5));
+    ms.forEach((m, i) => { const p = clamp((t - mt[i]) / 0.3); m.style.opacity = clamp(p * 3); m.style.transform = `scale(${E.outBack(p)})`; });
+    const pa = clamp((t - 51.7) / 0.5);
+    arc.style.opacity = pa > 0 ? 1 : 0;
+    arc.style.clipPath = `inset(0 ${100 - 100 * E.inOut(pa)}% 0 0)`;
+    const pq = clamp((t - 52.2) / 0.3);
+    q.style.opacity = clamp(pq * 3); q.style.transformBox = 'fill-box'; q.style.transformOrigin = 'center'; q.style.transform = `scale(${E.outBack(pq)})`;
+  };
+  cue(51.7, 'zip', { dur: 0.5 }); cue(52.2, 'click');
+}
+const open = A(`<div class="stamp" style="font-size:96px;text-align:center;line-height:1">Open<br>question ${em('🤔')}</div>`, { y: 560, rz: -5 });
+open.win = [54.2, DURATION + 1];
+open.in(54.3, { s: 2.4, o: 0, blur: 14 }, 0.28, 'outExpo');
+cue(54.3, 'impact', { big: true });
+
+/* =================================================================== camera */
+const CUTS = [7.7, 15.42, 22.87, 30.12, 32.12, 37.67, 43.97, 50.01, 54.25];
+const SHOTS = [0, ...CUTS, DURATION];
+const PUNCH = [[0.0, 0.1], [2.62, 0.07], [6.98, 0.05], [11.74, 0.05], [14.26, 0.05], [18.52, 0.05], [21.2, 0.08], [25.81, 0.05], [30.94, 0.08],
+  [37.22, 0.14], [42.93, 0.08], [44.93, 0.06], [47.87, 0.05], [51.23, 0.05], [54.3, 0.12]];
+const SHAKE = [[0.0, 0.6], [21.2, 0.6], [30.94, 0.7], [37.22, 1.2], [42.93, 0.7], [54.3, 1.0]];
+CUTS.forEach((c) => cue(c, 'cut'));
+function cameraAt(t) {
+  // slow push-in through each shot
+  let i = SHOTS.findIndex((s, k) => t >= s && t < SHOTS[k + 1]);
+  if (i < 0) i = SHOTS.length - 2;
+  const s0 = SHOTS[i], s1 = SHOTS[i + 1];
+  let z = 1.0 + 0.07 * E.inOut(clamp((t - s0) / Math.max(0.5, s1 - s0)));
+  const drift = (i % 2 ? 1 : -1) * 14 * clamp((t - s0) / Math.max(0.5, s1 - s0));
+  // cut pulse: each new shot starts slightly bigger and blurred, then snaps
+  const sinceCut = t - s0;
+  let blur = 0;
+  if (i > 0) { const p = clamp(sinceCut / 0.28); z += 0.08 * (1 - E.outExpo(p)); blur = 7 * (1 - E.out(clamp(sinceCut / 0.18))); }
+  for (const [pt, amt] of PUNCH) { const d = t - pt; if (d >= 0 && d < 0.9) z += amt * (d < 0.08 ? E.out(d / 0.08) : 1 - E.inOut((d - 0.08) / 0.82)); }
+  let sx = 0, sy = 0, rz = 0;
+  for (const [st, amp] of SHAKE) {
+    const d = t - st;
+    if (d >= 0 && d < 0.4) { const k = amp * (1 - d / 0.4); sx += k * 18 * Math.sin(d * 90); sy += k * 14 * Math.cos(d * 77); rz += k * 0.8 * Math.sin(d * 63); }
+  }
+  return { z, x: drift + sx, y: sy, rz, blur };
+}
+
+/* =================================================================== captions */
+let CHUNKS = [];
+const cap = document.getElementById('cap');
+let capKey = '';
+function captionsAt(t) {
+  const hide = t > 37.12 && t < 37.66;
+  let ci = -1;
+  for (let i = 0; i < CHUNKS.length; i++) {
+    const c = CHUNKS[i];
+    const end = Math.min(i + 1 < CHUNKS.length ? CHUNKS[i + 1][0].s : c[c.length - 1].e + 0.6, c[c.length - 1].e + 0.5);
+    if (t >= c[0].s && t < end) { ci = i; break; }
+  }
+  if (hide || ci < 0) { if (capKey !== '') { cap.innerHTML = ''; capKey = ''; } return; }
+  const c = CHUNKS[ci];
+  let wi = c.findIndex((w, k) => t >= w.s && (k + 1 >= c.length || t < c[k + 1].s));
+  if (wi < 0) wi = 0;
+  const key = ci + ':' + wi;
+  if (key !== capKey) {
+    cap.innerHTML = c.map((w, k) => `<span class="${w.key ? 'key' : ''} ${k === wi ? 'on' : ''}">${w.w}${w.emo ? `<i class="emo">${w.emo}</i>` : ""}</span>`).join('');
+    capKey = key;
+  }
+  const p = clamp((t - c[0].s) / 0.12);
+  cap.style.transform = `scale(${0.8 + 0.2 * E.outBack(p)})`;
+  const on = cap.querySelector('.on');
+  if (on) { const q = clamp((t - c[wi].s) / 0.1); on.style.transform = `scale(${1 + 0.1 * E.outBack(q)}) rotate(${on.classList.contains('key') ? -2 : 0}deg)`; }
+}
+
+// the emoji of the active word bounces in
+function emojiPop(t) {
+  const on = cap.querySelector('.on .emo');
+  if (!on) return;
+  const w = CHUNKS.flat().find((x) => x.emo && t >= x.s && t < x.s + 3 && on.textContent === x.emo);
+  const p = w ? clamp((t - w.s) / 0.35) : 1;
+  on.style.transform = `scale(${0.2 + 0.8 * E.outBack(p)}) rotate(${(1 - p) * -25 + 4 * Math.sin(t * 6)}deg)`;
+}
+
+/* =================================================================== frame */
+const foot = document.getElementById('foot');
+const flash = document.getElementById('flash');
+const dim = document.getElementById('dim');
+const topshade = document.getElementById('topshade');
+let curFrame = -1;
+
+async function seek(t) {
+  const f = Math.min(NSRC - 1, Math.max(0, Math.floor(t * SRC_FPS + 1e-6)));
+  if (f !== curFrame) {
+    foot.src = `frames/${String(f).padStart(5, '0')}.jpg`;
+    await foot.decode().catch(() => {});
+    curFrame = f;
+  }
+  const c = cameraAt(t);
+  foot.style.transform = `translate(${c.x}px, ${c.y}px) rotate(${c.rz}deg) scale(${c.z})`;
+  foot.style.filter = c.blur > 0.3 ? `blur(${c.blur.toFixed(1)}px)` : 'none';
+  let fl = 0;
+  for (const ct of CUTS) { const d = t - ct; if (d >= 0 && d < 0.16) fl = Math.max(fl, 0.28 * (1 - d / 0.16)); }
+  flash.style.opacity = fl.toFixed(3);
+  dim.style.opacity = (0.5 * clamp((t - 37.12) / 0.1) * (1 - clamp((t - 37.6) / 0.15)) + 0.3 * clamp((t - 54.25) / 0.15)).toFixed(3);
+  const anyTop = actors.some((a) => t >= a.win[0] && t <= a.win[1] && a.base.y < 700);
+  topshade.style.opacity = anyTop ? '1' : '0';
+  for (const a of actors) {
+    const vis = t >= a.win[0] && t <= a.win[1];
+    a.n.style.display = vis ? 'block' : 'none';
+    if (!vis) continue;
+    const q = a.at(t);
+    a.n.style.transform = `translate(${q.x}px, ${q.y}px) translate(-50%, -50%) rotateX(${q.rx}deg) rotateY(${q.ry}deg) rotateZ(${q.rz}deg) scale(${q.s})`;
+    a.n.style.opacity = clamp(q.o).toFixed(3);
+    a.n.style.filter = q.blur > 0.3 ? `blur(${q.blur.toFixed(1)}px)` : 'none';
+    if (a.fx) a.fx(t);
+  }
+  captionsAt(t);
+  emojiPop(t);
+}
+
+window.DURATION = DURATION;
+window.seek = seek;
+window.CUES = CUES;
+window.ready = (async () => {
+  CHUNKS = await (await fetch('chunks.json')).json();
+  await document.fonts.ready;
+  await document.fonts.load('900 80px "Inter Display"');
+  await document.fonts.load('80px "Noto Color Emoji"', '🍞🫓🌾');
+  await seek(0);
+})();
+</script>
+</body>
+</html>
