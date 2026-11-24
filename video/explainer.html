@@ -296,24 +296,15 @@
   <div class="captions"><p class="cap" id="cap"></p></div>
 </div>
 
+<script src="timeline.js"></script>
 <script>
-  const DURATION = 60;
-
-  // Narration, shown as captions: [start, end, text]
-  const CAPTIONS = [
-    [0.6, 3.0, 'Hi, I’m John Godwin Oamien.'],
-    [3.0, 5.8, 'I write software, and I trained as an environmental engineer.'],
-    [6.2, 10.8, 'My portfolio has two profiles, one for each side of my work.'],
-    [11.3, 15.6, 'On the software side, I built JOPAD Advisory’s booking platform.'],
-    [15.6, 20.7, 'Clients book a call, and the invite, Meet link and emails go out on their own.'],
-    [21.3, 27.7, 'I’ve also built a React and TypeScript fundraising site, and a concept studio site.'],
-    [28.3, 33.7, 'Plus fourteen Frontend Mentor solutions, from CSS components to React apps.'],
-    [34.3, 38.8, 'As a trainee at the NDDC, I inspected solar street-light projects in the field.'],
-    [38.8, 42.7, 'Measuring plinths and poles, checking earthing, confirming lights at night.'],
-    [43.3, 47.8, 'For my final-year research, I weighed 150 kilograms of hostel waste over six days.'],
-    [47.8, 51.7, 'The female hostel produced about five times as much. Around 80% was plastic.'],
-    [52.4, 59.6, 'Pick the side of my work you came to see.'],
-  ];
+  // Scene timings, captions and sound cues come from timeline.js, written by build_audio.py
+  // so that the picture follows the voiceover.
+  const { duration: DURATION, scenes: SCENE_TIMES, captions: CAPTIONS } = window.TIMELINE;
+  document.querySelectorAll('.scene').forEach((el, i) => {
+    el.dataset.start = SCENE_TIMES[i][0];
+    el.dataset.end = SCENE_TIMES[i][1];
+  });
 
   // Frontend Mentor wall (the 14 archive screenshots)
   const SHOTS = ['extensions-manager','conference-ticket','multi-step-form','calculator','advice-generator','newsletter','huddle',
@@ -384,7 +375,7 @@
     });
 
     [...ticks.children].forEach((i, idx) => i.classList.toggle('on', t >= scenes[idx].start));
-    ticks.style.opacity = t < 52 ? 1 : clamp((53 - t));
+    ticks.style.opacity = clamp(scenes[scenes.length - 1].start + 1 - t);
 
     const c = CAPTIONS.find(([a, b]) => t >= a && t < b);
     if (c) {
