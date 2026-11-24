@@ -1,7 +1,8 @@
 // Renders explainer.html to an MP4, frame by frame.
 // Usage: node video/render.mjs [output.mp4] [fps] [soundtrack.wav]
 // Needs Playwright (Chromium) and ffmpeg. Fonts come from node_modules, so run `npm install` first.
-// Build the soundtrack (and timeline.js, which sets the scene timings) first with build_audio.py.
+// Build the soundtrack (and timeline.js, which sets the scene timings) first:
+//   python3 video/build_audio.py soundtrack.wav && node video/render.mjs video/portfolio-explainer.mp4 30 soundtrack.wav
 // With a soundtrack, the audio is normalised to -16 LUFS and muxed in as AAC.
 import { createRequire } from 'node:module';
 const { chromium } = createRequire(import.meta.url)('playwright');
