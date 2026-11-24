@@ -42,10 +42,10 @@ export const caseStudies = [
   {
     slug: 'vortex-horizon',
     name: 'Vortex Horizon',
-    kind: 'Personal project · Frontend',
-    year: '2022 – present',
+    kind: 'Concept project · Frontend',
+    year: '2022',
     summary:
-      'The website for my small web and 3D studio: services, a filterable work gallery, a light and dark theme, and a contact form that writes straight into a Google Sheet. Plain HTML, CSS and JavaScript.',
+      'A concept website for an imaginary web and 3D studio, built to practise a complete multi-section site: services, a filterable work gallery, light and dark themes, and a contact form that writes straight into a Google Sheet. Plain HTML, CSS and JavaScript.',
     stack: ['HTML', 'CSS', 'JavaScript', 'Google Apps Script'],
     live: 'https://vortexhorizon.vercel.app/',
     repo: 'https://github.com/wariboko65/Vortex_Horizon',
@@ -99,13 +99,6 @@ export const experience = [
     org: 'Jason medical fundraising campaign',
     note: 'React and TypeScript campaign site with progress tracking and a privacy-gated donation flow.',
     href: '/software/projects/jason',
-  },
-  {
-    period: '2022 – present',
-    title: 'Founder, developer',
-    org: 'Vortex Horizon',
-    note: 'A small studio for websites and 3D model showcases. I built its site and brand.',
-    href: '/software/projects/vortex-horizon',
   },
   {
     period: '2020 – present',
