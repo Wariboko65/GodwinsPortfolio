@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Portfolio explainer</title>
+<!--
+  60-second explainer video for the portfolio, rendered frame by frame by render.mjs.
+  The page is a pure function of time: window.seek(t) draws the frame at t seconds.
+  Open it in a browser and add ?play to watch it in real time.
+  Every fact shown comes from src/data/*.ts; keep it that way when editing.
+-->
+<style>
+  @font-face { font-family: 'Grotesk'; src: url('../node_modules/@fontsource-variable/schibsted-grotesk/files/schibsted-grotesk-latin-wght-normal.woff2') format('woff2'); font-weight: 400 900; }
+  @font-face { font-family: 'Serif'; src: url('../node_modules/@fontsource-variable/newsreader/files/newsreader-latin-wght-normal.woff2') format('woff2'); font-weight: 200 800; }
+  @font-face { font-family: 'Mono'; src: url('../node_modules/@fontsource-variable/jetbrains-mono/files/jetbrains-mono-latin-wght-normal.woff2') format('woff2'); font-weight: 100 800; }
+
+  :root {
+    --sw-bg: #0d0f12; --sw-surface: #16191e; --sw-surface-2: #1d2127; --sw-line: #2b3038;
+    --sw-text: #eceae4; --sw-muted: #9ea3ab; --sw-accent: #c8f169;
+    --en-bg: #f2eee5; --en-surface: #fbf9f4; --en-line: #d6cfbf; --en-text: #13272e;
+    --en-muted: #4f5b5e; --en-accent: #a9471f; --en-deep: #0f3a44; --en-deep-text: #f2eee5;
+    --en-deep-muted: #b9c9cc; --en-deep-accent: #f0a46f;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1920px; height: 1080px; overflow: hidden; background: #000; }
+  body { font-family: 'Grotesk', sans-serif; color: var(--sw-text); -webkit-font-smoothing: antialiased; }
+  .stage { position: relative; width: 1920px; height: 1080px; overflow: hidden; background: var(--sw-bg); }
+  .scene { position: absolute; inset: 0; opacity: 0; }
+  .mono { font-family: 'Mono', monospace; letter-spacing: 0.02em; }
+  .serif { font-family: 'Serif', serif; }
+  img { display: block; }
+
+  /* Software look */
+  .sw { background: var(--sw-bg); color: var(--sw-text); }
+  .sw .label { font-family: 'Mono', monospace; font-size: 26px; color: var(--sw-accent); letter-spacing: 0.04em; text-transform: uppercase; }
+  .grid-bg { position: absolute; inset: 0;
+    background-image: linear-gradient(var(--sw-line) 1px, transparent 1px), linear-gradient(90deg, var(--sw-line) 1px, transparent 1px);
+    background-size: 80px 80px; opacity: 0.35; }
+  .chip { display: inline-block; font-family: 'Mono', monospace; font-size: 24px; padding: 10px 18px; border: 1px solid var(--sw-line);
+    border-radius: 4px; color: var(--sw-text); background: var(--sw-surface); margin: 0 10px 12px 0; }
+
+  /* Engineering look */
+  .en { background: var(--en-bg); color: var(--en-text); }
+  .en .label { font-family: 'Mono', monospace; font-size: 24px; color: var(--en-accent); letter-spacing: 0.05em; text-transform: uppercase; }
+  .paper-grid { position: absolute; inset: 0;
+    background-image: linear-gradient(#d6cfbf88 1px, transparent 1px), linear-gradient(90deg, #d6cfbf88 1px, transparent 1px);
+    background-size: 40px 40px; }
+  .deep { background: var(--en-deep); color: var(--en-deep-text); }
+
+  /* Captions (the narration, since the video has no voiceover) */
+  .captions { position: absolute; left: 0; right: 0; bottom: 56px; display: flex; justify-content: center; pointer-events: none; z-index: 10; }
+  .cap { font-family: 'Grotesk', sans-serif; font-weight: 500; font-size: 36px; line-height: 1.3; padding: 14px 30px; max-width: 1760px; text-align: center;
+    background: rgba(8, 10, 12, 0.82); color: #f4f2ec; border-radius: 6px; opacity: 0; }
+
+  /* Progress ticks top right */
+  .ticks { position: absolute; top: 48px; right: 64px; display: flex; gap: 8px; z-index: 10; }
+  .ticks i { width: 36px; height: 4px; border-radius: 2px; background: #8888; }
+  .ticks i.on { background: var(--sw-accent); }
+
+  /* ---------- S1 intro ---------- */
+  #s1 .url { position: absolute; left: 160px; top: 300px; font-size: 30px; color: var(--sw-muted); }
+  #s1 h1 { position: absolute; left: 152px; top: 360px; font-size: 168px; font-weight: 800; line-height: 0.95; letter-spacing: -0.035em; }
+  #s1 h1 span { display: block; }
+  #s1 .line { position: absolute; left: 160px; top: 720px; font-size: 44px; color: var(--sw-muted); max-width: 1400px; }
+  #s1 .line b { color: var(--sw-text); font-weight: 600; }
+  #s1 .cursor { display: inline-block; width: 22px; height: 150px; background: var(--sw-accent); vertical-align: -12px; margin-left: 16px; }
+
+  /* ---------- S2 two doors ---------- */
+  #s2 .half { position: absolute; top: 0; bottom: 0; width: 960px; overflow: hidden; }
+  #s2 .left { left: 0; background: var(--sw-bg); color: var(--sw-text); }
+  #s2 .right { right: 0; background: var(--en-bg); color: var(--en-text); }
+  #s2 .photo { position: absolute; top: 150px; width: 360px; height: 450px; object-fit: cover; border-radius: 4px; }
+  #s2 .left .photo { left: 120px; }
+  #s2 .right .photo { left: 120px; }
+  #s2 h2 { position: absolute; left: 120px; top: 640px; font-size: 76px; line-height: 1; letter-spacing: -0.02em; }
+  #s2 .left h2 { font-weight: 800; }
+  #s2 .right h2 { font-family: 'Serif', serif; font-weight: 500; letter-spacing: -0.01em; }
+  #s2 .tags { position: absolute; left: 120px; top: 830px; font-family: 'Mono', monospace; font-size: 24px; }
+  #s2 .left .tags { color: var(--sw-accent); }
+  #s2 .right .tags { color: var(--en-accent); }
+  #s2 .kicker { position: absolute; left: 540px; top: 160px; width: 360px; font-size: 30px; line-height: 1.35; }
+  #s2 .left .kicker { color: var(--sw-muted); }
+  #s2 .right .kicker { color: var(--en-muted); font-family: 'Serif', serif; font-size: 34px; }
+
+  /* ---------- S3 JOPAD flow ---------- */
+  #s3 .label { position: absolute; left: 140px; top: 130px; }
+  #s3 h2 { position: absolute; left: 136px; top: 180px; font-size: 110px; font-weight: 800; letter-spacing: -0.03em; }
+  #s3 .sub { position: absolute; left: 140px; top: 320px; font-size: 36px; color: var(--sw-muted); }
+  #s3 .flow { position: absolute; left: 140px; top: 440px; width: 1640px; height: 260px; }
+  #s3 .node { position: absolute; top: 0; width: 340px; height: 262px; background: var(--sw-surface); border: 2px solid var(--sw-line); border-radius: 6px; padding: 28px; }
+  #s3 .node .n { font-family: 'Mono', monospace; font-size: 22px; color: var(--sw-muted); }
+  #s3 .node .t { margin-top: 16px; font-size: 34px; font-weight: 600; line-height: 1.15; }
+  #s3 .node .d { margin-top: 12px; font-family: 'Mono', monospace; font-size: 20px; color: var(--sw-muted); }
+  #s3 .node.lit { border-color: var(--sw-accent); }
+  #s3 .node.lit .n { color: var(--sw-accent); }
+  #s3 .wire { position: absolute; top: 114px; height: 3px; background: var(--sw-line); width: 93px; }
+  #s3 .wire b { position: absolute; inset: 0; background: var(--sw-accent); transform-origin: left; }
+  #s3 .chips { position: absolute; left: 140px; top: 780px; width: 1640px; }
+
+  /* ---------- S4 Jason + Vortex ---------- */
+  #s4 .card { position: absolute; top: 150px; height: 760px; background: var(--sw-surface); border: 1px solid var(--sw-line); border-radius: 6px; overflow: hidden; }
+  #s4 .c1 { left: 120px; width: 720px; padding: 56px; }
+  #s4 .c2 { left: 880px; width: 920px; }
+  #s4 .c2 .shot { width: 920px; height: 575px; object-fit: cover; object-position: top; }
+  #s4 .c2 .body { padding: 30px 44px; }
+  #s4 h3 { font-size: 64px; font-weight: 800; letter-spacing: -0.02em; margin: 12px 0 18px; }
+  #s4 .c2 h3 { font-size: 48px; margin: 6px 0 0; }
+  #s4 p { font-size: 32px; line-height: 1.4; color: var(--sw-muted); }
+  #s4 .c1 ul { list-style: none; margin: 34px 0 36px; }
+  #s4 .c1 li { font-size: 30px; padding: 14px 0; border-top: 1px solid var(--sw-line); display: flex; gap: 18px; }
+  #s4 .c1 li::before { content: '→'; color: var(--sw-accent); font-family: 'Mono', monospace; }
+
+  /* ---------- S5 Frontend Mentor ---------- */
+  #s5 .wall { position: absolute; left: 80px; top: 80px; width: 1760px; display: grid; grid-template-columns: repeat(5, 1fr); gap: 20px; }
+  #s5 .wall img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; object-position: top; border-radius: 4px; border: 1px solid var(--sw-line); }
+  #s5 .over { position: absolute; left: 0; right: 0; bottom: 0; height: 560px; background: linear-gradient(transparent, var(--sw-bg) 45%); }
+  #s5 .big { position: absolute; left: 140px; top: 600px; font-size: 230px; font-weight: 800; color: var(--sw-accent); letter-spacing: -0.04em; line-height: 1; }
+  #s5 .what { position: absolute; left: 470px; top: 640px; font-size: 54px; font-weight: 700; line-height: 1.1; }
+  #s5 .what span { display: block; font-size: 32px; font-weight: 400; color: var(--sw-muted); margin-top: 12px; }
+
+  /* ---------- S6 NDDC field work ---------- */
+  #s6 .label { position: absolute; left: 120px; top: 120px; }
+  #s6 h2 { position: absolute; left: 116px; top: 170px; width: 820px; font-family: 'Serif', serif; font-weight: 500; font-size: 84px; line-height: 1.02; letter-spacing: -0.01em; }
+  #s6 .org { position: absolute; left: 120px; top: 370px; width: 780px; font-size: 30px; color: var(--en-muted); line-height: 1.35; }
+  #s6 ul { position: absolute; left: 120px; top: 500px; width: 800px; list-style: none; }
+  #s6 li { font-size: 32px; padding: 18px 0; border-top: 1px solid var(--en-line); display: flex; gap: 20px; align-items: baseline; }
+  #s6 li .k { font-family: 'Mono', monospace; font-size: 22px; color: var(--en-accent); min-width: 40px; }
+  #s6 .ph { position: absolute; overflow: hidden; border-radius: 3px; background: #ccc; box-shadow: 0 2px 0 var(--en-line); }
+  #s6 .ph img { width: 100%; height: 100%; object-fit: cover; }
+  #s6 .p1 { left: 1010px; top: 100px; width: 430px; height: 380px; }
+  #s6 .p2 { left: 1470px; top: 100px; width: 330px; height: 380px; }
+  #s6 .p3 { left: 1010px; top: 510px; width: 330px; height: 380px; }
+  #s6 .p4 { left: 1370px; top: 510px; width: 430px; height: 380px; }
+  #s6 .tag { position: absolute; left: 14px; bottom: 14px; font-family: 'Mono', monospace; font-size: 18px; background: var(--en-surface); color: var(--en-text); padding: 6px 10px; border-radius: 3px; }
+
+  /* ---------- S7 waste study ---------- */
+  #s7 .label { position: absolute; left: 120px; top: 110px; font-family: 'Mono', monospace; font-size: 24px; color: var(--en-deep-accent); letter-spacing: 0.05em; text-transform: uppercase; }
+  #s7 h2 { position: absolute; left: 116px; top: 160px; width: 1100px; font-family: 'Serif', serif; font-weight: 500; font-size: 72px; line-height: 1.05; }
+  #s7 .kg { position: absolute; left: 120px; top: 380px; font-family: 'Serif', serif; font-size: 200px; line-height: 1; color: var(--en-deep-accent); }
+  #s7 .kg small { font-size: 64px; margin-left: 12px; }
+  #s7 .kgsub { position: absolute; left: 124px; top: 600px; font-family: 'Mono', monospace; font-size: 26px; color: var(--en-deep-muted); }
+  #s7 .chart { position: absolute; left: 1010px; top: 400px; width: 800px; }
+  #s7 .chart h4 { font-family: 'Mono', monospace; font-weight: 400; font-size: 22px; color: var(--en-deep-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 26px; }
+  #s7 .row { margin-bottom: 30px; }
+  #s7 .row .lab { display: flex; justify-content: space-between; font-size: 30px; margin-bottom: 10px; }
+  #s7 .row .lab b { font-family: 'Mono', monospace; font-weight: 500; }
+  #s7 .track { height: 46px; background: #ffffff14; border-radius: 3px; overflow: hidden; }
+  #s7 .fill { height: 100%; width: 0; background: var(--en-deep-accent); }
+  #s7 .fill.m { background: var(--en-deep-muted); }
+  #s7 .plastic { position: absolute; left: 120px; top: 700px; width: 820px; font-size: 34px; line-height: 1.35; color: var(--en-deep-text); }
+  #s7 .plastic b { color: var(--en-deep-accent); font-family: 'Serif', serif; font-size: 64px; font-weight: 500; margin-right: 14px; }
+  #s7 .src { position: absolute; left: 1010px; top: 720px; width: 800px; font-family: 'Mono', monospace; font-size: 20px; color: var(--en-deep-muted); line-height: 1.5; }
+  #s7 .wph { position: absolute; right: 110px; top: 110px; width: 420px; height: 240px; overflow: hidden; border-radius: 3px; }
+  #s7 .wph img { width: 100%; height: 100%; object-fit: cover; }
+
+  /* ---------- S8 outro ---------- */
+  #s8 .half { position: absolute; top: 0; bottom: 0; width: 960px; }
+  #s8 .left { left: 0; background: var(--sw-bg); }
+  #s8 .right { right: 0; background: var(--en-bg); }
+  #s8 .center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+  #s8 .name { font-size: 120px; font-weight: 800; letter-spacing: -0.035em; line-height: 1; color: var(--sw-text); mix-blend-mode: difference; }
+  #s8 .pair { display: flex; gap: 0; margin-top: 50px; width: 1920px; }
+  #s8 .pair div { width: 960px; font-size: 44px; }
+  #s8 .pair .a { color: var(--sw-accent); font-family: 'Mono', monospace; font-size: 36px; }
+  #s8 .pair .b { color: var(--en-accent); font-family: 'Serif', serif; font-style: italic; }
+  #s8 .url { position: absolute; left: 0; right: 0; top: 760px; display: flex; justify-content: center; }
+  #s8 .url span { font-family: 'Mono', monospace; font-size: 40px; padding: 22px 40px; background: var(--sw-accent); color: var(--sw-bg); border-radius: 4px; font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+
+  <!-- S1: intro -->
+  <section class="scene sw" id="s1" data-start="0" data-end="6">
+    <div class="grid-bg"></div>
+    <p class="url mono" data-in="0.2">godwins-portfolio.vercel.app</p>
+    <h1><span data-in="0.4">John Godwin</span><span data-in="0.7">Oamien<i class="cursor" data-blink></i></span></h1>
+    <p class="line" data-in="2.6">I write <b>software</b>. I trained as an <b>environmental engineer</b>.</p>
+  </section>
+
+  <!-- S2: two profiles -->
+  <section class="scene" id="s2" data-start="6" data-end="11">
+    <div class="half left" data-in="0" data-anim="left">
+      <img class="photo" src="../src/assets/photos/portrait-software.jpg" alt="" data-kb />
+      <p class="kicker" data-in="0.9">For engineering teams, startups and clients</p>
+      <h2 data-in="0.6">Software<br />Development</h2>
+      <p class="tags" data-in="1.2">JavaScript · TypeScript · React · Node.js</p>
+    </div>
+    <div class="half right" data-in="0.25" data-anim="right">
+      <img class="photo" src="../src/assets/photos/portrait-eng-front.jpg" alt="" data-kb />
+      <p class="kicker" data-in="1.1">For engineering employers and collaborators</p>
+      <h2 data-in="0.85">Civil &amp; Environmental<br />Engineering</h2>
+      <p class="tags" data-in="1.4">Waste management · Project monitoring · Field inspection</p>
+    </div>
+  </section>
+
+  <!-- S3: JOPAD -->
+  <section class="scene sw" id="s3" data-start="11" data-end="21">
+    <div class="grid-bg"></div>
+    <p class="label" data-in="0.1">Contract · Full stack · 2026</p>
+    <h2 data-in="0.3">JOPAD Advisory</h2>
+    <p class="sub" data-in="0.7">A consulting and booking platform that runs itself.</p>
+    <div class="flow">
+      <div class="node" style="left:0" data-in="1.4" data-lit="5.2"><p class="n">01 / BOOK</p><p class="t">Client picks a consultation slot</p><p class="d">HTML · CSS · JS</p></div>
+      <div class="wire" style="left:342px"><b data-line="5.7"></b></div>
+      <div class="node" style="left:435px" data-in="1.8" data-lit="6.2"><p class="n">02 / CHECK</p><p class="t">Server confirms the slot is free</p><p class="d">Node · Express · MongoDB</p></div>
+      <div class="wire" style="left:777px"><b data-line="6.7"></b></div>
+      <div class="node" style="left:870px" data-in="2.2" data-lit="7.2"><p class="n">03 / SCHEDULE</p><p class="t">Calendar invite and Meet link</p><p class="d">Google Calendar API</p></div>
+      <div class="wire" style="left:1212px"><b data-line="7.7"></b></div>
+      <div class="node" style="left:1305px" data-in="2.6" data-lit="8.2"><p class="n">04 / CONFIRM</p><p class="t">Confirmation emails go out</p><p class="d">Resend</p></div>
+    </div>
+    <div class="chips" data-in="3.4">
+      <span class="chip">HTML</span><span class="chip">CSS</span><span class="chip">JavaScript</span><span class="chip">Node.js</span><span class="chip">Express</span><span class="chip">MongoDB</span><span class="chip">Google Calendar API</span>
+    </div>
+  </section>
+
+  <!-- S4: Jason + Vortex Horizon -->
+  <section class="scene sw" id="s4" data-start="21" data-end="28">
+    <div class="card c1" data-in="0.2">
+      <p class="label">Contract · Frontend</p>
+      <h3>Jason</h3>
+      <p>A fundraising site for a child’s corrective surgery.</p>
+      <ul>
+        <li data-in="1.0">Shows campaign progress</li>
+        <li data-in="1.3">Bank details behind a confirmation step</li>
+        <li data-in="1.6">Sharing the appeal in a single tap</li>
+      </ul>
+      <span class="chip">React</span><span class="chip">TypeScript</span><span class="chip">Zustand</span><span class="chip">Framer Motion</span>
+    </div>
+    <div class="card c2" data-in="0.6">
+      <img class="shot" src="../src/assets/projects/vortex-hero.png" alt="" data-pan />
+      <div class="body">
+        <p class="label">Concept project · Frontend · 2022</p>
+        <h3>Vortex Horizon</h3>
+      </div>
+    </div>
+  </section>
+
+  <!-- S5: Frontend Mentor -->
+  <section class="scene sw" id="s5" data-start="28" data-end="34">
+    <div class="wall" id="wall"></div>
+    <div class="over"></div>
+    <p class="big" data-in="1.2" data-count="14" data-count-in="1.2" data-count-dur="1.6">0</p>
+    <p class="what" data-in="1.5">Frontend Mentor solutions<span>From CSS components to React apps</span></p>
+  </section>
+
+  <!-- S6: NDDC -->
+  <section class="scene en" id="s6" data-start="34" data-end="43">
+    <div class="paper-grid"></div>
+    <p class="label" data-in="0.1">SIWES · July – December 2025</p>
+    <h2 data-in="0.3">Field inspection at the NDDC</h2>
+    <p class="org" data-in="0.6">Industrial Trainee, Project Monitoring &amp; Supervision Department, Rivers State Office</p>
+    <ul>
+      <li data-in="1.6"><span class="k">01</span>Pole and 450 × 450 × 1000 mm plinth checks</li>
+      <li data-in="2.4"><span class="k">02</span>Earthing rod and copper-wire connections</li>
+      <li data-in="3.2"><span class="k">03</span>Installed units reconciled against BEME</li>
+      <li data-in="4.0"><span class="k">04</span>Night-time functional checks</li>
+    </ul>
+    <div class="ph p1" data-in="0.8" data-anim="scale"><img src="../src/assets/field/plinth-measurement.jpg" alt="" data-kb /><span class="tag">Measuring a plinth</span></div>
+    <div class="ph p2" data-in="1.1" data-anim="scale"><img src="../src/assets/field/pole-measurement.jpg" alt="" data-kb /><span class="tag">Pole dimensions</span></div>
+    <div class="ph p3" data-in="1.4" data-anim="scale"><img src="../src/assets/field/earthing-installation.jpg" alt="" data-kb /><span class="tag">Earthing</span></div>
+    <div class="ph p4" data-in="1.7" data-anim="scale"><img src="../src/assets/field/streetlights-night.jpg" alt="" data-kb /><span class="tag">Night check</span></div>
+  </section>
+
+  <!-- S7: waste study -->
+  <section class="scene deep" id="s7" data-start="43" data-end="52">
+    <p class="label" data-in="0.1">B.Eng. final-year research · 2026</p>
+    <h2 data-in="0.3">Solid waste in male and female university hostels</h2>
+    <div class="wph" data-in="0.6" data-anim="scale"><img src="../src/assets/field/weighing-scale.jpg" alt="" data-kb /></div>
+    <p class="kg" data-in="1.0"><span data-count="150.4" data-dec="1" data-count-in="1.0" data-count-dur="2.2">0</span><small>kg</small></p>
+    <p class="kgsub" data-in="1.6">weighed · 6 days · 2 hostels · 9 categories</p>
+    <div class="chart" data-in="2.4">
+      <h4>Mean waste per day</h4>
+      <div class="row"><p class="lab"><span>Female hostel (D)</span><b>20.94 kg</b></p><div class="track"><div class="fill" data-bar="100" data-bar-in="3.0"></div></div></div>
+      <div class="row"><p class="lab"><span>Male hostel (E)</span><b>4.13 kg</b></p><div class="track"><div class="fill m" data-bar="19.74" data-bar-in="3.3"></div></div></div>
+    </div>
+    <p class="plastic" data-in="5.2"><b>~80%</b>plastics in both hostels by weight (78.5% male, 80.5% female)</p>
+    <p class="src" data-in="3.8">0.209 vs 0.041 kg per person per day<br />100 occupants per hostel, Rivers State University</p>
+  </section>
+
+  <!-- S8: outro -->
+  <section class="scene" id="s8" data-start="52" data-end="60">
+    <div class="half left"></div>
+    <div class="half right"></div>
+    <div class="center">
+      <p class="name" data-in="0.3">John Godwin Oamien</p>
+      <div class="pair">
+        <div class="a" data-in="0.9">/software</div>
+        <div class="b" data-in="1.1">/engineering</div>
+      </div>
+    </div>
+    <div class="url" data-in="1.8" data-anim="scale"><span>godwins-portfolio.vercel.app</span></div>
+  </section>
+
+  <div class="ticks" id="ticks"></div>
+  <div class="captions"><p class="cap" id="cap"></p></div>
+</div>
+
+<script>
+  const DURATION = 60;
+
+  // Narration, shown as captions: [start, end, text]
+  const CAPTIONS = [
+    [0.6, 3.0, 'Hi, I’m John Godwin Oamien.'],
+    [3.0, 5.8, 'I write software, and I trained as an environmental engineer.'],
+    [6.2, 10.8, 'My portfolio has two profiles, one for each side of my work.'],
+    [11.3, 15.6, 'On the software side, I built JOPAD Advisory’s booking platform.'],
+    [15.6, 20.7, 'Clients book a call, and the invite, Meet link and emails go out on their own.'],
+    [21.3, 27.7, 'I’ve also built a React and TypeScript fundraising site, and a concept studio site.'],
+    [28.3, 33.7, 'Plus fourteen Frontend Mentor solutions, from CSS components to React apps.'],
+    [34.3, 38.8, 'As a trainee at the NDDC, I inspected solar street-light projects in the field.'],
+    [38.8, 42.7, 'Measuring plinths and poles, checking earthing, confirming lights at night.'],
+    [43.3, 47.8, 'For my final-year research, I weighed 150 kilograms of hostel waste over six days.'],
+    [47.8, 51.7, 'The female hostel produced about five times as much. Around 80% was plastic.'],
+    [52.4, 59.6, 'Pick the side of my work you came to see.'],
+  ];
+
+  // Frontend Mentor wall (the 14 archive screenshots)
+  const SHOTS = ['extensions-manager','conference-ticket','multi-step-form','calculator','advice-generator','newsletter','huddle',
+    'clipboard','fylo-storage','testimonials-grid','chat-illustration','nft-preview','order-summary','three-column'];
+  const wall = document.getElementById('wall');
+  SHOTS.forEach((s, i) => {
+    const img = document.createElement('img');
+    img.src = `../src/assets/projects/${s}.png`; img.alt = '';
+    img.dataset.in = (0.05 + i * 0.07).toFixed(2); img.dataset.anim = 'scale';
+    wall.appendChild(img);
+  });
+  // Fifteenth tile: the wall is 5 wide, so fill the gap with a Vortex gallery shot (not counted)
+  const extra = document.createElement('img');
+  extra.src = '../src/assets/projects/vortex-gallery.png'; extra.alt = ''; extra.dataset.in = '1.03'; extra.dataset.anim = 'scale'; extra.style.opacity = '0.6';
+  wall.appendChild(extra);
+
+  const scenes = [...document.querySelectorAll('.scene')].map((el) => ({
+    el, start: +el.dataset.start, end: +el.dataset.end,
+    items: [...el.querySelectorAll('[data-in]')],
+    kb: [...el.querySelectorAll('[data-kb]')],
+    pan: [...el.querySelectorAll('[data-pan]')],
+    lit: [...el.querySelectorAll('[data-lit]')],
+    lines: [...el.querySelectorAll('[data-line]')],
+    counts: [...el.querySelectorAll('[data-count]')],
+    bars: [...el.querySelectorAll('[data-bar]')],
+    blink: [...el.querySelectorAll('[data-blink]')],
+  }));
+
+  const ticks = document.getElementById('ticks');
+  scenes.forEach(() => ticks.appendChild(document.createElement('i')));
+  const cap = document.getElementById('cap');
+
+  const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+  const easeOut = (x) => 1 - Math.pow(1 - x, 3);
+  const easeInOut = (x) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
+  const prog = (t, a, d) => easeOut(clamp((t - a) / d));
+
+  function seek(t) {
+    scenes.forEach((s, idx) => {
+      const local = t - s.start;
+      const len = s.end - s.start;
+      const visible = t >= s.start - 0.001 && t < s.end + (idx === scenes.length - 1 ? 1 : 0);
+      if (!visible) { s.el.style.opacity = 0; s.el.style.visibility = 'hidden'; return; }
+      s.el.style.visibility = 'visible';
+      const fadeIn = idx === 0 ? 1 : clamp(local / 0.35);
+      const fadeOut = idx === scenes.length - 1 ? clamp((DURATION - t) / 0.8) : clamp((len - local) / 0.35);
+      s.el.style.opacity = Math.min(fadeIn, fadeOut);
+
+      for (const el of s.items) {
+        const p = prog(local, +el.dataset.in, +(el.dataset.dur || 0.7));
+        const anim = el.dataset.anim || 'up';
+        el.style.opacity = p * (el === extra ? 0.6 : 1);
+        if (anim === 'up') el.style.transform = `translateY(${(1 - p) * 34}px)`;
+        else if (anim === 'scale') el.style.transform = `scale(${0.92 + 0.08 * p})`;
+        else if (anim === 'left') el.style.transform = `translateX(${(1 - p) * -120}px)`;
+        else if (anim === 'right') el.style.transform = `translateX(${(1 - p) * 120}px)`;
+      }
+      for (const el of s.kb) el.style.transform = `scale(${1.02 + 0.08 * clamp(local / len)})`;
+      for (const el of s.pan) el.style.objectPosition = `center ${clamp((local - 1) / (len - 1.5)) * 100}%`;
+      for (const el of s.lit) el.classList.toggle('lit', local >= +el.dataset.lit);
+      for (const el of s.lines) el.style.transform = `scaleX(${easeInOut(clamp((local - +el.dataset.line) / 0.5))})`;
+      for (const el of s.counts) {
+        const v = +el.dataset.count * easeOut(clamp((local - +el.dataset.countIn) / +el.dataset.countDur));
+        el.textContent = v.toFixed(+(el.dataset.dec || 0));
+      }
+      for (const el of s.bars) el.style.width = `${+el.dataset.bar * easeOut(clamp((local - +el.dataset.barIn) / 1.2))}%`;
+      for (const el of s.blink) el.style.opacity = Math.floor(local * 2) % 2 === 0 ? 1 : 0;
+    });
+
+    [...ticks.children].forEach((i, idx) => i.classList.toggle('on', t >= scenes[idx].start));
+    ticks.style.opacity = t < 52 ? 1 : clamp((53 - t));
+
+    const c = CAPTIONS.find(([a, b]) => t >= a && t < b);
+    if (c) {
+      if (cap.textContent !== c[2]) cap.textContent = c[2];
+      cap.style.opacity = Math.min(clamp((t - c[0]) / 0.2), clamp((c[1] - t) / 0.2));
+    } else cap.style.opacity = 0;
+  }
+
+  window.DURATION = DURATION;
+  window.seek = seek;
+  window.ready = Promise.all([document.fonts.ready, ...[...document.images].map((i) => i.decode().catch(() => {}))]);
+  seek(0);
+
+  if (location.search.includes('play')) {
+    const t0 = performance.now();
+    const loop = () => { const t = ((performance.now() - t0) / 1000) % DURATION; seek(t); requestAnimationFrame(loop); };
+    requestAnimationFrame(loop);
+  }
+</script>
+</body>
+</html>
