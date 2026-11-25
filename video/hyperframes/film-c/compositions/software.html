@@ -1,0 +1,61 @@
+<template>
+  <style>
+    @font-face { font-family: "Schibsted Grotesk"; src: url("assets/fonts/schibsted.woff2") format("woff2"); font-weight: 400 900; }
+    @font-face { font-family: "Newsreader"; src: url("assets/fonts/newsreader.woff2") format("woff2"); font-weight: 200 800; }
+    @font-face { font-family: "JetBrains Mono"; src: url("assets/fonts/jbmono.woff2") format("woff2"); font-weight: 100 800; }
+    
+    #root { position: absolute; inset: 0; overflow: hidden; font-family: "Schibsted Grotesk"; }
+    .v { position: absolute; inset: 0; }
+    .v .field { position: absolute; inset: 0; }
+    .v .word { position: absolute; font-weight: 800; letter-spacing: -0.05em; line-height: 0.85; white-space: nowrap; }
+    .v .proof { position: absolute; }
+    .v .lab { position: absolute; font-family: "JetBrains Mono"; font-weight: 600; font-size: 34px; letter-spacing: 0.02em; white-space: nowrap; }
+    .nodes { display: flex; gap: 24px; }
+    .nd { width: 420px; height: 230px; border-radius: 18px; border: 3px solid currentColor; padding: 26px 28px; font-family: "JetBrains Mono"; font-size: 26px; font-weight: 600; opacity: 0.55; }
+    .nd.on { opacity: 1; }
+    .nd b { display: block; font-family: "Schibsted Grotesk"; font-size: 40px; line-height: 1.08; margin-top: 16px; font-weight: 700; }
+    .shot { width: 860px; height: 540px; border-radius: 18px; overflow: hidden; box-shadow: 0 40px 90px rgba(0,0,0,0.45); }
+    .shot img, .photo img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+    .photo { width: 620px; height: 780px; border-radius: 10px; overflow: hidden; box-shadow: 0 40px 90px rgba(0,0,0,0.35); }
+    .grid { display: grid; grid-template-columns: repeat(7, 230px); gap: 14px; }
+    .grid div { height: 150px; border-radius: 10px; overflow: hidden; }
+    .grid img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+    .num { font-family: "Newsreader"; font-weight: 500; font-size: 330px; line-height: 1; white-space: nowrap; font-variant-numeric: tabular-nums; }
+    .num small { font-size: 0.3em; }
+    .bars { display: flex; align-items: flex-end; gap: 40px; height: 440px; }
+    .bar { width: 200px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; }
+    .bar i { display: block; width: 120px; border-radius: 8px 8px 0 0; background: currentColor; }
+    .bar span { font-family: "JetBrains Mono"; font-weight: 700; font-size: 34px; margin-bottom: 10px; }
+    .bar em { font-style: normal; font-family: "JetBrains Mono"; font-size: 28px; margin-top: 12px; color: #f2eee5; }
+
+  </style>
+  <div id="root" data-composition-id="software" data-width="1920" data-height="1080">
+        <div id="software-v0" class="v clip" data-start="0.0" data-duration="1.9666666666666666" data-track-index="0"><div class="field" style="background:#0d0f12"></div><div class="proof" id="software-p0" style="left:110px;top:470px;color:#c8f169"><div class="nodes"><div class="nd on">01 / BOOK<b>Client picks a consultation slot</b></div><div class="nd">02 / CHECK<b>Server confirms the slot is free</b></div></div></div><div class="word" id="software-w0" style="left:110px;top:120px;font-size:300px;color:#eceae4">BOOKS</div><div class="lab" id="software-l0" style="left:116px;bottom:70px;color:#c8f169">JOPAD Advisory · contract · 2026</div></div>
+    <div id="software-v1" class="v clip" data-start="1.9666666666666666" data-duration="1.9666666666666666" data-track-index="0"><div class="field" style="background:#c8f169"></div><div class="proof" id="software-p1" style="left:110px;top:470px;color:#0d0f12"><div class="nodes"><div class="nd on">03 / SCHEDULE<b>Calendar invite and Meet link</b></div><div class="nd on">04 / CONFIRM<b>Confirmation emails go out</b></div></div></div><div class="word" id="software-w1" style="left:110px;top:110px;font-size:270px;color:#0d0f12">SCHEDULES</div><div class="lab" id="software-l1" style="left:116px;bottom:70px;color:#0d0f12">Node · Express · MongoDB · Google Calendar API</div></div>
+    <div id="software-v2" class="v clip" data-start="3.9" data-duration="1.9666666666666666" data-track-index="0"><div class="field" style="background:#1d2127"></div><div class="proof" id="software-p2" style="left:110px;top:400px;color:#c8f169"><div class="grid"><div><img src="assets/img/extensions-manager.jpg" alt=""></div><div><img src="assets/img/conference-ticket.jpg" alt=""></div><div><img src="assets/img/multi-step-form.jpg" alt=""></div><div><img src="assets/img/calculator.jpg" alt=""></div><div><img src="assets/img/advice-generator.jpg" alt=""></div><div><img src="assets/img/newsletter.jpg" alt=""></div><div><img src="assets/img/clipboard.jpg" alt=""></div><div><img src="assets/img/huddle.jpg" alt=""></div><div><img src="assets/img/testimonials-grid.jpg" alt=""></div><div><img src="assets/img/fylo-storage.jpg" alt=""></div><div><img src="assets/img/chat-illustration.jpg" alt=""></div><div><img src="assets/img/nft-preview.jpg" alt=""></div><div><img src="assets/img/three-column.jpg" alt=""></div><div><img src="assets/img/order-summary.jpg" alt=""></div></div></div><div class="word" id="software-w2" style="left:110px;top:90px;font-size:260px;color:#eceae4">SHIPS</div><div class="lab" id="software-l2" style="left:116px;bottom:70px;color:#c8f169">14 Frontend Mentor solutions</div></div>
+    <div id="software-v3" class="v clip" data-start="5.866666666666666" data-duration="1.9666666666666666" data-track-index="0"><div class="field" style="background:#0d0f12"></div><div class="proof" id="software-p3" style="left:110px;top:420px;color:#c8f169"><div class="shot"><img src="assets/img/extensions-manager.jpg?shot" alt=""></div></div><div class="word" id="software-w3" style="right:110px;top:120px;font-size:300px;color:#eceae4">ANIMATES</div><div class="lab" id="software-l3" style="right:116px;bottom:70px;color:#c8f169">Browser Extensions Manager · React · Framer Motion</div></div>
+    <div id="software-v4" class="v clip" data-start="7.8" data-duration="1.9666666666666666" data-track-index="0"><div class="field" style="background:#c8f169"></div><div class="proof" id="software-p4" style="right:110px;top:420px;color:#0d0f12"><div class="shot"><img src="assets/img/vortex-hero.jpg" alt=""></div></div><div class="word" id="software-w4" style="left:110px;top:120px;font-size:300px;color:#0d0f12">DESIGNS</div><div class="lab" id="software-l4" style="left:116px;bottom:70px;color:#0d0f12">Vortex Horizon · 2022</div></div>
+  </div>
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+            tl.fromTo("#software-w0", { scale: 1.14, filter: "blur(10px)", transformOrigin: "0% 50%" }, { scale: 1, filter: "blur(0px)", duration: 0.3, ease: "expo.out" }, 0.0);
+      tl.fromTo("#software-p0", { y: 260, opacity: 0, filter: "blur(14px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 0.38, ease: "expo.out" }, 0.5);
+      tl.fromTo("#software-l0", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.16, ease: "power4.out" }, 0.9666666666666667);
+      tl.fromTo("#software-w1", { scale: 1.14, filter: "blur(10px)", transformOrigin: "0% 50%" }, { scale: 1, filter: "blur(0px)", duration: 0.3, ease: "expo.out" }, 1.9666666666666666);
+      tl.fromTo("#software-p1", { y: 260, opacity: 0, filter: "blur(14px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 0.38, ease: "expo.out" }, 2.466666666666667);
+      tl.fromTo("#software-l1", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.16, ease: "power4.out" }, 2.933333333333333);
+      tl.fromTo("#software-w2", { scale: 1.14, filter: "blur(10px)", transformOrigin: "0% 50%" }, { scale: 1, filter: "blur(0px)", duration: 0.3, ease: "expo.out" }, 3.9);
+      tl.fromTo("#software-p2", { y: 260, opacity: 0, filter: "blur(14px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 0.38, ease: "expo.out" }, 4.4);
+      tl.fromTo("#software-l2", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.16, ease: "power4.out" }, 4.866666666666666);
+      tl.fromTo("#software-p2 .grid div", { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3, ease: "back.out(1.6)", stagger: 0.035 }, 4.4);
+      tl.fromTo("#software-w3", { scale: 1.14, filter: "blur(10px)", transformOrigin: "0% 50%" }, { scale: 1, filter: "blur(0px)", duration: 0.3, ease: "expo.out" }, 5.866666666666666);
+      tl.fromTo("#software-p3", { y: 260, opacity: 0, filter: "blur(14px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 0.38, ease: "expo.out" }, 6.366666666666666);
+      tl.fromTo("#software-l3", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.16, ease: "power4.out" }, 6.833333333333333);
+      tl.fromTo("#software-w4", { scale: 1.14, filter: "blur(10px)", transformOrigin: "0% 50%" }, { scale: 1, filter: "blur(0px)", duration: 0.3, ease: "expo.out" }, 7.8);
+      tl.fromTo("#software-p4", { y: 260, opacity: 0, filter: "blur(14px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 0.38, ease: "expo.out" }, 8.3);
+      tl.fromTo("#software-l4", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.16, ease: "power4.out" }, 8.766666666666666);
+      window.__timelines["software"] = tl;
+    })();
+  </script>
+</template>

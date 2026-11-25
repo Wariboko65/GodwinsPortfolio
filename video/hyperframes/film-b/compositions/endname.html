@@ -1,0 +1,33 @@
+<template>
+  <style>
+    @font-face { font-family: "Schibsted Grotesk"; src: url("assets/fonts/schibsted.woff2") format("woff2"); font-weight: 400 900; }
+    @font-face { font-family: "Newsreader"; src: url("assets/fonts/newsreader.woff2") format("woff2"); font-weight: 200 800; }
+    @font-face { font-family: "JetBrains Mono"; src: url("assets/fonts/jbmono.woff2") format("woff2"); font-weight: 100 800; }
+    #root { position: absolute; inset: 0; }
+    #en-plate { position: absolute; left: 160px; top: 290px; width: 1600px; height: 520px; border-radius: 36px; background: rgba(242,238,229,0.92); box-shadow: 0 40px 120px rgba(19,39,46,0.25); }
+    #en-name { position: absolute; left: 0; width: 1920px; top: 380px; text-align: center; font-family: "Schibsted Grotesk"; font-weight: 800; font-size: 140px; letter-spacing: -0.04em; color: #13272e; white-space: nowrap; }
+    #en-name span { display: inline-block; }
+    #en-tags { position: absolute; left: 0; width: 1920px; top: 570px; text-align: center; white-space: nowrap; }
+    #en-sw { font-family: "JetBrains Mono"; font-weight: 600; font-size: 36px; color: #0d0f12; background: #c8f169; padding: 6px 16px; border-radius: 8px; }
+    #en-en { font-family: "Newsreader"; font-style: italic; font-size: 46px; color: #a9471f; margin-left: 40px; }
+    #en-url { position: absolute; left: 960px; top: 680px; transform: translateX(-50%); font-family: "JetBrains Mono"; font-weight: 700; font-size: 34px; color: #f2eee5; background: #0d0f12; border-radius: 999px; padding: 14px 34px; white-space: nowrap; }
+  </style>
+  <div id="root" data-composition-id="endname" data-width="1920" data-height="1080">
+    <div id="en-stage" class="clip" data-start="0" data-duration="4.8" data-track-index="0" style="position:absolute;inset:0">
+      <div id="en-plate"></div>
+      <div id="en-name"><span>John</span>&nbsp;<span>Godwin</span>&nbsp;<span>Oamien</span></div>
+      <div id="en-tags"><span id="en-sw">/software</span><span id="en-en">/engineering</span></div>
+      <div id="en-url">godwins-portfolio.vercel.app</div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo("#en-plate", { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.6, ease: "power3.out" }, 0);
+      tl.fromTo("#en-name span", { opacity: 0, filter: "blur(10px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.18, ease: "power4.out", stagger: 0.09 }, 0.35);
+      tl.fromTo(["#en-sw", "#en-en"], { opacity: 0 }, { opacity: 1, duration: 0.2, stagger: 0.1 }, 0.9);
+      tl.fromTo("#en-url", { clipPath: "inset(0 100% 0 0 round 999px)" }, { clipPath: "inset(0 0% 0 0 round 999px)", duration: 0.45, ease: "power3.inOut" }, 1.3);
+      window.__timelines["endname"] = tl;
+    })();
+  </script>
+</template>

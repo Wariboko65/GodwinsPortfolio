@@ -1,0 +1,72 @@
+<template>
+  <style>
+    @font-face { font-family: "Schibsted Grotesk"; src: url("assets/fonts/schibsted.woff2") format("woff2"); font-weight: 400 900; }
+    @font-face { font-family: "JetBrains Mono"; src: url("assets/fonts/jbmono.woff2") format("woff2"); font-weight: 100 800; }
+    #root { position: absolute; inset: 0; overflow: hidden; background: #0d0f12; font-family: "Schibsted Grotesk"; color: #eceae4; }
+    #tn-view { position: absolute; inset: 0; perspective: 900px; perspective-origin: 960px 540px; }
+    #tn-world { position: absolute; left: 960px; top: 540px; transform-style: preserve-3d; }
+    .tn-card { position: absolute; width: 560px; height: 350px; margin: -175px 0 0 -280px; border-radius: 14px; overflow: hidden; background: #16191e;
+      border: 2px solid #2b3038; box-shadow: 0 30px 80px rgba(0,0,0,0.6); }
+    .tn-card img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+    #tn-plate { position: absolute; inset: 0; background: radial-gradient(closest-side at 50% 50%, rgba(13,15,18,0.9), rgba(13,15,18,0) 70%); }
+    #tn-count { position: absolute; left: 0; width: 1920px; top: 330px; text-align: center; font-size: 300px; font-weight: 800; letter-spacing: -0.05em; line-height: 1; color: #c8f169;
+      font-variant-numeric: tabular-nums; }
+    #tn-cap { position: absolute; left: 0; width: 1920px; top: 650px; text-align: center; font-size: 56px; font-weight: 700; }
+    #tn-cap2 { position: absolute; left: 0; width: 1920px; top: 728px; text-align: center; font-family: "JetBrains Mono"; font-size: 30px; color: #9ea3ab; letter-spacing: 0.04em; }
+    #tn-last { position: absolute; left: 770px; top: 350px; width: 380px; height: 380px; border-radius: 18px; overflow: hidden; border: 6px solid #c8f169; background: #0d0f12; }
+    #tn-last img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+  </style>
+  <div id="root" data-composition-id="tunnel" data-width="1920" data-height="1080">
+    <div id="tn-stage" class="clip" data-start="0" data-duration="3.5" data-track-index="0" style="position:absolute;inset:0">
+      <div id="tn-view"><div id="tn-world">
+        <div class="tn-card"><img src="assets/img/extensions-manager.jpg" alt=""></div>
+        <div class="tn-card"><img src="assets/img/conference-ticket.jpg" alt=""></div>
+        <div class="tn-card"><img src="assets/img/multi-step-form.jpg" alt=""></div>
+        <div class="tn-card"><img src="assets/img/calculator.jpg" alt=""></div>
+        <div class="tn-card"><img src="assets/img/advice-generator.jpg" alt=""></div>
+        <div class="tn-card"><img src="assets/img/newsletter.jpg" alt=""></div>
+        <div class="tn-card"><img src="assets/img/clipboard.jpg" alt=""></div>
+        <div class="tn-card"><img src="assets/img/huddle.jpg" alt=""></div>
+        <div class="tn-card"><img src="assets/img/testimonials-grid.jpg" alt=""></div>
+        <div class="tn-card"><img src="assets/img/fylo-storage.jpg" alt=""></div>
+        <div class="tn-card"><img src="assets/img/chat-illustration.jpg" alt=""></div>
+        <div class="tn-card"><img src="assets/img/nft-preview.jpg" alt=""></div>
+        <div class="tn-card"><img src="assets/img/three-column.jpg" alt=""></div>
+        <div class="tn-card"><img src="assets/img/order-summary.jpg" alt=""></div>
+      </div></div>
+      <div id="tn-plate"></div>
+      <div id="tn-count">0</div>
+      <div id="tn-cap">Frontend Mentor solutions</div>
+      <div id="tn-cap2">From CSS components to React apps</div>
+      <div id="tn-last"><img id="tn-last-img" src="assets/img/order-summary.jpg?last" alt=""></div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+      const cards = gsap.utils.toArray("#tn-world .tn-card");
+      const GAP = 620, FLY = 0.16; // one card passes the camera every 0.16 s
+      // a corridor: cards alternate walls, angled inward, deterministic layout
+      cards.forEach((c, i) => {
+        const side = i % 2 ? 1 : -1, row = (i >> 1) % 2 ? -1 : 1;
+        gsap.set(c, { x: side * 640, y: row * 230, z: -900 - i * GAP, rotationY: -side * 58, rotationX: row * 6 });
+      });
+      const travel = 900 + (cards.length - 1) * GAP + 700;
+      tl.fromTo("#tn-world", { z: 0 }, { z: travel, duration: 0.2 + (cards.length - 1) * FLY + 0.35, ease: "power1.in" }, 0);
+      // the number counts each card as it passes
+      const counter = { v: 0 };
+      const el = document.getElementById("tn-count");
+      tl.fromTo(counter, { v: 0 }, { v: 14, duration: 2.35, ease: "power2.in", onUpdate: () => (el.textContent = Math.max(1, Math.round(counter.v))) }, 0.05);
+      tl.fromTo("#tn-count", { opacity: 0, filter: "blur(12px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power4.out" }, 0.05);
+      tl.fromTo("#tn-cap", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.18, ease: "power4.out" }, 0.3);
+      tl.fromTo("#tn-cap2", { opacity: 0 }, { opacity: 1, duration: 0.2 }, 0.45);
+      tl.fromTo("#tn-count", { scale: 1 }, { scale: 1.12, duration: 0.12, ease: "power2.out", yoyo: true, repeat: 1 }, 2.4);
+      tl.to(["#tn-count", "#tn-cap", "#tn-cap2"], { opacity: 0, filter: "blur(10px)", duration: 0.18, ease: "power3.in" }, 2.75);
+      tl.to("#tn-view", { opacity: 0, duration: 0.3 }, 2.75);
+      // the last card comes to rest, then empties into a square: the shape the next world picks up
+      tl.fromTo("#tn-last", { scale: 0.15, opacity: 0, rotation: -12 }, { scale: 1, opacity: 1, rotation: 0, duration: 0.5, ease: "expo.out" }, 2.7);
+      tl.fromTo("#tn-last-img", { opacity: 1 }, { opacity: 0, duration: 0.25, ease: "power2.in" }, 3.15);
+      window.__timelines["tunnel"] = tl;
+    })();
+  </script>
+</template>

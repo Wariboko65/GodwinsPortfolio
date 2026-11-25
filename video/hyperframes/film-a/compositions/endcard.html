@@ -1,0 +1,49 @@
+<template>
+  <style>
+    @font-face { font-family: "Schibsted Grotesk"; src: url("assets/fonts/schibsted.woff2") format("woff2"); font-weight: 400 900; }
+    @font-face { font-family: "Newsreader"; src: url("assets/fonts/newsreader.woff2") format("woff2"); font-weight: 200 800; }
+    @font-face { font-family: "JetBrains Mono"; src: url("assets/fonts/jbmono.woff2") format("woff2"); font-weight: 100 800; }
+    #root { position: absolute; inset: 0; overflow: hidden; background: #0f3a44; }
+    #ec-dark { position: absolute; left: 0; top: 0; width: 960px; height: 1080px; background: #0d0f12; }
+    #ec-paper { position: absolute; left: 960px; top: 0; width: 960px; height: 1080px; background: #f2eee5; }
+    .ec-name { position: absolute; left: 0; top: -40px; width: 1920px; height: 1080px; display: flex; align-items: center; justify-content: center;
+      font-family: "Schibsted Grotesk"; font-weight: 800; font-size: 150px; letter-spacing: -0.04em; white-space: nowrap; }
+    .ec-name span { display: inline-block; }
+    #ec-dn { color: #eceae4; clip-path: inset(0 960px 0 0); }
+    #ec-ln { color: #13272e; clip-path: inset(0 0 0 960px); }
+    #ec-sw { position: absolute; left: 600px; top: 600px; font-family: "JetBrains Mono"; font-weight: 600; font-size: 34px; color: #c8f169; white-space: nowrap; }
+    #ec-en { position: absolute; left: 1100px; top: 592px; font-family: "Newsreader"; font-style: italic; font-weight: 500; font-size: 42px; color: #a9471f; white-space: nowrap; }
+    #ec-url { position: absolute; left: 960px; top: 742px; transform: translateX(-50%); font-family: "JetBrains Mono"; font-weight: 700; font-size: 34px; color: #0d0f12;
+      background: #c8f169; border-radius: 999px; padding: 14px 34px; white-space: nowrap; }
+  </style>
+  <div id="root" data-composition-id="endcard" data-width="1920" data-height="1080">
+    <div id="ec-stage" class="clip" data-start="0" data-duration="4" data-track-index="0" style="position:absolute;inset:0">
+      <div id="ec-dark"></div>
+      <div id="ec-paper"></div>
+      <div id="ec-dn" data-layout-allow-occlusion data-layout-allow-overlap class="ec-name"></div>
+      <div id="ec-ln" data-layout-allow-occlusion data-layout-allow-overlap class="ec-name"></div>
+      <div id="ec-sw">/software</div>
+      <div id="ec-en">/engineering</div>
+      <div id="ec-url">godwins-portfolio.vercel.app</div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const NAME = "John Godwin Oamien";
+      for (const id of ["ec-dn", "ec-ln"]) document.getElementById(id).innerHTML = [...NAME].map((c) => (c === " " ? "<span>&nbsp;</span>" : `<span>${c}</span>`)).join("");
+      const tl = gsap.timeline({ paused: true });
+      // the two halves close in from either side and meet on the beat
+      tl.fromTo("#ec-dark", { x: -960 }, { x: 0, duration: 0.5, ease: "power3.out" }, 0);
+      tl.fromTo("#ec-paper", { x: 960 }, { x: 0, duration: 0.5, ease: "power3.out" }, 0);
+      const sp = gsap.utils.toArray("#ec-dn span, #ec-ln span");
+      sp.forEach((s, i) => {
+        const k = i % NAME.length;
+        tl.fromTo(s, { opacity: 0.0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.25, ease: "power4.out" }, 0.45 + k * 0.03);
+      });
+      tl.fromTo(["#ec-sw", "#ec-en"], { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power4.out", stagger: 0.08 }, 1.05);
+      // the call to action wipes in, then everything holds still
+      tl.fromTo("#ec-url", { clipPath: "inset(0 100% 0 0 round 999px)" }, { clipPath: "inset(0 0% 0 0 round 999px)", duration: 0.45, ease: "power3.inOut" }, 1.4);
+      window.__timelines["endcard"] = tl;
+    })();
+  </script>
+</template>

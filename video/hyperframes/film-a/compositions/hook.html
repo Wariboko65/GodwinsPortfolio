@@ -1,0 +1,52 @@
+<template>
+  <style>
+    @font-face { font-family: "Schibsted Grotesk"; src: url("assets/fonts/schibsted.woff2") format("woff2"); font-weight: 400 900; }
+    @font-face { font-family: "Newsreader"; src: url("assets/fonts/newsreader.woff2") format("woff2"); font-weight: 200 800; }
+    @font-face { font-family: "JetBrains Mono"; src: url("assets/fonts/jbmono.woff2") format("woff2"); font-weight: 100 800; }
+    #root { position: absolute; inset: 0; overflow: hidden; background: #0d0f12; }
+    #hook-paper { position: absolute; left: 960px; top: 0; width: 960px; height: 1080px; background: #f2eee5; }
+    .hook-name { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; display: flex; align-items: center; justify-content: center;
+      font-family: "Schibsted Grotesk"; font-weight: 800; font-size: 168px; letter-spacing: -0.04em; white-space: nowrap; }
+    #hook-dark-name { color: #eceae4; clip-path: inset(0 960px 0 0); }
+    #hook-light-name { color: #13272e; clip-path: inset(0 0 0 960px); }
+    .hook-name span { display: inline-block; }
+    .hook-lab { position: absolute; top: 690px; font-size: 40px; white-space: nowrap; }
+    #hook-sw { left: 330px; font-family: "JetBrains Mono"; font-weight: 600; color: #c8f169; }
+    #hook-en { left: 1300px; font-family: "Newsreader"; font-style: italic; font-weight: 500; font-size: 50px; color: #a9471f; top: 680px; }
+    #hook-seam { position: absolute; left: 958px; top: 0; width: 4px; height: 1080px; background: #c8f169; transform-origin: 50% 0; }
+  </style>
+  <div id="root" data-composition-id="hook" data-width="1920" data-height="1080">
+    <div id="hook-stage" class="clip" data-start="0" data-duration="3" data-track-index="0" style="position:absolute;inset:0">
+      <div id="hook-paper"></div>
+      <div id="hook-dark-name" data-layout-allow-occlusion data-layout-allow-overlap class="hook-name"></div>
+      <div id="hook-light-name" data-layout-allow-occlusion data-layout-allow-overlap class="hook-name"></div>
+      <div id="hook-seam"></div>
+      <div id="hook-sw" class="hook-lab">/software</div>
+      <div id="hook-en" class="hook-lab">/engineering</div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const NAME = "John Godwin Oamien";
+      for (const id of ["hook-dark-name", "hook-light-name"]) {
+        const el = document.getElementById(id);
+        el.innerHTML = [...NAME].map((c) => (c === " " ? '<span>&nbsp;</span>' : `<span>${c}</span>`)).join("");
+      }
+      const tl = gsap.timeline({ paused: true });
+      // frame 0 is the thumbnail: the split ground and the first letters are already there
+      const letters = gsap.utils.toArray("#hook-dark-name span, #hook-light-name span");
+      const n = NAME.length;
+      letters.forEach((s, i) => {
+        const k = i % n;
+        tl.fromTo(s, { opacity: k < 4 ? 1 : 0.15, filter: k < 4 ? "blur(0px)" : "blur(10px)", y: k < 4 ? 0 : 26 },
+          { opacity: 1, filter: "blur(0px)", y: 0, duration: 0.32, ease: "expo.out" }, Math.max(0, (k - 3) * 0.035));
+      });
+      tl.fromTo("#hook-seam", { scaleY: 0 }, { scaleY: 1, duration: 0.5, ease: "expo.out" }, 0);
+      tl.fromTo(["#hook-sw", "#hook-en"], { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power4.out", stagger: 0.08 }, 0.75);
+      // split to one: the paper half and its name leave right, the seam goes with it
+      tl.to(["#hook-paper", "#hook-light-name", "#hook-en", "#hook-seam"], { x: 980, duration: 0.5, ease: "power3.in" }, 2.35);
+      tl.to(["#hook-dark-name", "#hook-sw"], { opacity: 0, filter: "blur(14px)", scale: 1.08, duration: 0.3, ease: "power3.in" }, 2.6);
+      window.__timelines["hook"] = tl;
+    })();
+  </script>
+</template>

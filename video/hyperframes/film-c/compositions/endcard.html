@@ -1,0 +1,42 @@
+<template>
+  <style>
+    @font-face { font-family: "Schibsted Grotesk"; src: url("assets/fonts/schibsted.woff2") format("woff2"); font-weight: 400 900; }
+    @font-face { font-family: "Newsreader"; src: url("assets/fonts/newsreader.woff2") format("woff2"); font-weight: 200 800; }
+    @font-face { font-family: "JetBrains Mono"; src: url("assets/fonts/jbmono.woff2") format("woff2"); font-weight: 100 800; }
+    #root { position: absolute; inset: 0; overflow: hidden; font-family: "Schibsted Grotesk"; }
+    #end-dark { position: absolute; left: 0; top: 0; width: 960px; height: 1080px; background: #0d0f12; }
+    #end-paper { position: absolute; left: 960px; top: 0; width: 960px; height: 1080px; background: #f2eee5; }
+    .end-both { position: absolute; left: 0; width: 1920px; top: 300px; text-align: center; font-weight: 800; font-size: 400px; letter-spacing: -0.05em; line-height: 1; }
+    #end-bd { color: #c8f169; clip-path: inset(0 960px 0 0); }
+    #end-bl { color: #a9471f; clip-path: inset(0 0 0 960px); }
+    .end-name { position: absolute; left: 0; top: 380px; width: 1920px; text-align: center; font-weight: 800; font-size: 150px; letter-spacing: -0.04em; white-space: nowrap; }
+    .end-name span { display: inline-block; }
+    #end-dn { color: #eceae4; clip-path: inset(0 960px 0 0); }
+    #end-ln { color: #13272e; clip-path: inset(0 0 0 960px); }
+    #end-sw { position: absolute; left: 600px; top: 590px; font-family: "JetBrains Mono"; font-weight: 600; font-size: 36px; color: #c8f169; }
+    #end-en { position: absolute; left: 1100px; top: 582px; font-family: "Newsreader"; font-style: italic; font-weight: 500; font-size: 44px; color: #a9471f; }
+    #end-url { position: absolute; left: 960px; top: 730px; transform: translateX(-50%); font-family: "JetBrains Mono"; font-weight: 700; font-size: 36px; color: #0d0f12; background: #c8f169; border-radius: 999px; padding: 14px 34px; white-space: nowrap; }
+  </style>
+  <div id="root" data-composition-id="endcard" data-width="1920" data-height="1080">
+    <div id="end-stage" class="clip" data-start="0" data-duration="5.600" data-track-index="0" style="position:absolute;inset:0">
+      <div id="end-dark"></div><div id="end-paper"></div>
+      <div id="end-bd" class="end-both" data-layout-allow-overlap data-layout-allow-occlusion>BOTH.</div><div id="end-bl" class="end-both" data-layout-allow-overlap data-layout-allow-occlusion>BOTH.</div>
+      <div id="end-dn" class="end-name" data-layout-allow-occlusion data-layout-allow-overlap><span>J</span><span>o</span><span>h</span><span>n</span><span>&nbsp;</span><span>G</span><span>o</span><span>d</span><span>w</span><span>i</span><span>n</span><span>&nbsp;</span><span>O</span><span>a</span><span>m</span><span>i</span><span>e</span><span>n</span></div>
+      <div id="end-ln" class="end-name" data-layout-allow-occlusion data-layout-allow-overlap><span>J</span><span>o</span><span>h</span><span>n</span><span>&nbsp;</span><span>G</span><span>o</span><span>d</span><span>w</span><span>i</span><span>n</span><span>&nbsp;</span><span>O</span><span>a</span><span>m</span><span>i</span><span>e</span><span>n</span></div>
+      <div id="end-sw">/software</div><div id="end-en">/engineering</div>
+      <div id="end-url">godwins-portfolio.vercel.app</div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo(".end-both", { scale: 1.2, filter: "blur(12px)" }, { scale: 1, filter: "blur(0px)", duration: 0.3, ease: "expo.out" }, 0);
+      tl.to(".end-both", { opacity: 0, filter: "blur(14px)", duration: 0.15, ease: "power3.in" }, 0.8166666666666667);
+      const sp = gsap.utils.toArray("#end-dn span, #end-ln span");
+      sp.forEach((s, i) => tl.fromTo(s, { opacity: 0, y: 60, filter: "blur(8px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.3, ease: "expo.out" }, 0.9666666666666667 + (i % 18) * 0.025));
+      tl.fromTo(["#end-sw", "#end-en"], { opacity: 0 }, { opacity: 1, duration: 0.15, stagger: 0.06 }, 1.9666666666666666);
+      tl.fromTo("#end-url", { clipPath: "inset(0 100% 0 0 round 999px)" }, { clipPath: "inset(0 0% 0 0 round 999px)", duration: 0.4, ease: "power3.inOut" }, 2.433333333333333);
+      window.__timelines["endcard"] = tl;
+    })();
+  </script>
+</template>

@@ -1,0 +1,65 @@
+<template>
+  <style>
+    @font-face { font-family: "Newsreader"; src: url("assets/fonts/newsreader.woff2") format("woff2"); font-weight: 200 800; }
+    @font-face { font-family: "JetBrains Mono"; src: url("assets/fonts/jbmono.woff2") format("woff2"); font-weight: 100 800; }
+    @font-face { font-family: "Schibsted Grotesk"; src: url("assets/fonts/schibsted.woff2") format("woff2"); font-weight: 400 900; }
+    #root { position: absolute; inset: 0; overflow: hidden; background: #0d0f12; color: #13272e; font-family: "Schibsted Grotesk"; }
+    #nd-paper { position: absolute; inset: 0; background: #f2eee5; }
+    #nd-cam { position: absolute; left: 0; top: 0; width: 4800px; height: 1080px; }
+    #nd-sq { position: absolute; left: 770px; top: 350px; width: 380px; height: 380px; border: 6px solid #c8f169; border-radius: 18px; }
+    #nd-dims { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: visible; }
+    .nd-lab { font-family: "JetBrains Mono"; font-weight: 600; fill: #a9471f; font-size: 30px; }
+    #nd-spec { position: absolute; left: 330px; top: 840px; font-family: "JetBrains Mono"; font-weight: 600; font-size: 26px; color: #a9471f; letter-spacing: 0.04em; white-space: nowrap; }
+    #nd-kicker { position: absolute; left: 1120px; top: 170px; font-family: "JetBrains Mono"; font-weight: 600; font-size: 24px; letter-spacing: 0.08em; color: #a9471f; text-transform: uppercase; white-space: nowrap; }
+    #nd-title { position: absolute; left: 1116px; top: 210px; font-family: "Newsreader"; font-weight: 500; font-size: 104px; line-height: 1; letter-spacing: -0.02em; white-space: nowrap; }
+    #nd-title span { display: inline-block; }
+    #nd-sub { position: absolute; left: 1120px; top: 336px; font-size: 30px; color: #4f5b5e; white-space: nowrap; }
+    .nd-photo { position: absolute; background: #fbf9f4; padding: 14px 14px 66px; border-radius: 10px; box-shadow: 0 30px 70px rgba(19,39,46,0.22); }
+    .nd-photo img { display: block; width: 100%; height: 100%; object-fit: cover; border-radius: 4px; }
+    .nd-photo p { position: absolute; left: 18px; bottom: 16px; font-family: "JetBrains Mono"; font-size: 26px; font-weight: 600; color: #13272e; white-space: nowrap; }
+  </style>
+  <div id="root" data-composition-id="nddc" data-width="1920" data-height="1080">
+    <div id="nd-stage" class="clip" data-start="0" data-duration="7.5" data-track-index="0" style="position:absolute;inset:0">
+      <div id="nd-paper"></div>
+      <div id="nd-cam">
+        <div id="nd-sq"></div>
+        <svg id="nd-dims" viewBox="0 0 1920 1080">
+          <path class="nd-d" d="M330 790 H680 M330 776 V804 M680 776 V804" stroke="#a9471f" stroke-width="4" fill="none" pathLength="1"/>
+          <path class="nd-d" d="M730 440 V790 M716 440 H744 M716 790 H744" stroke="#a9471f" stroke-width="4" fill="none" pathLength="1"/>
+          <text class="nd-lab nd-t" x="505" y="770" text-anchor="middle">450</text>
+          <text class="nd-lab nd-t" x="790" y="624">450</text>
+        </svg>
+        <div id="nd-spec">PLINTH · 450 × 450 × 1000 mm</div>
+        <div id="nd-kicker">NDDC · July – December 2025</div>
+        <div id="nd-title"><span>Field</span>&nbsp;<span>inspection</span></div>
+        <div id="nd-sub">Solar street-light projects · Rivers State</div>
+        <div class="nd-photo" id="nd-p0" style="left:1120px;top:420px;width:470px;height:560px"><img src="assets/img/plinth-measurement.jpg" alt=""><p>Measuring a concrete plinth</p></div>
+        <div class="nd-photo" id="nd-p1" style="left:2100px;top:300px;width:470px;height:500px"><img src="assets/img/earthing-installation.jpg" alt=""><p>Earthing system</p></div>
+        <div class="nd-photo" id="nd-p2" style="left:2660px;top:420px;width:400px;height:560px"><img src="assets/img/pole-measurement.jpg" alt=""><p>Checking pole dimensions</p></div>
+        <div class="nd-photo" id="nd-p3" style="left:3160px;top:260px;width:520px;height:500px"><img src="assets/img/plinth-reinforcement.jpg" alt=""><p>Reinforcement cages</p></div>
+        <div class="nd-photo" id="nd-p4" style="left:3770px;top:380px;width:600px;height:540px"><img src="assets/img/streetlights-night.jpg" alt=""><p>Night-time functional check</p></div>
+      </div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+      // match cut: the same square, then the ground floods to paper
+      tl.fromTo("#nd-paper", { clipPath: "circle(0px at 960px 540px)" }, { clipPath: "circle(1200px at 960px 540px)", duration: 0.45, ease: "power2.inOut" }, 0.15);
+      tl.fromTo("#nd-sq", { borderColor: "#c8f169", x: 0, y: 0, width: 380, height: 380, borderRadius: 18 },
+        { borderColor: "#a9471f", x: -440, y: 90, width: 350, height: 350, borderRadius: 2, duration: 0.6, ease: "power3.inOut" }, 0.2);
+      tl.fromTo(".nd-d", { strokeDasharray: 1, strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.45, ease: "power2.inOut", stagger: 0.15 }, 0.8);
+      tl.fromTo(".nd-t", { opacity: 0 }, { opacity: 1, duration: 0.15, stagger: 0.15 }, 1.15);
+      tl.fromTo("#nd-spec", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power4.out" }, 1.4);
+      tl.fromTo("#nd-kicker", { opacity: 0 }, { opacity: 1, duration: 0.2 }, 1.55);
+      tl.fromTo("#nd-title span", { opacity: 0, filter: "blur(10px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.16, ease: "power4.out", stagger: 0.08 }, 1.6);
+      tl.fromTo("#nd-sub", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power4.out" }, 1.85);
+      tl.fromTo("#nd-p0", { y: 700, rotation: 6 }, { y: 0, rotation: -2, duration: 0.7, ease: "expo.out" }, 2.0);
+      ["#nd-p1", "#nd-p2", "#nd-p3", "#nd-p4"].forEach((p, i) => gsap.set(p, { rotation: [2, -1.5, 1.5, -1][i] }));
+      // the camera glides along the site photos
+      tl.to("#nd-cam", { x: -2550, duration: 3.9, ease: "power2.inOut" }, 3.2);
+      tl.to(["#nd-sq", "#nd-dims", "#nd-spec"], { opacity: 0, duration: 0.3 }, 3.3);
+      window.__timelines["nddc"] = tl;
+    })();
+  </script>
+</template>

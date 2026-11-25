@@ -1,0 +1,138 @@
+<template>
+  <style>
+    @font-face { font-family: "Schibsted Grotesk"; src: url("assets/fonts/schibsted.woff2") format("woff2"); font-weight: 400 900; }
+    @font-face { font-family: "Newsreader"; src: url("assets/fonts/newsreader.woff2") format("woff2"); font-weight: 200 800; }
+    @font-face { font-family: "JetBrains Mono"; src: url("assets/fonts/jbmono.woff2") format("woff2"); font-weight: 100 800; }
+    #root { position: absolute; inset: 0; overflow: hidden; background: #0d0f12; font-family: "Schibsted Grotesk"; color: #eceae4; }
+    #fb-view { position: absolute; inset: 0; perspective: 1200px; perspective-origin: 960px 540px;
+      background-image: linear-gradient(#2b303844 2px, transparent 2px), linear-gradient(90deg, #2b303844 2px, transparent 2px); background-size: 90px 90px; }
+    #fb-world { position: absolute; left: 960px; top: 540px; width: 0; height: 0; transform-style: preserve-3d; }
+    .o { position: absolute; left: 0; top: 0; white-space: nowrap; }
+    .win { width: 1700px; height: 980px; border: 2px solid #2b3038; border-radius: 28px; background: #12151a; }
+    .name { font-weight: 800; font-size: 130px; letter-spacing: -0.04em; }
+    .mono { font-family: "JetBrains Mono"; font-weight: 600; font-size: 30px; }
+    .lime { color: #c8f169; } .grey { color: #9ea3ab; } .clay { color: #a9471f; }
+    .node { width: 330px; height: 270px; background: #16191e; border: 3px solid #2b3038; border-radius: 18px; padding: 26px; white-space: normal; }
+    .nn { font-family: "JetBrains Mono"; font-size: 26px; color: #9ea3ab; font-weight: 600; }
+    .nt { font-size: 36px; font-weight: 700; line-height: 1.1; margin-top: 16px; }
+    .wire { width: 50px; height: 4px; } .wire b { display: block; width: 100%; height: 100%; background: #c8f169; transform-origin: 0 50%; }
+    .title { font-weight: 800; font-size: 120px; letter-spacing: -0.03em; }
+    .card { width: 460px; height: 290px; border-radius: 14px; overflow: hidden; border: 2px solid #2b3038; box-shadow: 0 30px 80px rgba(0,0,0,0.6); rotate: y var(--ry); }
+    .card img, .photo img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+    #fb-count { position: absolute; left: 0; width: 1920px; top: 800px; text-align: center; font-weight: 800; font-size: 150px; color: #c8f169; letter-spacing: -0.04em; white-space: nowrap; }
+    #fb-count small { font-size: 44px; color: #eceae4; letter-spacing: 0; }
+    .paper { width: 14000px; height: 9000px; background: #f2eee5; }
+    .plan .dim { font-family: "JetBrains Mono"; font-weight: 600; font-size: 34px; fill: #a9471f; }
+    .serif { font-family: "Newsreader"; font-weight: 500; font-size: 120px; color: #13272e; letter-spacing: -0.02em; }
+    .photo { width: 560px; height: 620px; background: #fbf9f4; padding: 16px 16px 70px; border-radius: 10px; box-shadow: 0 30px 70px rgba(19,39,46,0.22); rotate: z var(--rz); }
+    .photo p { position: absolute; left: 20px; bottom: 18px; font-family: "JetBrains Mono"; font-size: 28px; font-weight: 600; color: #13272e; }
+    .waste { width: 1700px; height: 1000px; background: #0f3a44; border-radius: 30px; color: #f2eee5; }
+    .wk { position: absolute; left: 90px; top: 110px; font-family: "JetBrains Mono"; font-size: 30px; color: #b9c9cc; }
+    .wn { position: absolute; left: 80px; top: 180px; font-family: "Newsreader"; font-size: 250px; line-height: 1; color: #f0a46f; transform-origin: 0 60%; }
+    .wn small { font-size: 0.3em; }
+    .wm { position: absolute; left: 92px; top: 470px; font-family: "JetBrains Mono"; font-size: 30px; color: #b9c9cc; }
+    .wb { position: absolute; left: 900px; top: 300px; width: 760px; height: 560px; }
+    .wb i { position: absolute; bottom: 0; width: 46px; border-radius: 6px 6px 0 0; transform-origin: 50% 100%; }
+    .bf { background: #f0a46f; } .bm { background: #b9c9cc; }
+
+  </style>
+  <div id="root" data-composition-id="flight" data-width="1920" data-height="1080">
+    <div id="fb-stage" class="clip" data-start="0" data-duration="30" data-track-index="0" style="position:absolute;inset:0" data-layout-allow-overflow data-layout-allow-overlap>
+      <div id="fb-view"><div id="fb-world">
+                <div id="fb-win" class="o soft win" style="transform:translate3d(0px,0px,0px) translate(-50%,-50%);"></div>
+        <div id="fb-name" class="o soft name" style="transform:translate3d(0px,-300px,0px) translate(-50%,-50%);">John Godwin Oamien<span id="fb-cur">_</span></div>
+        <div id="fb-sub" class="o soft mono lime" style="transform:translate3d(0px,-170px,0px) translate(-50%,-50%);">/software · Frontend / Full Stack Developer</div>
+        <div id="fb-n0" class="o soft node" style="transform:translate3d(1900px,60px,0px) translate(-50%,-50%);"><p class="nn">01 / BOOK</p><p class="nt">Client picks a consultation slot</p></div>
+        <div id="fb-wire0" class="o soft wire" style="transform:translate3d(2090px,60px,0px) translate(-50%,-50%);"><b id="fb-wb0"></b></div>
+        <div id="fb-n1" class="o soft node" style="transform:translate3d(2280px,60px,0px) translate(-50%,-50%);"><p class="nn">02 / CHECK</p><p class="nt">Server confirms the slot is free</p></div>
+        <div id="fb-wire1" class="o soft wire" style="transform:translate3d(2470px,60px,0px) translate(-50%,-50%);"><b id="fb-wb1"></b></div>
+        <div id="fb-n2" class="o soft node" style="transform:translate3d(2660px,60px,0px) translate(-50%,-50%);"><p class="nn">03 / SCHEDULE</p><p class="nt">Calendar invite and Meet link</p></div>
+        <div id="fb-wire2" class="o soft wire" style="transform:translate3d(2850px,60px,0px) translate(-50%,-50%);"><b id="fb-wb2"></b></div>
+        <div id="fb-n3" class="o soft node" style="transform:translate3d(3040px,60px,0px) translate(-50%,-50%);"><p class="nn">04 / CONFIRM</p><p class="nt">Confirmation emails go out</p></div>
+        <div id="fb-jt" class="o soft title" style="transform:translate3d(2470px,-260px,0px) translate(-50%,-50%);">JOPAD Advisory</div>
+        <div id="fb-js" class="o soft mono grey" style="transform:translate3d(2470px,-150px,0px) translate(-50%,-50%);">A booking platform that runs itself · 2026</div>
+        <div id="fb-c0" class="o card" style="transform:translate3d(3950px,150px,-700px) translate(-50%,-50%);--ry:28deg"><img src="assets/img/extensions-manager.jpg" alt=""></div>
+        <div id="fb-c1" class="o card" style="transform:translate3d(4480px,150px,-1340px) translate(-50%,-50%);--ry:-28deg"><img src="assets/img/conference-ticket.jpg" alt=""></div>
+        <div id="fb-c2" class="o card" style="transform:translate3d(3890px,-150px,-1980px) translate(-50%,-50%);--ry:28deg"><img src="assets/img/multi-step-form.jpg" alt=""></div>
+        <div id="fb-c3" class="o card" style="transform:translate3d(4450px,-150px,-2620px) translate(-50%,-50%);--ry:-28deg"><img src="assets/img/calculator.jpg" alt=""></div>
+        <div id="fb-c4" class="o card" style="transform:translate3d(3920px,150px,-3260px) translate(-50%,-50%);--ry:28deg"><img src="assets/img/advice-generator.jpg" alt=""></div>
+        <div id="fb-c5" class="o card" style="transform:translate3d(4510px,150px,-3900px) translate(-50%,-50%);--ry:-28deg"><img src="assets/img/newsletter.jpg" alt=""></div>
+        <div id="fb-c6" class="o card" style="transform:translate3d(3950px,-150px,-4540px) translate(-50%,-50%);--ry:28deg"><img src="assets/img/clipboard.jpg" alt=""></div>
+        <div id="fb-c7" class="o card" style="transform:translate3d(4480px,-150px,-5180px) translate(-50%,-50%);--ry:-28deg"><img src="assets/img/huddle.jpg" alt=""></div>
+        <div id="fb-c8" class="o card" style="transform:translate3d(3890px,150px,-5820px) translate(-50%,-50%);--ry:28deg"><img src="assets/img/testimonials-grid.jpg" alt=""></div>
+        <div id="fb-c9" class="o card" style="transform:translate3d(4450px,150px,-6460px) translate(-50%,-50%);--ry:-28deg"><img src="assets/img/fylo-storage.jpg" alt=""></div>
+        <div id="fb-c10" class="o card" style="transform:translate3d(3920px,-150px,-7100px) translate(-50%,-50%);--ry:28deg"><img src="assets/img/chat-illustration.jpg" alt=""></div>
+        <div id="fb-c11" class="o card" style="transform:translate3d(4510px,-150px,-7740px) translate(-50%,-50%);--ry:-28deg"><img src="assets/img/nft-preview.jpg" alt=""></div>
+        <div id="fb-c12" class="o card" style="transform:translate3d(3950px,150px,-8380px) translate(-50%,-50%);--ry:28deg"><img src="assets/img/three-column.jpg" alt=""></div>
+        <div id="fb-c13" class="o card" style="transform:translate3d(4200px,0px,-9650px) translate(-50%,-50%);--ry:0deg"><img src="assets/img/order-summary.jpg" alt=""></div>
+        <div id="fb-paper" class="o paperw paper" style="transform:translate3d(7000px,0px,-10500px) translate(-50%,-50%);"></div>
+        <div id="fb-plinth" class="o paperw plan" style="transform:translate3d(3700px,60px,-10500px) translate(-50%,-50%);"><svg viewBox="0 0 600 520" width="600" height="520"><rect id="fb-sq" x="80" y="40" width="380" height="380" fill="none" stroke="#a9471f" stroke-width="6"/><path class="fb-d" d="M80 470 H460 M80 456 V484 M460 456 V484" stroke="#a9471f" stroke-width="4" fill="none" pathLength="1"/><path class="fb-d" d="M510 40 V420 M496 40 H524 M496 420 H524" stroke="#a9471f" stroke-width="4" fill="none" pathLength="1"/><text x="270" y="510" text-anchor="middle" class="dim">450</text><text x="540" y="240" class="dim">450</text></svg></div>
+        <div id="fb-et" class="o paperw serif" style="transform:translate3d(4500px,-250px,-10500px) translate(-50%,-50%);">Field inspection</div>
+        <div id="fb-es" class="o paperw mono clay" style="transform:translate3d(4500px,-140px,-10500px) translate(-50%,-50%);">NDDC · July – December 2025 · PLINTH 450 × 450 × 1000 mm</div>
+        <div id="fb-p0" class="o paperw photo" style="transform:translate3d(5300px,130px,-10500px) translate(-50%,-50%);--rz:-2deg"><img src="assets/img/plinth-measurement.jpg" alt=""><p>Measuring a concrete plinth</p></div>
+        <div id="fb-p1" class="o paperw photo" style="transform:translate3d(6080px,-60px,-10500px) translate(-50%,-50%);--rz:1.5deg"><img src="assets/img/earthing-installation.jpg" alt=""><p>Earthing system</p></div>
+        <div id="fb-p2" class="o paperw photo" style="transform:translate3d(6860px,130px,-10500px) translate(-50%,-50%);--rz:-1deg"><img src="assets/img/pole-measurement.jpg" alt=""><p>Checking pole dimensions</p></div>
+        <div id="fb-p3" class="o paperw photo" style="transform:translate3d(7640px,-60px,-10500px) translate(-50%,-50%);--rz:2deg"><img src="assets/img/streetlights-night.jpg" alt=""><p>Night-time functional check</p></div>
+        <div id="fb-waste" class="o paperw waste" style="transform:translate3d(9500px,40px,-10500px) translate(-50%,-50%);"><p class="wk">B.Eng. research · hostel solid waste study</p><p class="wn"><span id="fb-kg">0.0</span><small> kg</small></p><p class="wm">weighed · 6 days · 2 hostels · 9 categories</p><div class="wb"><i class="bf" style="left:60px;height:344px"></i><i class="bm" style="left:110px;height:129px"></i><i class="bf" style="left:178px;height:400px"></i><i class="bm" style="left:228px;height:58px"></i><i class="bf" style="left:296px;height:261px"></i><i class="bm" style="left:346px;height:29px"></i><i class="bf" style="left:414px;height:247px"></i><i class="bm" style="left:464px;height:55px"></i><i class="bf" style="left:532px;height:293px"></i><i class="bm" style="left:582px;height:39px"></i><i class="bf" style="left:650px;height:265px"></i><i class="bm" style="left:700px;height:47px"></i></div></div>
+      </div></div>
+      <div id="fb-count"><span id="fb-cnt">0</span> <small>Frontend Mentor solutions</small></div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+            gsap.set("#fb-world", { x: 0, y: 260, z: 300 });
+      tl.to("#fb-world", { x: 0, y: 120, z: -250, duration: 2.400, ease: "power2.inOut" }, 0.0);
+      tl.to("#fb-world", { x: -2050, y: -60, z: 250, duration: 2.000, ease: "power2.inOut" }, 2.4);
+      tl.to("#fb-world", { x: -2850, y: -60, z: 250, duration: 2.200, ease: "power1.inOut" }, 4.4);
+      tl.to("#fb-world", { x: -2470, y: 40, z: -150, duration: 1.000, ease: "power2.inOut" }, 6.6);
+      tl.to("#fb-world", { x: -4200, y: 0, z: 0, duration: 0.800, ease: "power2.in" }, 7.6);
+      tl.to("#fb-world", { x: -4200, y: 0, z: 9300, duration: 3.200, ease: "none" }, 8.4);
+      tl.to("#fb-world", { x: -3900, y: -40, z: 10350, duration: 1.000, ease: "power2.out" }, 11.6);
+      tl.to("#fb-world", { x: -4100, y: -20, z: 10620, duration: 2.400, ease: "power1.inOut" }, 12.6);
+      tl.to("#fb-world", { x: -7700, y: 0, z: 10750, duration: 4.600, ease: "power2.inOut" }, 15.0);
+      tl.to("#fb-world", { x: -9500, y: 0, z: 10380, duration: 1.600, ease: "power2.inOut" }, 19.6);
+      tl.to("#fb-world", { x: -9500, y: 20, z: 10620, duration: 3.400, ease: "power1.inOut" }, 21.2);
+      tl.to("#fb-world", { x: -7000, y: 0, z: 6300, duration: 4.400, ease: "power2.inOut" }, 24.6);
+      tl.fromTo("#fb-cur", { opacity: 1 }, { opacity: 0, duration: 0.01, repeat: 5, yoyo: true, repeatDelay: 0.39 }, 0.4);
+      tl.fromTo("#fb-sub", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power4.out" }, 1.3);
+      tl.fromTo("#fb-n0", { borderColor: "#2b3038", boxShadow: "0 0 0 rgba(200,241,105,0)" }, { borderColor: "#c8f169", boxShadow: "0 0 60px rgba(200,241,105,0.4)", duration: 0.25 }, 3.6);
+      tl.fromTo("#fb-wb0", { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: "power2.inOut" }, 3.85);
+      tl.fromTo("#fb-n1", { borderColor: "#2b3038", boxShadow: "0 0 0 rgba(200,241,105,0)" }, { borderColor: "#c8f169", boxShadow: "0 0 60px rgba(200,241,105,0.4)", duration: 0.25 }, 4.4);
+      tl.fromTo("#fb-wb1", { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: "power2.inOut" }, 4.65);
+      tl.fromTo("#fb-n2", { borderColor: "#2b3038", boxShadow: "0 0 0 rgba(200,241,105,0)" }, { borderColor: "#c8f169", boxShadow: "0 0 60px rgba(200,241,105,0.4)", duration: 0.25 }, 5.2);
+      tl.fromTo("#fb-wb2", { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: "power2.inOut" }, 5.45);
+      tl.fromTo("#fb-n3", { borderColor: "#2b3038", boxShadow: "0 0 0 rgba(200,241,105,0)" }, { borderColor: "#c8f169", boxShadow: "0 0 60px rgba(200,241,105,0.4)", duration: 0.25 }, 6.0);
+      tl.fromTo("#fb-jt", { opacity: 0, filter: "blur(10px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power4.out" }, 6.7);
+      tl.fromTo("#fb-js", { opacity: 0 }, { opacity: 1, duration: 0.2 }, 6.9);
+      tl.to("#fb-c0", { opacity: 0, duration: 0.1 }, 8.871);
+      tl.to("#fb-c1", { opacity: 0, duration: 0.1 }, 9.091);
+      tl.to("#fb-c2", { opacity: 0, duration: 0.1 }, 9.312);
+      tl.to("#fb-c3", { opacity: 0, duration: 0.1 }, 9.532);
+      tl.to("#fb-c4", { opacity: 0, duration: 0.1 }, 9.752);
+      tl.to("#fb-c5", { opacity: 0, duration: 0.1 }, 9.972);
+      tl.to("#fb-c6", { opacity: 0, duration: 0.1 }, 10.192);
+      tl.to("#fb-c7", { opacity: 0, duration: 0.1 }, 10.413);
+      tl.to("#fb-c8", { opacity: 0, duration: 0.1 }, 10.633);
+      tl.to("#fb-c9", { opacity: 0, duration: 0.1 }, 10.853);
+      tl.to("#fb-c10", { opacity: 0, duration: 0.1 }, 11.073);
+      tl.to("#fb-c11", { opacity: 0, duration: 0.1 }, 11.294);
+      tl.to("#fb-c12", { opacity: 0, duration: 0.1 }, 11.514);
+      tl.to("#fb-count", { opacity: 0, filter: "blur(10px)", duration: 0.2 }, 9.950000000000001);
+      { const c = { v: 0 }, el = document.getElementById("fb-cnt"); tl.fromTo(c, { v: 0 }, { v: 14, duration: 1.7, ease: "none", onUpdate: () => (el.textContent = Math.max(1, Math.ceil(c.v))) }, 8.200000000000001); }
+      tl.fromTo("#fb-count", { opacity: 0 }, { opacity: 1, duration: 0.2 }, 8.1);
+      tl.to("#fb-c13", { opacity: 0, duration: 0.25, ease: "power2.in" }, 11.95);
+      tl.to([".soft"], { opacity: 0, duration: 0.3 }, 11.2);
+      tl.fromTo(".fb-d", { strokeDasharray: 1, strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.45, ease: "power2.inOut", stagger: 0.15 }, 13.0);
+      tl.fromTo(".dim", { opacity: 0 }, { opacity: 1, duration: 0.15, stagger: 0.15 }, 13.35);
+      tl.fromTo("#fb-et", { opacity: 0, filter: "blur(10px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power4.out" }, 13.6);
+      tl.fromTo("#fb-es", { opacity: 0 }, { opacity: 1, duration: 0.2 }, 13.85);
+      tl.fromTo("#fb-waste .bf, #fb-waste .bm", { scaleY: 0 }, { scaleY: 1, duration: 0.55, ease: "expo.out", stagger: 0.06 }, 20.6);
+      tl.fromTo("#fb-waste .wn", { opacity: 0, scale: 1.5, filter: "blur(14px)" }, { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.35, ease: "expo.out" }, 22.0);
+      { const c = { v: 0 }, el = document.getElementById("fb-kg"); tl.fromTo(c, { v: 0 }, { v: 150.4, duration: 1.0, ease: "power3.out", onUpdate: () => (el.textContent = c.v.toFixed(1)) }, 22.0); }
+      tl.fromTo("#fb-waste .wm", { opacity: 0 }, { opacity: 1, duration: 0.2 }, 22.6);
+      tl.fromTo(".paperw", { opacity: 0 }, { opacity: 1, duration: 1.0, ease: "power2.in" }, 10.0);
+      window.__timelines["flight"] = tl;
+    })();
+  </script>
+</template>

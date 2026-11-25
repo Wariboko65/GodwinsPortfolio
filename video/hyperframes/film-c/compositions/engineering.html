@@ -1,0 +1,62 @@
+<template>
+  <style>
+    @font-face { font-family: "Schibsted Grotesk"; src: url("assets/fonts/schibsted.woff2") format("woff2"); font-weight: 400 900; }
+    @font-face { font-family: "Newsreader"; src: url("assets/fonts/newsreader.woff2") format("woff2"); font-weight: 200 800; }
+    @font-face { font-family: "JetBrains Mono"; src: url("assets/fonts/jbmono.woff2") format("woff2"); font-weight: 100 800; }
+    
+    #root { position: absolute; inset: 0; overflow: hidden; font-family: "Schibsted Grotesk"; }
+    .v { position: absolute; inset: 0; }
+    .v .field { position: absolute; inset: 0; }
+    .v .word { position: absolute; font-weight: 800; letter-spacing: -0.05em; line-height: 0.85; white-space: nowrap; }
+    .v .proof { position: absolute; }
+    .v .lab { position: absolute; font-family: "JetBrains Mono"; font-weight: 600; font-size: 34px; letter-spacing: 0.02em; white-space: nowrap; }
+    .nodes { display: flex; gap: 24px; }
+    .nd { width: 420px; height: 230px; border-radius: 18px; border: 3px solid currentColor; padding: 26px 28px; font-family: "JetBrains Mono"; font-size: 26px; font-weight: 600; opacity: 0.55; }
+    .nd.on { opacity: 1; }
+    .nd b { display: block; font-family: "Schibsted Grotesk"; font-size: 40px; line-height: 1.08; margin-top: 16px; font-weight: 700; }
+    .shot { width: 860px; height: 540px; border-radius: 18px; overflow: hidden; box-shadow: 0 40px 90px rgba(0,0,0,0.45); }
+    .shot img, .photo img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+    .photo { width: 620px; height: 780px; border-radius: 10px; overflow: hidden; box-shadow: 0 40px 90px rgba(0,0,0,0.35); }
+    .grid { display: grid; grid-template-columns: repeat(7, 230px); gap: 14px; }
+    .grid div { height: 150px; border-radius: 10px; overflow: hidden; }
+    .grid img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+    .num { font-family: "Newsreader"; font-weight: 500; font-size: 330px; line-height: 1; white-space: nowrap; font-variant-numeric: tabular-nums; }
+    .num small { font-size: 0.3em; }
+    .bars { display: flex; align-items: flex-end; gap: 40px; height: 440px; }
+    .bar { width: 200px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; }
+    .bar i { display: block; width: 120px; border-radius: 8px 8px 0 0; background: currentColor; }
+    .bar span { font-family: "JetBrains Mono"; font-weight: 700; font-size: 34px; margin-bottom: 10px; }
+    .bar em { font-style: normal; font-family: "JetBrains Mono"; font-size: 28px; margin-top: 12px; color: #f2eee5; }
+
+  </style>
+  <div id="root" data-composition-id="engineering" data-width="1920" data-height="1080">
+        <div id="engineering-v0" class="v clip" data-start="0.0" data-duration="1.9666666666666666" data-track-index="0"><div class="field" style="background:#f2eee5"></div><div class="proof" id="engineering-p0" style="left:110px;top:150px;color:#a9471f"><div class="photo"><img src="assets/img/plinth-measurement.jpg" alt=""></div></div><div class="word" id="engineering-w0" style="left:820px;top:330px;font-size:190px;color:#13272e">INSPECTS</div><div class="lab" id="engineering-l0" style="left:826px;top:560px;color:#a9471f">Plinth · 450 × 450 × 1000 mm · NDDC</div></div>
+    <div id="engineering-v1" class="v clip" data-start="1.9666666666666666" data-duration="1.9666666666666666" data-track-index="0"><div class="field" style="background:#a9471f"></div><div class="proof" id="engineering-p1" style="right:110px;top:150px;color:#f2eee5"><div class="photo"><img src="assets/img/pole-measurement.jpg" alt=""></div></div><div class="word" id="engineering-w1" style="left:110px;top:330px;font-size:190px;color:#f2eee5">MEASURES</div><div class="lab" id="engineering-l1" style="left:116px;top:560px;color:#f2eee5">Checking pole dimensions</div></div>
+    <div id="engineering-v2" class="v clip" data-start="3.9" data-duration="1.9666666666666666" data-track-index="0"><div class="field" style="background:#0f3a44"></div><div class="proof" id="engineering-p2" style="left:110px;top:150px;color:#f0a46f"><div class="photo"><img src="assets/img/streetlights-night.jpg" alt=""></div></div><div class="word" id="engineering-w2" style="left:820px;top:330px;font-size:190px;color:#f2eee5">CHECKS</div><div class="lab" id="engineering-l2" style="left:826px;top:560px;color:#f0a46f">Night-time functional check</div></div>
+    <div id="engineering-v3" class="v clip" data-start="5.866666666666666" data-duration="1.9666666666666666" data-track-index="0"><div class="field" style="background:#f2eee5"></div><div class="proof" id="engineering-p3" style="left:100px;top:420px;color:#a9471f"><div class="num"><span class="cnt" data-to="150.4">0</span><small> kg</small></div></div><div class="word" id="engineering-w3" style="left:110px;top:110px;font-size:300px;color:#13272e">WEIGHS</div><div class="lab" id="engineering-l3" style="left:116px;bottom:70px;color:#a9471f">6 days · 2 hostels · 9 categories</div></div>
+    <div id="engineering-v4" class="v clip" data-start="7.8" data-duration="1.9666666666666666" data-track-index="0"><div class="field" style="background:#0f3a44"></div><div class="proof" id="engineering-p4" style="left:110px;top:470px;color:#f0a46f"><div class="bars"><div class="bar"><span>80.46%</span><i style="height:300px"></i><em>Plastics</em></div><div class="bar"><span>11.15%</span><i style="height:42px"></i><em>Food</em></div><div class="bar"><span>3.2%</span><i style="height:12px"></i><em>Cardboard</em></div><div class="bar"><span>2.49%</span><i style="height:9px"></i><em>Paper</em></div><div class="bar"><span>1.36%</span><i style="height:5px"></i><em>Residual</em></div></div></div><div class="word" id="engineering-w4" style="left:110px;top:110px;font-size:270px;color:#f2eee5">SORTS</div><div class="lab" id="engineering-l4" style="left:116px;bottom:70px;color:#f0a46f">Female hostel · % by weight · 9 categories in all</div></div>
+  </div>
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+            tl.fromTo("#engineering-w0", { scale: 1.14, filter: "blur(10px)", transformOrigin: "0% 50%" }, { scale: 1, filter: "blur(0px)", duration: 0.3, ease: "expo.out" }, 0.0);
+      tl.fromTo("#engineering-p0", { y: 260, opacity: 0, filter: "blur(14px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 0.38, ease: "expo.out" }, 0.5);
+      tl.fromTo("#engineering-l0", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.16, ease: "power4.out" }, 0.9666666666666667);
+      tl.fromTo("#engineering-w1", { scale: 1.14, filter: "blur(10px)", transformOrigin: "0% 50%" }, { scale: 1, filter: "blur(0px)", duration: 0.3, ease: "expo.out" }, 1.9666666666666666);
+      tl.fromTo("#engineering-p1", { y: 260, opacity: 0, filter: "blur(14px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 0.38, ease: "expo.out" }, 2.466666666666667);
+      tl.fromTo("#engineering-l1", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.16, ease: "power4.out" }, 2.933333333333333);
+      tl.fromTo("#engineering-w2", { scale: 1.14, filter: "blur(10px)", transformOrigin: "0% 50%" }, { scale: 1, filter: "blur(0px)", duration: 0.3, ease: "expo.out" }, 3.9);
+      tl.fromTo("#engineering-p2", { y: 260, opacity: 0, filter: "blur(14px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 0.38, ease: "expo.out" }, 4.4);
+      tl.fromTo("#engineering-l2", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.16, ease: "power4.out" }, 4.866666666666666);
+      tl.fromTo("#engineering-w3", { scale: 1.14, filter: "blur(10px)", transformOrigin: "0% 50%" }, { scale: 1, filter: "blur(0px)", duration: 0.3, ease: "expo.out" }, 5.866666666666666);
+      tl.fromTo("#engineering-p3", { y: 260, opacity: 0, filter: "blur(14px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 0.38, ease: "expo.out" }, 6.366666666666666);
+      tl.fromTo("#engineering-l3", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.16, ease: "power4.out" }, 6.833333333333333);
+      { const c = { v: 0 }, el = document.querySelector("#engineering-p3 .cnt"); tl.fromTo(c, { v: 0 }, { v: 150.4, duration: 0.9666666666666667, ease: "power3.out", onUpdate: () => (el.textContent = c.v.toFixed(1)) }, 6.366666666666666); }
+      tl.fromTo("#engineering-w4", { scale: 1.14, filter: "blur(10px)", transformOrigin: "0% 50%" }, { scale: 1, filter: "blur(0px)", duration: 0.3, ease: "expo.out" }, 7.8);
+      tl.fromTo("#engineering-p4", { y: 260, opacity: 0, filter: "blur(14px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 0.38, ease: "expo.out" }, 8.3);
+      tl.fromTo("#engineering-l4", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.16, ease: "power4.out" }, 8.766666666666666);
+      tl.fromTo("#engineering-p4 .bars i", { scaleY: 0, transformOrigin: "50% 100%" }, { scaleY: 1, duration: 0.45, ease: "expo.out", stagger: 0.06 }, 8.3);
+      window.__timelines["engineering"] = tl;
+    })();
+  </script>
+</template>
