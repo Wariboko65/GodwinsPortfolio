@@ -1,0 +1,56 @@
+<template>
+  <style>
+    @font-face { font-family: "Schibsted Grotesk"; src: url("assets/fonts/schibsted.woff2") format("woff2"); font-weight: 400 900; }
+    @font-face { font-family: "JetBrains Mono"; src: url("assets/fonts/jbmono.woff2") format("woff2"); font-weight: 100 800; }
+    #root { position: absolute; inset: 0; overflow: hidden; background: #0d0f12; font-family: "Schibsted Grotesk"; color: #eceae4; }
+    #vx-win { position: absolute; left: 260px; top: 150px; width: 1400px; height: 875px; border-radius: 18px; overflow: hidden; background: #16191e;
+      border: 3px solid #c8f169; box-shadow: 0 40px 120px rgba(0,0,0,0.6); }
+    #vx-bar { position: absolute; left: 0; top: 0; right: 0; height: 44px; background: #1d2127; display: flex; align-items: center; gap: 10px; padding-left: 18px; }
+    #vx-bar b { width: 13px; height: 13px; border-radius: 50%; background: #2b3038; display: block; }
+    #vx-url { margin-left: 22px; font-family: "JetBrains Mono"; font-size: 20px; color: #9ea3ab; background: #0d0f12; padding: 5px 16px; border-radius: 8px; }
+    #vx-view { position: absolute; left: 0; top: 44px; width: 1400px; height: 831px; overflow: hidden; background: #fff; }
+    #vx-page { position: absolute; left: 0; top: 0; width: 1400px; height: 1750px; display: block; }
+    #vx-press { position: absolute; left: 812px; top: 1408px; width: 142px; height: 36px; border-radius: 4px; background: #000; opacity: 0; }
+    #vx-title { position: absolute; left: 266px; top: 52px; font-weight: 800; font-size: 56px; letter-spacing: -0.03em; white-space: nowrap; }
+    #vx-meta { position: absolute; left: 850px; top: 70px; font-family: "JetBrains Mono"; font-size: 28px; font-weight: 600; color: #c8f169; white-space: nowrap; }
+    #vx-edge { position: absolute; left: 770px; top: 350px; width: 380px; height: 380px; border: 6px solid #c8f169; border-radius: 18px; }
+    #vx-cursor { position: absolute; left: 0; top: 0; width: 60px; height: 78px; }
+  </style>
+  <div id="root" data-composition-id="vortex" data-width="1920" data-height="1080">
+    <div id="vx-stage" class="clip" data-start="0" data-duration="7" data-track-index="0" style="position:absolute;inset:0">
+      <div id="vx-win">
+        <div id="vx-bar"><b></b><b></b><b></b><span id="vx-url">vortexhorizon.vercel.app</span></div>
+        <div id="vx-view"><div id="vx-scroll" style="position:absolute;left:0;top:0;width:1400px;height:1750px"><img id="vx-page" src="assets/img/vortex-page.jpg" alt=""><div id="vx-press"></div></div></div>
+      </div>
+      <div id="vx-edge"></div>
+      <div id="vx-title">Vortex Horizon</div>
+      <div id="vx-meta">Concept site · 2022 · HTML · CSS · JS · Apps Script</div>
+      <svg id="vx-cursor" viewBox="0 0 40 52"><path d="M4 3 L4 42 L14 32 L21 48 L28 45 L21 29 L35 29 Z" fill="#eceae4" stroke="#0d0f12" stroke-width="3" stroke-linejoin="round"/></svg>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+      // the empty square from the fly-through opens into a browser window (same box, same lime edge)
+      tl.fromTo("#vx-win", { clipPath: "inset(200px 510px 295px 510px round 18px)", borderColor: "#c8f169" },
+        { clipPath: "inset(0px 0px 0px 0px round 18px)", borderColor: "#2b3038", duration: 0.6, ease: "power3.inOut" }, 0);
+      // the lime edge carried over from the fly-through stretches with the window, then lets go
+      tl.fromTo("#vx-edge", { x: 0, y: 0, scaleX: 1, scaleY: 1, opacity: 1 }, { x: 0, y: 0, scaleX: 1400 / 380, scaleY: 875 / 380, opacity: 0, duration: 0.6, ease: "power3.inOut", transformOrigin: "50% 50%" }, 0);
+      tl.fromTo("#vx-view", { opacity: 0 }, { opacity: 1, duration: 0.35, ease: "power2.out" }, 0.3);
+      tl.fromTo("#vx-title", { opacity: 0, filter: "blur(10px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.18, ease: "power4.out" }, 0.75);
+      tl.fromTo("#vx-meta", { opacity: 0, filter: "blur(6px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power4.out" }, 0.95);
+      // the cursor comes in and scrolls the real page down to the gallery
+      tl.fromTo("#vx-cursor", { x: 1700, y: 760, opacity: 0 }, { x: 1300, y: 600, opacity: 1, duration: 0.5, ease: "expo.out" }, 1.0);
+      tl.fromTo("#vx-scroll", { y: 0 }, { y: -919, duration: 1.9, ease: "power2.inOut" }, 1.3);
+      // it clicks the real "Web Design & Development" filter (screen 883, 701)
+      tl.to("#vx-cursor", { x: 878, y: 696, duration: 0.45, ease: "expo.out" }, 3.4);
+      tl.to("#vx-cursor", { scale: 0.85, duration: 0.06, yoyo: true, repeat: 1, transformOrigin: "10% 10%" }, 3.95);
+      tl.fromTo("#vx-press", { opacity: 0 }, { opacity: 0.25, duration: 0.06, yoyo: true, repeat: 1 }, 3.95);
+      tl.to("#vx-cursor", { x: 1100, y: 1150, opacity: 0, duration: 0.35, ease: "power3.in" }, 4.6);
+      // rest on the page, then the window drops away and the tools carry on
+      tl.to(["#vx-win"], { y: 1100, rotation: 4, duration: 0.42, ease: "power3.in" }, 6.5);
+      tl.to(["#vx-title", "#vx-meta"], { opacity: 0, filter: "blur(10px)", duration: 0.2, ease: "power3.in" }, 6.6);
+      window.__timelines["vortex"] = tl;
+    })();
+  </script>
+</template>

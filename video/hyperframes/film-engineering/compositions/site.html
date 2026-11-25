@@ -1,0 +1,55 @@
+<template>
+  <style>
+    @font-face { font-family: "Newsreader"; src: url("assets/fonts/newsreader.woff2") format("woff2"); font-weight: 200 800; }
+    @font-face { font-family: "JetBrains Mono"; src: url("assets/fonts/jbmono.woff2") format("woff2"); font-weight: 100 800; }
+    #root { position: absolute; inset: 0; overflow: hidden; background: #f2eee5; color: #13272e; }
+    #st-kicker { position: absolute; left: 1010px; top: 300px; font-family: "JetBrains Mono"; font-weight: 600; font-size: 26px; letter-spacing: 0.08em; color: #a9471f; white-space: nowrap; }
+    #st-title { position: absolute; left: 1004px; top: 342px; font-family: "Newsreader"; font-weight: 500; font-size: 112px; line-height: 1; letter-spacing: -0.02em; white-space: nowrap; }
+    #st-title span { display: inline-block; }
+    #st-sub { position: absolute; left: 1010px; top: 478px; font-family: "Newsreader"; font-style: italic; font-size: 40px; color: #4f5b5e; white-space: nowrap; }
+    #st-spec { position: absolute; left: 1010px; top: 560px; font-family: "JetBrains Mono"; font-weight: 600; font-size: 30px; white-space: nowrap; }
+    .pr { position: absolute; background: #fbf9f4; padding: 14px 14px 64px; border-radius: 8px; box-shadow: 0 30px 70px rgba(19,39,46,0.22); }
+    .pr img { display: block; width: 100%; height: 100%; object-fit: cover; border-radius: 3px; }
+    .pr p { position: absolute; left: 18px; bottom: 14px; font-family: "JetBrains Mono"; font-size: 30px; font-weight: 700; white-space: nowrap; }
+    #st-w { left: 660px; top: 292px; width: 600px; height: 495px; padding: 18px 18px 81px; border-radius: 12px; }
+    #st-next { position: absolute; left: 0; width: 1920px; top: 200px; text-align: center; font-family: "JetBrains Mono"; font-weight: 600; font-size: 30px; letter-spacing: 0.06em; color: #a9471f; }
+  </style>
+  <div id="root" data-composition-id="site" data-width="1920" data-height="1080">
+    <div id="st-stage" style="position:absolute;inset:0">
+      <video id="st-plinth" class="clip" src="assets/video/plinth.mp4" muted playsinline data-start="0" data-duration="9.77" data-track-index="1" style="position:absolute;left:0;top:0;width:1920px;height:1080px"></video>
+      <div id="st-kicker">NDDC · JULY – DECEMBER 2025</div>
+      <div id="st-title"><span>Field</span>&nbsp;<span>inspection</span></div>
+      <div id="st-sub">Solar street-light projects, Rivers State</div>
+      <div id="st-spec">Plinth · 450 × 450 × 1000 mm</div>
+      <div class="pr" id="st-p0" style="left:1060px;top:250px;width:470px;height:440px"><img src="assets/img/plinth-measurement.jpg" alt=""><p>Measured</p></div>
+      <div class="pr" id="st-p1" style="left:1300px;top:330px;width:470px;height:440px"><img src="assets/img/earthing-installation.jpg" alt=""><p>Earthed</p></div>
+      <div class="pr" id="st-p2" style="left:1090px;top:430px;width:470px;height:440px"><img src="assets/img/pole-measurement.jpg" alt=""><p>Checked</p></div>
+      <div class="pr" id="st-p3" style="left:1330px;top:520px;width:470px;height:440px"><img src="assets/img/streetlights-night.jpg" alt=""><p>Lit at night</p></div>
+      <div id="st-next">NEXT · HOSTEL SOLID WASTE STUDY</div>
+      <div class="pr" id="st-w"><img src="assets/img/weighing-scale.jpg" alt=""></div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+      // the drawing (Manim) builds on the left; the facts arrive on the right
+      tl.fromTo("#st-kicker", { opacity: 0 }, { opacity: 1, duration: 0.2 }, 1.0);
+      tl.fromTo("#st-title span", { opacity: 0, filter: "blur(10px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.16, ease: "power4.out", stagger: 0.08 }, 1.1);
+      tl.fromTo("#st-sub", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power4.out" }, 1.45);
+      tl.fromTo("#st-spec", { opacity: 0, filter: "blur(6px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power4.out" }, 2.6);
+      tl.to(["#st-kicker", "#st-title", "#st-sub", "#st-spec"], { opacity: 0, filter: "blur(8px)", duration: 0.22, ease: "power3.in", stagger: 0.03 }, 6.2);
+      // the proof: four site prints dealt onto the table beside the drawing
+      ["#st-p0", "#st-p1", "#st-p2", "#st-p3"].forEach((p, i) => {
+        tl.fromTo(p, { y: 1100, x: 120, rotation: [9, -7, 8, -6][i] }, { y: 0, x: 0, rotation: [-3, 2.5, -1.5, 2][i], duration: 0.45, ease: "expo.out" }, 6.5 + i * 0.5);
+      });
+      // the drawing lifts off the paper before its clip ends
+      tl.to("#st-plinth", { opacity: 0, duration: 0.35, ease: "power2.in" }, 9.2);
+      // the prints are swept off, and the last print (the weighing scale) is dealt into the middle
+      ["#st-p0", "#st-p1", "#st-p2", "#st-p3"].forEach((p, i) => tl.to(p, { x: -1700, rotation: -12, duration: 0.42, ease: "power3.in" }, 9.3 + i * 0.05));
+      tl.fromTo("#st-w", { y: 900, rotation: 10 }, { y: 0, rotation: 0, duration: 0.55, ease: "expo.out" }, 9.6);
+      tl.fromTo("#st-next", { opacity: 0, filter: "blur(6px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power4.out" }, 10.2);
+      tl.to("#st-next", { opacity: 0, duration: 0.2 }, 12.2);
+      window.__timelines["site"] = tl;
+    })();
+  </script>
+</template>

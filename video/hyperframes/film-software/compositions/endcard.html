@@ -1,0 +1,37 @@
+<template>
+  <style>
+    @font-face { font-family: "Schibsted Grotesk"; src: url("assets/fonts/schibsted.woff2") format("woff2"); font-weight: 400 900; }
+    @font-face { font-family: "JetBrains Mono"; src: url("assets/fonts/jbmono.woff2") format("woff2"); font-weight: 100 800; }
+    #root { position: absolute; inset: 0; overflow: hidden; background: #0d0f12; font-family: "Schibsted Grotesk"; }
+    .ec-w { position: absolute; top: 360px; font-weight: 800; font-size: 200px; letter-spacing: -0.05em; line-height: 1; white-space: nowrap; }
+    #ec-b { left: 160px; color: #eceae4; }
+    #ec-s { left: 860px; color: #c8f169; }
+    #ec-name { position: absolute; left: 0; width: 1920px; top: 420px; text-align: center; font-weight: 800; font-size: 130px; letter-spacing: -0.04em; color: #eceae4; white-space: nowrap; }
+    #ec-name span { display: inline-block; }
+    #ec-tag { position: absolute; left: 0; width: 1920px; top: 590px; text-align: center; font-family: "JetBrains Mono"; font-weight: 600; font-size: 36px; color: #c8f169; }
+    #ec-url { position: absolute; left: 960px; top: 690px; transform: translateX(-50%); font-family: "JetBrains Mono"; font-weight: 700; font-size: 34px; color: #0d0f12; background: #c8f169; border-radius: 999px; padding: 14px 34px; white-space: nowrap; }
+  </style>
+  <div id="root" data-composition-id="endcard" data-width="1920" data-height="1080">
+    <div id="ec-stage" class="clip" data-start="0" data-duration="4" data-track-index="0" style="position:absolute;inset:0">
+      <div id="ec-b" class="ec-w">Builds</div>
+      <div id="ec-s" class="ec-w">software.</div>
+      <div id="ec-name"><span>John</span>&nbsp;<span>Godwin</span>&nbsp;<span>Oamien</span></div>
+      <div id="ec-tag">/software · Frontend / Full Stack Developer</div>
+      <div id="ec-url">godwins-portfolio.vercel.app</div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+      // the claim: two words, each lands with a squash, then holds dead still
+      [["#ec-b", 0.0, -90], ["#ec-s", 0.3, 90]].forEach(([s, t, y]) =>
+        tl.fromTo(s, { opacity: 0, y, scaleY: 1.25, scaleX: 0.86, transformOrigin: "0% 100%" }, { opacity: 1, y: 0, scaleY: 1, scaleX: 1, duration: 0.34, ease: "back.out(2.2)" }, t));
+      tl.to(".ec-w", { opacity: 0, y: -60, filter: "blur(10px)", duration: 0.22, ease: "power3.in", stagger: 0.04 }, 1.45);
+      // the mark: the name, the path, the link to click
+      tl.fromTo("#ec-name span", { opacity: 0, filter: "blur(10px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.18, ease: "power4.out", stagger: 0.09 }, 1.65);
+      tl.fromTo("#ec-tag", { opacity: 0 }, { opacity: 1, duration: 0.2 }, 2.05);
+      tl.fromTo("#ec-url", { clipPath: "inset(0 100% 0 0 round 999px)" }, { clipPath: "inset(0 0% 0 0 round 999px)", duration: 0.4, ease: "power3.inOut" }, 2.25);
+      window.__timelines["endcard"] = tl;
+    })();
+  </script>
+</template>

@@ -1,0 +1,182 @@
+{
+ "click0_0": {
+  "kind": "click",
+  "dur": 0.119
+ },
+ "click0_1": {
+  "kind": "click",
+  "dur": 0.242
+ },
+ "click0_2": {
+  "kind": "click",
+  "dur": 0.114
+ },
+ "click0_3": {
+  "kind": "click",
+  "dur": 0.17
+ },
+ "click1_0": {
+  "kind": "click",
+  "dur": 0.347
+ },
+ "click1_1": {
+  "kind": "click",
+  "dur": 0.155
+ },
+ "click1_2": {
+  "kind": "click",
+  "dur": 0.033
+ },
+ "click2_0": {
+  "kind": "click",
+  "dur": 0.45
+ },
+ "click2_1": {
+  "kind": "click",
+  "dur": 0.45
+ },
+ "click2_2": {
+  "kind": "click",
+  "dur": 0.45
+ },
+ "click2_3": {
+  "kind": "click",
+  "dur": 0.45
+ },
+ "click3_0": {
+  "kind": "click",
+  "dur": 0.169
+ },
+ "key0_0": {
+  "kind": "key",
+  "dur": 0.304
+ },
+ "key0_1": {
+  "kind": "key",
+  "dur": 0.274
+ },
+ "key1_0": {
+  "kind": "key",
+  "dur": 0.155
+ },
+ "key2_0": {
+  "kind": "key",
+  "dur": 0.246
+ },
+ "key2_1": {
+  "kind": "key",
+  "dur": 0.175
+ },
+ "key3_0": {
+  "kind": "key",
+  "dur": 0.155
+ },
+ "pop0_0": {
+  "kind": "pop",
+  "dur": 0.135
+ },
+ "pop1_0": {
+  "kind": "pop",
+  "dur": 0.034
+ },
+ "pop2_0": {
+  "kind": "pop",
+  "dur": 0.447
+ },
+ "pop2_1": {
+  "kind": "pop",
+  "dur": 0.29
+ },
+ "pop3_0": {
+  "kind": "pop",
+  "dur": 0.45
+ },
+ "pop3_1": {
+  "kind": "pop",
+  "dur": 0.427
+ },
+ "pop3_2": {
+  "kind": "pop",
+  "dur": 0.22
+ },
+ "pop3_3": {
+  "kind": "pop",
+  "dur": 0.336
+ },
+ "scroll0": {
+  "kind": "scroll",
+  "dur": 3.304,
+  "peak": 2.941
+ },
+ "scroll1": {
+  "kind": "scroll",
+  "dur": 3.252,
+  "peak": 2.406
+ },
+ "scroll2": {
+  "kind": "scroll",
+  "dur": 3.81,
+  "peak": 0.503
+ },
+ "scroll3": {
+  "kind": "scroll",
+  "dur": 3.982,
+  "peak": 1.306
+ },
+ "slide0": {
+  "kind": "slide",
+  "dur": 1.181,
+  "peak": 0.455
+ },
+ "slide1": {
+  "kind": "slide",
+  "dur": 0.499,
+  "peak": 0.165
+ },
+ "slide2": {
+  "kind": "slide",
+  "dur": 1.389,
+  "peak": 0.573
+ },
+ "slide3": {
+  "kind": "slide",
+  "dur": 1.589,
+  "peak": 1.343
+ },
+ "swish0": {
+  "kind": "swish",
+  "dur": 1.65,
+  "peak": 0.337
+ },
+ "swish1": {
+  "kind": "swish",
+  "dur": 0.777,
+  "peak": 0.363
+ },
+ "swish2": {
+  "kind": "swish",
+  "dur": 1.715,
+  "peak": 0.683
+ },
+ "swish3": {
+  "kind": "swish",
+  "dur": 0.74,
+  "peak": 0.4
+ },
+ "tap0_0": {
+  "kind": "tap",
+  "dur": 0.216
+ },
+ "tap1_0": {
+  "kind": "tap",
+  "dur": 0.178
+ },
+ "tap2_0": {
+  "kind": "tap",
+  "dur": 0.092
+ },
+ "tap3_0": {
+  "kind": "tap",
+  "dur": 0.095
+ }
+}

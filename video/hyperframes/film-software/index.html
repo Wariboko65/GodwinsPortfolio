@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="assets/vendor/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: #0d0f12; }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; }
+    </style>
+  </head>
+  <body>
+    <!-- Software film, 30 s, sound design only (no music). Facts: src/data/software.ts. -->
+    <div id="root" data-composition-id="main" data-start="0" data-duration="30" data-width="1920" data-height="1080" data-motion-blur="on">
+      <div id="hook" data-composition-id="hook" data-composition-src="compositions/hook.html" data-start="0" data-duration="2.6" data-track-index="1" data-track-kind="graphics" data-width="1920" data-height="1080"></div>
+      <div id="jopad" data-composition-id="jopad" data-composition-src="compositions/jopad.html" data-start="2.6" data-duration="8.5" data-track-index="1" data-track-kind="graphics" data-width="1920" data-height="1080"></div>
+      <div id="tunnel" data-composition-id="tunnel" data-composition-src="compositions/tunnel.html" data-start="11.1" data-duration="4.5" data-track-index="1" data-track-kind="graphics" data-width="1920" data-height="1080"></div>
+      <div id="vortex" data-composition-id="vortex" data-composition-src="compositions/vortex.html" data-start="15.6" data-duration="7" data-track-index="1" data-track-kind="graphics" data-width="1920" data-height="1080"></div>
+      <div id="stack" data-composition-id="stack" data-composition-src="compositions/stack.html" data-start="22.6" data-duration="3.4" data-track-index="1" data-track-kind="graphics" data-width="1920" data-height="1080"></div>
+      <div id="endcard" data-composition-id="endcard" data-composition-src="compositions/endcard.html" data-start="26" data-duration="4" data-track-index="1" data-track-kind="graphics" data-width="1920" data-height="1080"></div>
+      <audio id="sound-design" class="clip" src="assets/sfx/score.wav" data-start="0" data-duration="30.000" data-track-index="3" data-volume="1"></audio>
+    </div>
+    <script>
+      const tl = gsap.timeline({ paused: true });
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

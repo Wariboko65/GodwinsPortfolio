@@ -1,0 +1,37 @@
+<template>
+  <style>
+    @font-face { font-family: "Schibsted Grotesk"; src: url("assets/fonts/schibsted.woff2") format("woff2"); font-weight: 400 900; }
+    @font-face { font-family: "Newsreader"; src: url("assets/fonts/newsreader.woff2") format("woff2"); font-weight: 200 800; }
+    @font-face { font-family: "JetBrains Mono"; src: url("assets/fonts/jbmono.woff2") format("woff2"); font-weight: 100 800; }
+    #root { position: absolute; inset: 0; overflow: hidden; background: #f2eee5; color: #13272e; }
+    #hk-name { position: absolute; left: 160px; top: 330px; font-family: "Schibsted Grotesk"; font-weight: 800; font-size: 150px; letter-spacing: -0.04em; white-space: nowrap; }
+    #hk-name span { display: inline-block; }
+    #hk-line { position: absolute; left: 160px; top: 507px; width: 1190px; height: 6px; background: #a9471f; transform-origin: 0 50%; }
+    #hk-en { position: absolute; left: 164px; top: 560px; font-family: "Newsreader"; font-style: italic; font-weight: 500; font-size: 68px; color: #a9471f; white-space: nowrap; }
+    #hk-role { position: absolute; left: 168px; top: 668px; font-family: "JetBrains Mono"; font-weight: 500; font-size: 36px; color: #4f5b5e; white-space: nowrap; }
+  </style>
+  <div id="root" data-composition-id="hook" data-width="1920" data-height="1080">
+    <div id="hk-stage" class="clip" data-start="0" data-duration="2.6" data-track-index="0" style="position:absolute;inset:0">
+      <div id="hk-name"><span>J</span><span>o</span><span>h</span><span>n</span><span>&nbsp;</span><span>G</span><span>o</span><span>d</span><span>w</span><span>i</span><span>n</span><span>&nbsp;</span><span>O</span><span>a</span><span>m</span><span>i</span><span>e</span><span>n</span></div>
+      <div id="hk-line"></div>
+      <div id="hk-en">/engineering</div>
+      <div id="hk-role">B.Eng. Civil &amp; Environmental Engineering</div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+      gsap.utils.toArray("#hk-name span").forEach((s, i) => {
+        tl.fromTo(s, { opacity: i < 4 ? 1 : 0, filter: i < 4 ? "blur(0px)" : "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.12, ease: "power4.out" }, Math.max(0, (i - 3) * 0.03));
+      });
+      // a pencil line is drawn under the name, left to right
+      tl.fromTo("#hk-line", { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: "power2.inOut" }, 0.45);
+      tl.fromTo("#hk-en", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power4.out" }, 0.95);
+      tl.fromTo("#hk-role", { opacity: 0, filter: "blur(6px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power4.out" }, 1.25);
+      // the words leave; the line stays and slides down to become the first edge of the plinth's plan view
+      tl.to(["#hk-name", "#hk-en", "#hk-role"], { opacity: 0, filter: "blur(10px)", duration: 0.22, ease: "power3.in", stagger: 0.04 }, 2.0);
+      tl.to("#hk-line", { x: 162, y: 320, scaleX: 304 / 1190, scaleY: 0.7, backgroundColor: "#13272e", duration: 0.5, ease: "power3.inOut" }, 2.05);
+      window.__timelines["hook"] = tl;
+    })();
+  </script>
+</template>

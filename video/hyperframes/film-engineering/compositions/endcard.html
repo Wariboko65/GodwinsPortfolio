@@ -1,0 +1,38 @@
+<template>
+  <style>
+    @font-face { font-family: "Schibsted Grotesk"; src: url("assets/fonts/schibsted.woff2") format("woff2"); font-weight: 400 900; }
+    @font-face { font-family: "Newsreader"; src: url("assets/fonts/newsreader.woff2") format("woff2"); font-weight: 200 800; }
+    @font-face { font-family: "JetBrains Mono"; src: url("assets/fonts/jbmono.woff2") format("woff2"); font-weight: 100 800; }
+    #root { position: absolute; inset: 0; overflow: hidden; background: #f2eee5; color: #13272e; }
+    .ec-w { position: absolute; top: 380px; font-family: "Newsreader"; font-weight: 500; font-size: 150px; line-height: 1; white-space: nowrap; }
+    #ec-a { left: 150px; }
+    #ec-b { left: 830px; font-style: italic; color: #a9471f; }
+    #ec-c { left: 1395px; font-style: italic; color: #a9471f; }
+    #ec-name { position: absolute; left: 0; width: 1920px; top: 410px; text-align: center; font-family: "Schibsted Grotesk"; font-weight: 800; font-size: 130px; letter-spacing: -0.04em; white-space: nowrap; }
+    #ec-name span { display: inline-block; }
+    #ec-tag { position: absolute; left: 0; width: 1920px; top: 580px; text-align: center; font-family: "Newsreader"; font-style: italic; font-size: 48px; color: #a9471f; }
+    #ec-url { position: absolute; left: 960px; top: 690px; transform: translateX(-50%); font-family: "JetBrains Mono"; font-weight: 700; font-size: 34px; color: #f2eee5; background: #13272e; border-radius: 999px; padding: 14px 34px; white-space: nowrap; }
+  </style>
+  <div id="root" data-composition-id="endcard" data-width="1920" data-height="1080">
+    <div id="ec-stage" class="clip" data-start="0" data-duration="4" data-track-index="0" style="position:absolute;inset:0">
+      <div id="ec-a" class="ec-w">Builds the</div>
+      <div id="ec-b" class="ec-w">physical</div>
+      <div id="ec-c" class="ec-w">world.</div>
+      <div id="ec-name"><span>John</span>&nbsp;<span>Godwin</span>&nbsp;<span>Oamien</span></div>
+      <div id="ec-tag">/engineering · B.Eng. Civil &amp; Environmental Engineering</div>
+      <div id="ec-url">godwins-portfolio.vercel.app</div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+      [["#ec-a", 0.0, -80], ["#ec-b", 0.3, 80], ["#ec-c", 0.55, 80]].forEach(([s, t, y]) =>
+        tl.fromTo(s, { opacity: 0, y, scaleY: 1.22, scaleX: 0.88, transformOrigin: "0% 100%" }, { opacity: 1, y: 0, scaleY: 1, scaleX: 1, duration: 0.34, ease: "back.out(2.2)" }, t));
+      tl.to(".ec-w", { opacity: 0, y: -60, filter: "blur(10px)", duration: 0.22, ease: "power3.in", stagger: 0.04 }, 1.5);
+      tl.fromTo("#ec-name span", { opacity: 0, filter: "blur(10px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.18, ease: "power4.out", stagger: 0.09 }, 1.7);
+      tl.fromTo("#ec-tag", { opacity: 0 }, { opacity: 1, duration: 0.2 }, 2.1);
+      tl.fromTo("#ec-url", { clipPath: "inset(0 100% 0 0 round 999px)" }, { clipPath: "inset(0 0% 0 0 round 999px)", duration: 0.4, ease: "power3.inOut" }, 2.3);
+      window.__timelines["endcard"] = tl;
+    })();
+  </script>
+</template>
