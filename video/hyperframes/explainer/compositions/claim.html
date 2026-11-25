@@ -1,0 +1,43 @@
+<template>
+  <style>
+    @font-face { font-family: "Schibsted Grotesk"; src: url("assets/fonts/schibsted.woff2") format("woff2"); font-weight: 400 900; }
+    @font-face { font-family: "Newsreader"; src: url("assets/fonts/newsreader.woff2") format("woff2"); font-weight: 200 800; }
+    #root { position: absolute; inset: 0; overflow: hidden; background: #0f3a44; }
+    #cl-dark { position: absolute; left: 0; top: 0; width: 960px; height: 1080px; background: #0d0f12; }
+    #cl-paper { position: absolute; left: 960px; top: 0; width: 960px; height: 1080px; background: #f2eee5; }
+    .cl-w { position: absolute; display: inline-block; white-space: nowrap; line-height: 1; }
+    #cl-b1 { left: 110px; top: 360px; font-family: "Schibsted Grotesk"; font-weight: 800; font-size: 120px; letter-spacing: -0.04em; color: #eceae4; }
+    #cl-s1 { left: 110px; top: 490px; font-family: "Schibsted Grotesk"; font-weight: 800; font-size: 150px; letter-spacing: -0.045em; color: #c8f169; }
+    #cl-b2 { left: 1060px; top: 360px; font-family: "Newsreader"; font-weight: 500; font-size: 120px; color: #13272e; }
+    #cl-s2 { left: 1060px; top: 490px; font-family: "Newsreader"; font-style: italic; font-weight: 500; font-size: 112px; color: #a9471f; }
+    #cl-s2b { left: 1060px; top: 610px; font-family: "Newsreader"; font-style: italic; font-weight: 500; font-size: 112px; color: #a9471f; }
+  </style>
+  <div id="root" data-composition-id="claim" data-width="1920" data-height="1080">
+    <div id="cl-stage" class="clip" data-start="0" data-duration="7" data-track-index="0" style="position:absolute;inset:0">
+      <div id="cl-dark"></div>
+      <div id="cl-paper"></div>
+      <div id="cl-b1" class="cl-w">Builds</div>
+      <div id="cl-s1" class="cl-w">software.</div>
+      <div id="cl-b2" class="cl-w">Builds the</div>
+      <div id="cl-s2" class="cl-w">physical</div>
+      <div id="cl-s2b" class="cl-w">world.</div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+      // on the downbeat the two halves close in from either side, the same split the film opened on
+      tl.fromTo("#cl-dark", { x: -960 }, { x: 0, duration: 0.42, ease: "expo.out" }, 0);
+      tl.fromTo("#cl-paper", { x: 960 }, { x: 0, duration: 0.42, ease: "expo.out" }, 0);
+      // one word a beat (120 BPM: 0.5 s); each lands with a small squash, then is dead still
+      const land = (sel, t, from) => {
+        tl.fromTo(sel, { opacity: 0, y: from, scaleY: 1.25, scaleX: 0.86, transformOrigin: "0% 100%" },
+          { opacity: 1, y: 0, scaleY: 1, scaleX: 1, duration: 0.34, ease: "back.out(2.2)" }, t);
+      };
+      land("#cl-b1", 0.5, -90); land("#cl-s1", 1.0, 90); land("#cl-b2", 1.5, -90); land("#cl-s2", 2.0, 90); land("#cl-s2b", 2.25, 90);
+      // hold still, then hand over to the end card: the words clear, the halves stay
+      tl.to(".cl-w", { opacity: 0, filter: "blur(10px)", duration: 0.2, ease: "power3.in", stagger: 0.03 }, 6.6);
+      window.__timelines["claim"] = tl;
+    })();
+  </script>
+</template>

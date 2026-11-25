@@ -1,0 +1,14 @@
+{
+  "name": "waste-chart",
+  "private": true,
+  "description": "Remotion segment for the portfolio explainer: the hostel waste study, driven by src/data/engineering.ts numbers.",
+  "scripts": {
+    "render": "remotion render src/index.ts WasteChart out/waste.mp4"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.547",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "remotion": "4.0.547"
+  }
+}

@@ -17,6 +17,6 @@ chain = Pedalboard([HighpassFilter(24), LowShelfFilter(cutoff_frequency_hz=70, g
 a = chain(a, sr)
 buf = io.BytesIO(); sf.write(buf, a.T, sr, format="WAV", subtype="PCM_24"); buf.seek(0)
 subprocess.run(["ffmpeg", "-loglevel", "error", "-y", "-i", src, "-f", "wav", "-i", "-", "-map", "0:v", "-map", "1:a", "-c:v", "copy",
-                "-af", "loudnorm=I=-14:TP=-1.0:LRA=11", "-ar", "48000", "-c:a", "aac", "-b:a", "256k", "-movflags", "+faststart", out],
+                "-af", f"loudnorm=I=-14:TP={__import__('os').environ.get('MASTER_TP', '-1.0')}:LRA=11", "-ar", "48000", "-c:a", "aac", "-b:a", "256k", "-movflags", "+faststart", out],
                input=buf.read(), check=True)
 print("wrote", out)
